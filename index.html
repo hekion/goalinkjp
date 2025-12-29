@@ -1,1 +1,108 @@
-<!DOCTYPE html><html lang="ja"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Goalink | Jリーグデータメディア</title>    <script src="https://cdn.tailwindcss.com"></script>    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">    <style>        :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }        .font-oswald { font-family: 'Oswald', sans-serif; }        .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }                /* 日本語メインのタブスタイル */        .nav-tab {            position: relative;            padding: 1rem 1.25rem;            font-size: 0.9rem;            font-weight: 700;            color: #94a3b8;            transition: all 0.3s ease;            white-space: nowrap;        }        .nav-tab.active { color: var(--main-blue); }        .nav-tab.active::after {            content: ''; position: absolute; bottom: 0; left: 0;            width: 100%; h-1; background: var(--main-blue);        }        .no-scrollbar::-webkit-scrollbar { display: none; }        .news-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }        .news-card:hover { border-color: var(--main-blue); background: rgba(51, 65, 85, 0.6); }    </style></head><body class="hero-gradient min-h-screen">    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">            <a href="index.html">                <img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto">            </a>            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all">FOLLOW X</a>        </div>        <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">            <div class="max-w-5xl mx-auto px-4 flex">                <a href="#" class="nav-tab active">最新の更新</a>                <a href="#" class="nav-tab">マッチスタッツ</a>                <a href="#" class="nav-tab">順位表</a>                <a href="#" class="nav-tab">Goalinkについて</a>            </div>        </nav>    </header>    <main class="max-w-5xl mx-auto px-6 py-8">                <section class="mb-12">            <div class="relative group cursor-pointer overflow-hidden rounded-2xl border border-white/10 shadow-2xl">                <div class="aspect-[16/9] w-full bg-slate-900">                    <img src="latest_stats.png" alt="Latest" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-all duration-1000">                </div>                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>                <div class="absolute bottom-0 p-6 md:p-10">                    <span class="bg-[#63bde3] text-black text-[10px] font-black px-2 py-0.5 mb-3 inline-block rounded-sm">LATEST</span>                    <h2 class="text-3xl md:text-5xl font-black italic tracking-tighter">J1 第1節 スタッツアーカイブ</h2>                </div>            </div>        </section>        <div class="grid grid-cols-1 gap-4">            <h3 class="text-[10px] font-black tracking-[0.4em] text-gray-500 uppercase mb-2 border-l-2 border-[#63bde3] pl-3">Archives</h3>                        <a href="stats-j1-01.html" class="news-card p-4 rounded-xl flex gap-4 md:gap-8 items-center group">                <div class="w-24 h-24 md:w-44 md:h-28 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 border border-white/5">                    <img src="thumb-sample.png" class="w-full h-full object-cover group-hover:scale-110 transition-all">                </div>                <div class="flex-grow">                    <div class="flex items-center gap-3 mb-1">                        <span class="font-oswald text-[#63bde3] text-sm">STATS</span>                        <span class="text-[10px] text-gray-500">2026.01.01</span>                    </div>                    <h4 class="font-bold text-lg md:text-2xl group-hover:text-[#63bde3]">J1 第1節 マッチスタッツ一覧</h4>                    <p class="text-xs text-gray-500 mt-2 hidden md:block">全試合の決定率・枠内シュート数データを集計。</p>                </div>            </a>            <a href="standings.html" class="news-card p-4 rounded-xl flex gap-4 md:gap-8 items-center group">                <div class="w-24 h-24 md:w-44 md:h-28 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 border border-white/5">                    <img src="standings_j1.png" class="w-full h-full object-cover">                </div>                <div class="flex-grow">                    <div class="flex items-center gap-3 mb-1">                        <span class="font-oswald text-[#63bde3] text-sm">TABLE</span>                        <span class="text-[10px] text-gray-500">UPDATE: 2026.01.01</span>                    </div>                    <h4 class="font-bold text-lg md:text-2xl">【最新】J1リーグ順位表</h4>                </div>            </a>        </div>    </main>    <footer class="py-20 border-t border-white/5 mt-20 text-center">        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-600 uppercase">Goalink © 2026 Powered by HEKION</p>    </footer></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goalink |トップページ</title>
+    <script src="[https://cdn.tailwindcss.com"></script]https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }
+        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }
+       
+        /* 日本語メインのタブスタイル */
+        .nav-tab {
+            position: relative;
+            padding: 1rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .nav-tab.active { color: var(--main-blue); }
+        .nav-tab.active::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; h-1; background: var(--main-blue);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .news-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .news-card:hover { border-color: var(--main-blue); background: rgba(51, 65, 85, 0.6); }
+    </style>
+</head>
+<body class="hero-gradient min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html">
+                <img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto">
+            </a>
+            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all">FOLLOW X</a>
+        </div>
+
+        <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">
+            <div class="max-w-5xl mx-auto px-4 flex">
+                <a href="index.html" class="nav-tab active">トップ</a>
+                <a href="statsin.html" class="nav-tab">マッチスタッツ</a>
+                <a href="standing.html" class="nav-tab">順位表</a>
+                <a href="#" class="nav-tab">Goalinkについて</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-8">
+       
+        <section class="mb-12">
+            <div class="relative group cursor-pointer overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+                <div class="aspect-[16/9] w-full bg-slate-900">
+                    <img src="latest_stats.png" alt="Latest" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-all duration-1000">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 p-6 md:p-10">
+                    <span class="bg-[#63bde3] text-black text-[10px] font-black px-2 py-0.5 mb-3 inline-block rounded-sm">LATEST</span>
+                    <h2 class="text-3xl md:text-5xl font-black italic tracking-tighter">J1 第1節 スタッツアーカイブ</h2>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 gap-4">
+            <h3 class="text-[10px] font-black tracking-[0.4em] text-gray-500 uppercase mb-2 border-l-2 border-[#63bde3] pl-3">Archives</h3>
+           
+            <a href="stats-j1-01.html" class="news-card p-4 rounded-xl flex gap-4 md:gap-8 items-center group">
+                <div class="w-24 h-24 md:w-44 md:h-28 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 border border-white/5">
+                    <img src="thumb-sample.png" class="w-full h-full object-cover group-hover:scale-110 transition-all">
+                </div>
+                <div class="flex-grow">
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="font-oswald text-[#63bde3] text-sm">STATS</span>
+                        <span class="text-[10px] text-gray-500">2026.01.01</span>
+                    </div>
+                    <h4 class="font-bold text-lg md:text-2xl group-hover:text-[#63bde3]">J1 第1節 マッチスタッツ一覧</h4>
+                    <p class="text-xs text-gray-500 mt-2 hidden md:block">全試合の決定率・枠内シュート数データを集計。</p>
+                </div>
+            </a>
+
+            <a href="standings.html" class="news-card p-4 rounded-xl flex gap-4 md:gap-8 items-center group">
+                <div class="w-24 h-24 md:w-44 md:h-28 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 border border-white/5">
+                    <img src="standings_j1.png" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-grow">
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="font-oswald text-[#63bde3] text-sm">TABLE</span>
+                        <span class="text-[10px] text-gray-500">UPDATE: 2026.01.01</span>
+                    </div>
+                    <h4 class="font-bold text-lg md:text-2xl">【最新】J1リーグ順位表</h4>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="py-20 border-t border-white/5 mt-20 text-center">
+        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-600 uppercase">Goalink © 2026 Powered by HEKION</p>
+    </footer>
+
+</body>
+</html>

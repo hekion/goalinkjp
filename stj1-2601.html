@@ -1,1 +1,165 @@
-<!DOCTYPE html><html lang="ja"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>J1 第1節 スタッツ | Goalink</title>    <script src="https://cdn.tailwindcss.com"></script>    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">    <style>        :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }        .font-oswald { font-family: 'Oswald', sans-serif; }        .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }                .nav-tab {            position: relative; padding: 1rem 1.25rem; font-size: 0.9rem; font-weight: 700;            color: #94a3b8; transition: all 0.3s ease; white-space: nowrap;        }        .nav-tab.active { color: var(--main-blue); }        .nav-tab.active::after {            content: ''; position: absolute; bottom: 0; left: 0;            width: 100%; height: 4px; background: var(--main-blue);        }        .no-scrollbar::-webkit-scrollbar { display: none; }        .white-panel {            background-color: white; color: black;            padding: 1.25rem 1.5rem; border-left: 6px solid var(--main-blue);        }        .page-title {            white-space: nowrap;            font-size: 1.2rem;            letter-spacing: -0.02em;        }        @media (min-width: 400px) { .page-title { font-size: 1.5rem; } }        @media (min-width: 768px) { .page-title { font-size: 2rem; letter-spacing: normal; } }        .match-card {            background: rgba(255, 255, 255, 0.03);            border: 1px solid rgba(255, 255, 255, 0.1);            transition: all 0.3s ease;        }        .match-card:hover { border-color: var(--main-blue); transform: translateY(-2px); }    </style></head><body class="hero-gradient min-h-screen">    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">            <a href="index.html"><img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto"></a>            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all">FOLLOW X</a>        </div>        <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">            <div class="max-w-5xl mx-auto px-4 flex">                <a href="index.html" class="nav-tab">最新の更新</a>                <a href="stats-index.html" class="nav-tab active">マッチスタッツ</a>                <a href="standings.html" class="nav-tab">順位表</a>                <a href="#" class="nav-tab">Goalinkについて</a>            </div>        </nav>    </header>    <main class="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">                <a href="stats-index.html" class="inline-flex items-center text-[10px] font-black text-[#63bde3] mb-6 hover:opacity-70 uppercase tracking-widest">            ← BACK TO ARCHIVES        </a>        <div class="white-panel rounded-lg mb-12 shadow-lg">            <span class="text-[9px] md:text-[10px] font-black uppercase text-[#63bde3] tracking-[0.2em] block leading-none mb-1">J1 LEAGUE</span>            <h2 class="font-black tracking-tighter uppercase page-title">第1節 スタッツアーカイブ</h2>        </div>        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">                        <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 01</span>                </div>                <img src="stats_j1_01_m1.png" alt="Match 1" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 02</span>                </div>                <img src="stats_j1_01_m2.png" alt="Match 2" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 03</span>                </div>                <img src="stats_j1_01_m3.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 04</span>                </div>                <img src="stats_j1_01_m4.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 05</span>                </div>                <img src="stats_j1_01_m5.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 06</span>                </div>                <img src="stats_j1_01_m6.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 07</span>                </div>                <img src="stats_j1_01_m7.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 08</span>                </div>                <img src="stats_j1_01_m8.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 09</span>                </div>                <img src="stats_j1_01_m9.png" class="w-full h-auto block bg-slate-800">            </div>            <div class="match-card rounded-xl overflow-hidden shadow-2xl">                <div class="p-3 bg-white/5 border-b border-white/10">                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 10</span>                </div>                <img src="stats_j1_01_m10.png" class="w-full h-auto block bg-slate-800">            </div>        </div>        <div class="mt-20 flex flex-col items-center gap-6">            <a href="stats-index.html" class="group flex flex-col items-center">                <span class="text-[10px] font-bold text-gray-500 mb-2 tracking-[0.3em] uppercase">Return to list</span>                <div class="bg-white/5 border border-white/10 px-10 py-4 rounded-full font-black text-xs group-hover:bg-[#63bde3] group-hover:text-black transition-all uppercase tracking-widest shadow-xl">                    一覧に戻る                </div>            </a>        </div>    </main>    <footer class="py-20 border-t border-white/5 text-center mt-20">        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-600 uppercase">Goalink © 2026 Powered by HEKION</p>    </footer></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goalink | J1 第1節 スタッツ</title>
+    <script src="[https://cdn.tailwindcss.com"></script]https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }
+        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }
+       
+        .nav-tab {
+            position: relative; padding: 1rem 1.25rem; font-size: 0.9rem; font-weight: 700;
+            color: #94a3b8; transition: all 0.3s ease; white-space: nowrap;
+        }
+        .nav-tab.active { color: var(--main-blue); }
+        .nav-tab.active::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 4px; background: var(--main-blue);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .white-panel {
+            background-color: white; color: black;
+            padding: 1.25rem 1.5rem; border-left: 6px solid var(--main-blue);
+        }
+
+        .page-title {
+            white-space: nowrap;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+        @media (min-width: 400px) { .page-title { font-size: 1.5rem; } }
+        @media (min-width: 768px) { .page-title { font-size: 2rem; letter-spacing: normal; } }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .match-card:hover { border-color: var(--main-blue); transform: translateY(-2px); }
+    </style>
+</head>
+<body class="hero-gradient min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html"><img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto"></a>
+            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all">FOLLOW X</a>
+        </div>
+        <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">
+            <div class="max-w-5xl mx-auto px-4 flex">
+                <a href="index.html" class="nav-tab">トップ</a>
+                <a href="statsin.html" class="nav-tab active">マッチスタッツ</a>
+                <a href="standings.html" class="nav-tab">順位表</a>
+                <a href="#" class="nav-tab">Goalinkについて</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
+       
+        <a href="statsin.html" class="inline-flex items-center text-[10px] font-black text-[#63bde3] mb-6 hover:opacity-70 uppercase tracking-widest">
+            ← BACK TO ARCHIVES
+        </a>
+
+        <div class="white-panel rounded-lg mb-12 shadow-lg">
+            <span class="text-[9px] md:text-[10px] font-black uppercase text-[#63bde3] tracking-[0.2em] block leading-none mb-1">J1 LEAGUE</span>
+            <h2 class="font-black tracking-tighter uppercase page-title">第1節 スタッツアーカイブ</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+           
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 01</span>
+                </div>
+                <img src="stats_j1_01_m1.png" alt="Match 1" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 02</span>
+                </div>
+                <img src="stats_j1_01_m2.png" alt="Match 2" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 03</span>
+                </div>
+                <img src="stats_j1_01_m3.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 04</span>
+                </div>
+                <img src="stats_j1_01_m4.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 05</span>
+                </div>
+                <img src="stats_j1_01_m5.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 06</span>
+                </div>
+                <img src="stats_j1_01_m6.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 07</span>
+                </div>
+                <img src="stats_j1_01_m7.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 08</span>
+                </div>
+                <img src="stats_j1_01_m8.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 09</span>
+                </div>
+                <img src="stats_j1_01_m9.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="p-3 bg-white/5 border-b border-white/10">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 10</span>
+                </div>
+                <img src="stats_j1_01_m10.png" class="w-full h-auto block bg-slate-800">
+            </div>
+
+        </div>
+
+        <div class="mt-20 flex flex-col items-center gap-6">
+            <a href="statsin.html" class="group flex flex-col items-center">
+                <span class="text-[10px] font-bold text-gray-500 mb-2 tracking-[0.3em] uppercase">Return to list</span>
+                <div class="bg-white/5 border border-white/10 px-10 py-4 rounded-full font-black text-xs group-hover:bg-[#63bde3] group-hover:text-black transition-all uppercase tracking-widest shadow-xl">
+                    一覧に戻る
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="py-20 border-t border-white/5 text-center mt-20">
+        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-600 uppercase">Goalink © 2026 Powered by HEKION</p>
+    </footer>
+
+</body>
+</html>

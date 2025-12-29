@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goalink | J1 第1節 スタッツ</title>
-    <script src="[https://cdn.tailwindcss.com"></script]https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }
-        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }
+        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }
-       
+        
         .nav-tab {
             position: relative; padding: 1rem 1.25rem; font-size: 0.9rem; font-weight: 700;
             color: #94a3b8; transition: all 0.3s ease; white-space: nowrap;
@@ -28,11 +28,7 @@
             padding: 1.25rem 1.5rem; border-left: 6px solid var(--main-blue);
         }
 
-        .page-title {
-            white-space: nowrap;
-            font-size: 1.2rem;
-            letter-spacing: -0.02em;
-        }
+        .page-title { white-space: nowrap; font-size: 1.2rem; letter-spacing: -0.02em; }
         @media (min-width: 400px) { .page-title { font-size: 1.5rem; } }
         @media (min-width: 768px) { .page-title { font-size: 2rem; letter-spacing: normal; } }
 
@@ -46,24 +42,28 @@
 </head>
 <body class="hero-gradient min-h-screen">
 
-    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html"><img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto"></a>
-            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all">FOLLOW X</a>
+    <header class="sticky top-0 z-50 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-5xl mx-auto px-4 h-24 md:h-28 flex items-center justify-between">
+            <a href="index.html" class="flex items-center h-full py-2">
+                <img src="goalinklogo.png" alt="GOALINK" class="h-full w-auto object-contain">
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="https://x.com/Goalink_JP" target="_blank" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all uppercase">FOLLOW X</a>
+            </div>
         </div>
         <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">
-            <div class="max-w-5xl mx-auto px-4 flex">
+            <div class="max-w-5xl mx-auto px-4 flex justify-start md:justify-center">
                 <a href="index.html" class="nav-tab">トップ</a>
                 <a href="statsin.html" class="nav-tab active">マッチスタッツ</a>
-                <a href="standings.html" class="nav-tab">順位表</a>
+                <a href="standing.html" class="nav-tab">順位表</a>
                 <a href="#" class="nav-tab">Goalinkについて</a>
             </div>
         </nav>
     </header>
 
     <main class="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
-       
-        <a href="statsin.html" class="inline-flex items-center text-[10px] font-black text-[#63bde3] mb-6 hover:opacity-70 uppercase tracking-widest">
+        
+        <a href="statsin.html" class="inline-flex items-center text-[10px] font-black text-[#63bde3] mb-6 hover:opacity-70 uppercase tracking-[0.2em]">
             ← BACK TO ARCHIVES
         </a>
 
@@ -73,83 +73,42 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-           
+            
             <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
+                <div class="p-3 bg-white/5 border-b border-white/10 flex justify-between items-center">
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 01</span>
+                    <span class="text-[10px] font-bold text-[#63bde3] uppercase">Full Stats</span>
                 </div>
                 <img src="stats_j1_01_m1.png" alt="Match 1" class="w-full h-auto block bg-slate-800">
             </div>
 
             <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
+                <div class="p-3 bg-white/5 border-b border-white/10 flex justify-between items-center">
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 02</span>
                 </div>
                 <img src="stats_j1_01_m2.png" alt="Match 2" class="w-full h-auto block bg-slate-800">
             </div>
 
             <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
+                <div class="p-3 bg-white/5 border-b border-white/10 flex justify-between items-center">
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 03</span>
                 </div>
                 <img src="stats_j1_01_m3.png" class="w-full h-auto block bg-slate-800">
             </div>
 
             <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
+                <div class="p-3 bg-white/5 border-b border-white/10 flex justify-between items-center">
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 04</span>
                 </div>
                 <img src="stats_j1_01_m4.png" class="w-full h-auto block bg-slate-800">
-            </div>
-
-            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 05</span>
-                </div>
-                <img src="stats_j1_01_m5.png" class="w-full h-auto block bg-slate-800">
-            </div>
-
-            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 06</span>
-                </div>
-                <img src="stats_j1_01_m6.png" class="w-full h-auto block bg-slate-800">
-            </div>
-
-            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 07</span>
-                </div>
-                <img src="stats_j1_01_m7.png" class="w-full h-auto block bg-slate-800">
-            </div>
-
-            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 08</span>
-                </div>
-                <img src="stats_j1_01_m8.png" class="w-full h-auto block bg-slate-800">
-            </div>
-
-            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 09</span>
-                </div>
-                <img src="stats_j1_01_m9.png" class="w-full h-auto block bg-slate-800">
-            </div>
-
-            <div class="match-card rounded-xl overflow-hidden shadow-2xl">
-                <div class="p-3 bg-white/5 border-b border-white/10">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Match 10</span>
-                </div>
-                <img src="stats_j1_01_m10.png" class="w-full h-auto block bg-slate-800">
             </div>
 
         </div>
 
         <div class="mt-20 flex flex-col items-center gap-6">
             <a href="statsin.html" class="group flex flex-col items-center">
-                <span class="text-[10px] font-bold text-gray-500 mb-2 tracking-[0.3em] uppercase">Return to list</span>
-                <div class="bg-white/5 border border-white/10 px-10 py-4 rounded-full font-black text-xs group-hover:bg-[#63bde3] group-hover:text-black transition-all uppercase tracking-widest shadow-xl">
+                <span class="text-[10px] font-bold text-gray-500 mb-4 tracking-[0.3em] uppercase">Return to list</span>
+                <div class="bg-white/5 border border-white/10 px-12 py-4 rounded-full font-black text-xs group-hover:bg-[#63bde3] group-hover:text-black transition-all uppercase tracking-widest shadow-xl">
                     一覧に戻る
                 </div>
             </a>

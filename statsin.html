@@ -1,1 +1,146 @@
-<!DOCTYPE html><html lang="ja"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>マッチスタッツ | Goalink</title>    <script src="https://cdn.tailwindcss.com"></script>    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">    <style>        :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }        .font-oswald { font-family: 'Oswald', sans-serif; }        .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }                /* ナビゲーションタブ */        .nav-tab {            position: relative; padding: 1rem 1.25rem; font-size: 0.9rem; font-weight: 700;            color: #94a3b8; transition: all 0.3s ease; white-space: nowrap;        }        .nav-tab.active { color: var(--main-blue); }        .nav-tab.active::after {            content: ''; position: absolute; bottom: 0; left: 0;            width: 100%; height: 4px; background: var(--main-blue);        }        .no-scrollbar::-webkit-scrollbar { display: none; }        /* 順位表ページと共通の白パネル */        .white-panel {            background-color: white; color: black;            padding: 1rem 1.5rem; border-left: 6px solid var(--main-blue);        }        /* 絞り込みボタン */        .filter-btn {            background: rgba(255, 255, 255, 0.05); color: #94a3b8;            padding: 0.5rem 1.5rem; border-radius: 999px; font-weight: 700;            font-size: 0.8rem; transition: all 0.3s; border: 1px solid rgba(255, 255, 255, 0.1);            white-space: nowrap;        }        .filter-btn.active {            background: var(--main-blue); color: black; border-color: var(--main-blue);        }        /* アニメーションと非表示設定 */        .stats-panel { transition: all 0.4s ease; }        .stats-panel.hidden { display: none; }    </style></head><body class="hero-gradient min-h-screen">    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">            <a href="index.html">                <img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto">            </a>            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all uppercase">FOLLOW X</a>        </div>        <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">            <div class="max-w-5xl mx-auto px-4 flex">                <a href="index.html" class="nav-tab">最新の更新</a>                <a href="stats-index.html" class="nav-tab active">マッチスタッツ</a>                <a href="standings.html" class="nav-tab">順位表</a>                <a href="#" class="nav-tab">Goalinkについて</a>            </div>        </nav>    </header>    <main class="max-w-5xl mx-auto px-6 py-12">                <div class="white-panel rounded-lg mb-16 shadow-lg">            <h2 class="text-3xl font-black tracking-tighter uppercase">マッチスタッツ</h2>            <p class="text-[10px] font-bold uppercase tracking-[0.2em] mt-1 text-gray-500">Match Stats Archives</p>        </div>        <div class="flex flex-wrap gap-2 mb-12">            <button class="filter-btn active" onclick="filterStats('all')">すべて</button>            <button class="filter-btn" onclick="filterStats('j1')">J1 League</button>            <button class="filter-btn" onclick="filterStats('j2j3-east')">J2・J3 EAST</button>            <button class="filter-btn" onclick="filterStats('j2j3-west')">J2・J3 WEST</button>                        <button class="filter-btn" onclick="filterStats('j2')" style="display: none;">J2 League</button>            <button class="filter-btn" onclick="filterStats('j3')" style="display: none;">J3 League</button>        </div>        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="stats-grid">            <a href="stats-east-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-orange-400 group" data-category="j2j3-east">                <div class="aspect-video bg-slate-800 relative">                    <img src="thumb_east_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">                    <div class="absolute top-4 left-4 bg-[#63bde3] text-black text-[10px] font-black px-2 py-1 rounded shadow-lg">LATEST</div>                </div>                <div class="p-6">                    <span class="font-oswald text-xs text-orange-400 uppercase tracking-widest">J2・J3 EAST</span>                    <h3 class="text-xl font-bold mt-2 group-hover:text-orange-400 transition-colors">J2・J3 EAST 第1節 スタッツ</h3>                </div>            </a>            <a href="stats-west-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-red-400 group" data-category="j2j3-west">                <div class="aspect-video bg-slate-800 relative">                    <img src="thumb_west_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">                </div>                <div class="p-6">                    <span class="font-oswald text-xs text-red-400 uppercase tracking-widest">J2・J3 WEST</span>                    <h3 class="text-xl font-bold mt-2 group-hover:text-red-400 transition-colors">J2・J3 WEST 第1節 スタッツ</h3>                </div>            </a>            <a href="stats-j1-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-[#63bde3] group" data-category="j1">                <div class="aspect-video bg-slate-800 relative">                    <img src="thumb_j1_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">                </div>                <div class="p-6">                    <span class="font-oswald text-xs text-[#63bde3] uppercase tracking-widest">J1 League</span>                    <h3 class="text-xl font-bold mt-2 group-hover:text-[#63bde3] transition-colors">J1 第1節 スタッツアーカイブ</h3>                </div>            </a>        </div>    </main>    <script>        // 絞り込み機能のスクリプト        function filterStats(category) {            // 全ボタンからactiveを外して、クリックされたボタンに付ける            const buttons = document.querySelectorAll('.filter-btn');            buttons.forEach(btn => btn.classList.remove('active'));            event.currentTarget.classList.add('active');            // 全パネルをチェックして、カテゴリが合うものだけ表示            const panels = document.querySelectorAll('.stats-panel');            panels.forEach(panel => {                if (category === 'all' || panel.getAttribute('data-category') === category) {                    panel.classList.remove('hidden');                } else {                    panel.classList.add('hidden');                }            });        }    </script>    <footer class="py-20 border-t border-white/10 mt-20 text-center">        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-500 uppercase">Goalink © 2026 Powered by HEKION</p>    </footer></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Goalink|マッチスタッツ </title>
+    <script src="[https://cdn.tailwindcss.com"></script]https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }
+        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }
+       
+        /* ナビゲーションタブ */
+        .nav-tab {
+            position: relative; padding: 1rem 1.25rem; font-size: 0.9rem; font-weight: 700;
+            color: #94a3b8; transition: all 0.3s ease; white-space: nowrap;
+        }
+        .nav-tab.active { color: var(--main-blue); }
+        .nav-tab.active::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 4px; background: var(--main-blue);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* 順位表ページと共通の白パネル */
+        .white-panel {
+            background-color: white; color: black;
+            padding: 1rem 1.5rem; border-left: 6px solid var(--main-blue);
+        }
+
+        /* 絞り込みボタン */
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05); color: #94a3b8;
+            padding: 0.5rem 1.5rem; border-radius: 999px; font-weight: 700;
+            font-size: 0.8rem; transition: all 0.3s; border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+        .filter-btn.active {
+            background: var(--main-blue); color: black; border-color: var(--main-blue);
+        }
+
+        /* アニメーションと非表示設定 */
+        .stats-panel { transition: all 0.4s ease; }
+        .stats-panel.hidden { display: none; }
+    </style>
+</head>
+<body class="hero-gradient min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html">
+                <img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto">
+            </a>
+            <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all uppercase">FOLLOW X</a>
+        </div>
+        <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">
+            <div class="max-w-5xl mx-auto px-4 flex">
+                <a href="index.html" class="nav-tab">トップ</a>
+                <a href="statsin.html" class="nav-tab active">マッチスタッツ</a>
+                <a href="standings.html" class="nav-tab">順位表</a>
+                <a href="#" class="nav-tab">Goalinkについて</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12">
+       
+        <div class="white-panel rounded-lg mb-16 shadow-lg">
+            <h2 class="text-3xl font-black tracking-tighter uppercase">マッチスタッツ</h2>
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] mt-1 text-gray-500">Match Stats Archives</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-12">
+            <button class="filter-btn active" onclick="filterStats('all')">すべて</button>
+            <button class="filter-btn" onclick="filterStats('j1')">J1 League</button>
+            <button class="filter-btn" onclick="filterStats('j2j3-east')">J2・J3 EAST</button>
+            <button class="filter-btn" onclick="filterStats('j2j3-west')">J2・J3 WEST</button>
+           
+            <button class="filter-btn" onclick="filterStats('j2')" style="display: none;">J2 League</button>
+            <button class="filter-btn" onclick="filterStats('j3')" style="display: none;">J3 League</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="stats-grid">
+
+            <a href="stats-east-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-orange-400 group" data-category="j2j3-east">
+                <div class="aspect-video bg-slate-800 relative">
+                    <img src="thumb_east_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-4 left-4 bg-[#63bde3] text-black text-[10px] font-black px-2 py-1 rounded shadow-lg">LATEST</div>
+                </div>
+                <div class="p-6">
+                    <span class="font-oswald text-xs text-orange-400 uppercase tracking-widest">J2・J3 EAST</span>
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-orange-400 transition-colors">J2・J3 EAST 第1節 スタッツ</h3>
+                </div>
+            </a>
+
+            <a href="stats-west-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-red-400 group" data-category="j2j3-west">
+                <div class="aspect-video bg-slate-800 relative">
+                    <img src="thumb_west_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-6">
+                    <span class="font-oswald text-xs text-red-400 uppercase tracking-widest">J2・J3 WEST</span>
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-red-400 transition-colors">J2・J3 WEST 第1節 スタッツ</h3>
+                </div>
+            </a>
+
+            <a href="stj1-2601.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-[#63bde3] group" data-category="j1">
+                <div class="aspect-video bg-slate-800 relative">
+                    <img src="thumb_j1_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-6">
+                    <span class="font-oswald text-xs text-[#63bde3] uppercase tracking-widest">J1 League</span>
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-[#63bde3] transition-colors">J1 第1節 スタッツアーカイブ</h3>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <script>
+        // 絞り込み機能のスクリプト
+        function filterStats(category) {
+            // 全ボタンからactiveを外して、クリックされたボタンに付ける
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // 全パネルをチェックして、カテゴリが合うものだけ表示
+            const panels = document.querySelectorAll('.stats-panel');
+            panels.forEach(panel => {
+                if (category === 'all' || panel.getAttribute('data-category') === category) {
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
+    <footer class="py-20 border-t border-white/10 mt-20 text-center">
+        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-500 uppercase">Goalink © 2026 Powered by HEKION</p>
+    </footer>
+
+</body>
+</html>

@@ -3,23 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Goalink|順位表 </title>
-    <script src="[https://cdn.tailwindcss.com"></script]https://cdn.tailwindcss.com"></script>
+    <title>Goalink｜順位表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --main-blue: #63bde3; --dark-navy: #0a0f1d; }
-        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; }
+        body { background-color: var(--dark-navy); color: #f8fafc; font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         .hero-gradient { background: linear-gradient(180deg, rgba(99, 189, 227, 0.1) 0%, rgba(10, 15, 29, 0) 100%); }
-       
+        
         .nav-tab {
-            position: relative;
-            padding: 1rem 1.25rem;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #94a3b8;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            position: relative; padding: 1rem 1.25rem; font-size: 0.9rem; font-weight: 700;
+            color: #94a3b8; transition: all 0.3s ease; white-space: nowrap;
         }
         .nav-tab.active { color: var(--main-blue); }
         .nav-tab.active::after {
@@ -29,20 +24,12 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
         .white-panel {
-            background-color: white;
-            color: black;
-            padding: 0.75rem 1rem;
-            border-left: 6px solid var(--main-blue);
+            background-color: white; color: black;
+            padding: 0.75rem 1rem; border-left: 6px solid var(--main-blue);
         }
 
-        /* リーグタイトル：1列に収めつつ文字を切らさない設定 */
         .league-title {
-            white-space: nowrap;
-            font-size: 1.1rem; /* スマホで入り切るサイズ */
-            letter-spacing: -0.05em; /* 文字間を少し詰めて横幅を稼ぐ */
-        }
-        @media (min-width: 400px) {
-            .league-title { font-size: 1.25rem; }
+            white-space: nowrap; font-size: 1.1rem; letter-spacing: -0.05em;
         }
         @media (min-width: 768px) {
             .league-title { font-size: 1.5rem; letter-spacing: normal; }
@@ -52,19 +39,19 @@
 </head>
 <body class="hero-gradient min-h-screen">
 
-    <header class="sticky top-0 z-50 bg-[#0a0f1d]/90 backdrop-blur-md border-b border-white/10">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html">
-                <img src="goalinklogo.png" alt="GOALINK" class="h-10 w-auto">
+    <header class="sticky top-0 z-50 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-5xl mx-auto px-4 h-24 md:h-28 flex items-center justify-between">
+            <a href="index.html" class="flex items-center h-full py-2">
+                <img src="goalinklogo.png" alt="GOALINK" class="h-full w-auto object-contain">
             </a>
             <div class="flex items-center gap-4">
-                <a href="https://x.com" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all uppercase">FOLLOW X</a>
+                <a href="https://x.com/Goalink_JP" target="_blank" class="text-[10px] bg-[#63bde3] text-black px-4 py-2 rounded font-black hover:opacity-80 transition-all uppercase">FOLLOW X</a>
             </div>
         </div>
         <nav class="bg-[#0a0f1d]/50 border-b border-white/5 overflow-x-auto no-scrollbar">
-            <div class="max-w-5xl mx-auto px-4 flex">
+            <div class="max-w-5xl mx-auto px-4 flex justify-start md:justify-center">
                 <a href="index.html" class="nav-tab">トップ</a>
-                <a href="statin.html" class="nav-tab">マッチスタッツ</a>
+                <a href="statsin.html" class="nav-tab">マッチスタッツ</a>
                 <a href="standing.html" class="nav-tab active">順位表</a>
                 <a href="#" class="nav-tab">Goalinkについて</a>
             </div>
@@ -72,7 +59,7 @@
     </header>
 
     <main class="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
-       
+        
         <div class="white-panel rounded-lg mb-10 md:mb-16 shadow-lg">
             <h2 class="text-2xl md:text-3xl font-black tracking-tighter">2026シーズン 順位表</h2>
             <p class="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] mt-1 text-gray-500">2026 SEASON OFFICIAL STANDINGS</p>
@@ -83,10 +70,10 @@
                 <h3 class="font-oswald italic tracking-tighter uppercase league-title flex-grow">J1 EAST</h3>
                 <div class="text-right flex-shrink-0 border-l border-gray-200 pl-2">
                     <p class="text-[8px] md:text-[10px] font-black uppercase leading-none text-gray-400">STATUS</p>
-                    <p class="text-[9px] md:text-[11px] font-bold text-black">UPDATED</p>
+                    <p class="text-[9px] md:text-[11px] font-bold text-black uppercase">Updated</p>
                 </div>
             </div>
-            <div class="bg-black rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
+            <div class="bg-[#0a0f1d] rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
                 <img src="standings_j1_east.png" alt="J1 EAST" class="w-full h-auto block">
             </div>
         </section>
@@ -96,10 +83,10 @@
                 <h3 class="font-oswald italic tracking-tighter uppercase league-title flex-grow">J1 WEST</h3>
                 <div class="text-right flex-shrink-0 border-l border-gray-200 pl-2">
                     <p class="text-[8px] md:text-[10px] font-black uppercase leading-none text-gray-400">STATUS</p>
-                    <p class="text-[9px] md:text-[11px] font-bold text-black">UPDATED</p>
+                    <p class="text-[9px] md:text-[11px] font-bold text-black uppercase">Updated</p>
                 </div>
             </div>
-            <div class="bg-black rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
+            <div class="bg-[#0a0f1d] rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
                 <img src="standings_j1_west.png" alt="J1 WEST" class="w-full h-auto block">
             </div>
         </section>
@@ -109,10 +96,10 @@
                 <h3 class="font-oswald italic tracking-tighter uppercase league-title flex-grow">J2・J3 EAST-A</h3>
                 <div class="text-right flex-shrink-0 border-l border-gray-200 pl-2">
                     <p class="text-[8px] md:text-[10px] font-black uppercase leading-none text-gray-400">STATUS</p>
-                    <p class="text-[9px] md:text-[11px] font-bold text-black">UPDATED</p>
+                    <p class="text-[9px] md:text-[11px] font-bold text-black uppercase">Updated</p>
                 </div>
             </div>
-            <div class="bg-black rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
+            <div class="bg-[#0a0f1d] rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
                 <img src="standings_j2j3_east_a.png" alt="J2・J3 EAST-A" class="w-full h-auto block">
             </div>
         </section>
@@ -122,37 +109,11 @@
                 <h3 class="font-oswald italic tracking-tighter uppercase league-title flex-grow">J2・J3 EAST-B</h3>
                 <div class="text-right flex-shrink-0 border-l border-gray-200 pl-2">
                     <p class="text-[8px] md:text-[10px] font-black uppercase leading-none text-gray-400">STATUS</p>
-                    <p class="text-[9px] md:text-[11px] font-bold text-black">UPDATED</p>
+                    <p class="text-[9px] md:text-[11px] font-bold text-black uppercase">Updated</p>
                 </div>
             </div>
-            <div class="bg-black rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
+            <div class="bg-[#0a0f1d] rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
                 <img src="standings_j2j3_east_b.png" alt="J2・J3 EAST-B" class="w-full h-auto block">
-            </div>
-        </section>
-
-        <section class="mb-12">
-            <div class="white-panel rounded-t-xl flex justify-between items-center gap-2">
-                <h3 class="font-oswald italic tracking-tighter uppercase league-title flex-grow">J2・J3 WEST-A</h3>
-                <div class="text-right flex-shrink-0 border-l border-gray-200 pl-2">
-                    <p class="text-[8px] md:text-[10px] font-black uppercase leading-none text-gray-400">STATUS</p>
-                    <p class="text-[9px] md:text-[11px] font-bold text-black">UPDATED</p>
-                </div>
-            </div>
-            <div class="bg-black rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
-                <img src="standings_j2j3_west_a.png" alt="J2・J3 WEST-A" class="w-full h-auto block">
-            </div>
-        </section>
-
-        <section class="mb-12">
-            <div class="white-panel rounded-t-xl flex justify-between items-center gap-2">
-                <h3 class="font-oswald italic tracking-tighter uppercase league-title flex-grow">J2・J3 WEST-B</h3>
-                <div class="text-right flex-shrink-0 border-l border-gray-200 pl-2">
-                    <p class="text-[8px] md:text-[10px] font-black uppercase leading-none text-gray-400">STATUS</p>
-                    <p class="text-[9px] md:text-[11px] font-bold text-black">UPDATED</p>
-                </div>
-            </div>
-            <div class="bg-black rounded-b-xl overflow-hidden border-x border-b border-white/20 shadow-2xl">
-                <img src="standings_j2j3_west_b.png" alt="J2・J3 WEST-B" class="w-full h-auto block">
             </div>
         </section>
 

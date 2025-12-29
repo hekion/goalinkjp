@@ -72,4 +72,71 @@
 
         <div class="flex flex-wrap gap-2 mb-10 overflow-x-auto no-scrollbar pb-2">
             <button class="filter-btn active" onclick="filterStats(event, 'all')">すべて</button>
-            <button class="filter-btn" onclick="filterStats(event, 'j1')">J
+            <button class="filter-btn" onclick="filterStats(event, 'j1')">J1 League</button>
+            <button class="filter-btn" onclick="filterStats(event, 'j2j3-east')">J2・J3 EAST</button>
+            <button class="filter-btn" onclick="filterStats(event, 'j2j3-west')">J2・J3 WEST</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" id="stats-grid">
+
+            <a href="stats-east-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-orange-400 group" data-category="j2j3-east">
+                <div class="aspect-video bg-slate-800 relative overflow-hidden">
+                    <img src="thumb_east_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-4 left-4 bg-[#63bde3] text-black text-[10px] font-black px-2 py-1 rounded shadow-lg">LATEST</div>
+                </div>
+                <div class="p-6">
+                    <span class="font-oswald text-xs text-orange-400 uppercase tracking-widest">J2・J3 EAST</span>
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-orange-400 transition-colors">J2・J3 EAST 第1節 スタッツ</h3>
+                </div>
+            </a>
+
+            <a href="stats-west-01.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-red-400 group" data-category="j2j3-west">
+                <div class="aspect-video bg-slate-800 relative overflow-hidden">
+                    <img src="thumb_west_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-6">
+                    <span class="font-oswald text-xs text-red-400 uppercase tracking-widest">J2・J3 WEST</span>
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-red-400 transition-colors">J2・J3 WEST 第1節 スタッツ</h3>
+                </div>
+            </a>
+
+            <a href="stj1-2601.html" class="stats-panel rounded-2xl overflow-hidden bg-slate-900/40 border border-white/5 hover:border-[#63bde3] group" data-category="j1">
+                <div class="aspect-video bg-slate-800 relative overflow-hidden">
+                    <img src="thumb_j1_01.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-6">
+                    <span class="font-oswald text-xs text-[#63bde3] uppercase tracking-widest">J1 League</span>
+                    <h3 class="text-xl font-bold mt-2 group-hover:text-[#63bde3] transition-colors">J1 第1節 スタッツアーカイブ</h3>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <script>
+        function filterStats(event, category) {
+            // 全ボタンからactiveを解除
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // クリックされたボタンにactiveを付与
+            event.currentTarget.classList.add('active');
+
+            // パネルの表示・非表示
+            const panels = document.querySelectorAll('.stats-panel');
+            panels.forEach(panel => {
+                if (category === 'all' || panel.getAttribute('data-category') === category) {
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
+    <footer class="py-20 border-t border-white/10 mt-20 text-center">
+        <p class="font-oswald text-[10px] tracking-[0.4em] text-gray-500 uppercase">Goalink © 2026 Powered by HEKION</p>
+    </footer>
+
+</body>
+</html>

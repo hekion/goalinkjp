@@ -11,76 +11,126 @@
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
+        
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
-        .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; }
-        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s; }
-        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        header { background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%); }
+
+        .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
+        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .menu-trigger span:nth-child(1) { width: 100%; }
+        .menu-trigger span:nth-child(2) { width: 60%; }
+        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
         .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
-        #sideMenu { position: fixed; top: 0; right: -100%; width: 75%; height: 100%; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; justify-content: center; padding-left: 12%; border-left: 1px solid rgba(255,255,255,0.1); }
+
+        #sideMenu {
+            position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
+            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
+            z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column; justify-content: center; padding-left: 12%;
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
         #sideMenu.open { right: 0; }
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
+
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2.5rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
-        .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem; }
-        .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
+
+        .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
+        .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
-        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); margin-top: 1rem; margin-bottom: 5rem; }
-        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); margin-top: 1rem; margin-bottom: 6rem; background: rgba(255,255,255,0.02); }
+        
+        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+
     <div id="overlay" onclick="toggleMenu()"></div>
-    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
+
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200]">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
-        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger"><span></span><span></span></div>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
+            <span></span>
+            <span></span>
+        </div>
     </header>
+
     <nav id="sideMenu">
         <div class="menu-item" style="transition-delay: 0.1s;"><a href="index.html"><span class="font-serif text-2xl">トップ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TOP</small></a></div>
         <div class="menu-item" style="transition-delay: 0.2s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="database.html"><span class="font-serif text-2xl">データベース</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">DATABASE</small></a></div>
         <div class="menu-item" style="transition-delay: 0.4s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">スタッツなど</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS (note)</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3"><svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span class="font-serif text-xl text-gray-400">公式Xへ</span></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+        </div>
     </nav>
 
     <main class="pt-36 px-8 max-w-screen-md mx-auto pb-20">
-        <div class="section-header fade-in">
+        <div class="section-header fade-in" style="animation-delay: 0.1s;">
             <span class="section-title-en">League Standings</span>
             <h1 class="section-title-ja text-3xl">現在の順位</h1>
         </div>
-        <div class="fade-in" style="animation-delay: 0.2s;">
-            <div class="section-header border-l-2 border-[#4bb8e0] pl-4 mb-8">
-                <span class="section-title-en">J1 Category</span>
+
+        <div class="fade-in" style="animation-delay: 0.3s;">
+            <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <span class="section-title-en">J1 League Category</span>
                 <span class="section-title-ja text-xl italic">J1 リーグ</span>
             </div>
-            <h3 class="font-oswald text-xs tracking-[0.3em] opacity-40 mb-2">EAST DISTRICT</h3>
+            
+            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">EAST DISTRICT</h3>
             <img src="stand_j1_east.png" alt="J1 EAST" class="stand-img">
-            <h3 class="font-oswald text-xs tracking-[0.3em] opacity-40 mb-2">WEST DISTRICT</h3>
+
+            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">WEST DISTRICT</h3>
             <img src="stand_j1_west.png" alt="J1 WEST" class="stand-img">
         </div>
-        <div class="fade-in" style="animation-delay: 0.4s;">
-            <div class="section-header border-l-2 border-[#4bb8e0] pl-4 mb-8">
+
+        <div class="fade-in" style="animation-delay: 0.5s;">
+            <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                 <span class="section-title-en">J2・J3 East Category</span>
                 <span class="section-title-ja text-xl italic">J2・J3 EAST</span>
             </div>
-            <h3 class="font-oswald text-xs tracking-[0.3em] opacity-40 mb-2">GROUP A</h3>
+            
+            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP A</h3>
             <img src="stand_j2j3_east_a.png" alt="J2・J3 EAST-A" class="stand-img">
-            <h3 class="font-oswald text-xs tracking-[0.3em] opacity-40 mb-2">GROUP B</h3>
+
+            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP B</h3>
             <img src="stand_j2j3_east_b.png" alt="J2・J3 EAST-B" class="stand-img">
         </div>
-        <div class="fade-in" style="animation-delay: 0.6s;">
-            <div class="section-header border-l-2 border-[#4bb8e0] pl-4 mb-8">
+
+        <div class="fade-in" style="animation-delay: 0.7s;">
+            <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                 <span class="section-title-en">J2・J3 West Category</span>
                 <span class="section-title-ja text-xl italic">J2・J3 WEST</span>
             </div>
-            <h3 class="font-oswald text-xs tracking-[0.3em] opacity-40 mb-2">GROUP A</h3>
+            
+            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP A</h3>
             <img src="stand_j2j3_west_a.png" alt="J2・J3 WEST-A" class="stand-img">
-            <h3 class="font-oswald text-xs tracking-[0.3em] opacity-40 mb-2">GROUP B</h3>
+
+            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP B</h3>
             <img src="stand_j2j3_west_b.png" alt="J2・J3 WEST-B" class="stand-img">
         </div>
     </main>
-    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-12"><p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p></footer>
-    <script>function toggleMenu(){document.getElementById('sideMenu').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');document.getElementById('menuBtn').classList.toggle('active');document.body.style.overflow=document.getElementById('sideMenu').classList.contains('open')?'hidden':'auto';}</script>
+
+    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-16">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const btn = document.getElementById('menuBtn');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('show');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
+        }
+    </script>
 </body>
 </html>

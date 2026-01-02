@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goalink | Analysis Archive</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;700&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
@@ -13,60 +13,51 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        /* ロゴ：存在感を強化 */
-        .site-logo { height: 2.8rem; width: auto; object-fit: contain; }
+        /* ロゴ：しっかり大きく */
+        .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
 
-        /* 和モダン・ミニマルボタン */
+        /* メニューボタン */
         .menu-trigger {
-            width: 32px; height: 18px;
+            width: 28px; height: 14px;
             display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;
-            cursor: pointer; z-index: 200; position: relative;
+            cursor: pointer; z-index: 200;
         }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
         .menu-trigger span:nth-child(1) { width: 100%; }
         .menu-trigger span:nth-child(2) { width: 60%; }
-        /* 閉じるボタン（Active時）の動き */
-        .active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); width: 100%; }
-        .active span:nth-child(2) { opacity: 0; }
-        .active span:after { content:''; display:block; height:1px; background:#fff; transform: translateY(7.5px) rotate(-90deg); width: 100%; }
+        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
 
-        /* サイドメニュー：右からスライド */
+        /* サイドメニュー */
         #sideMenu {
-            position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px);
-            z-index: 150; transition: right 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            display: flex; flex-direction: column; justify-content: center; padding-left: 10%;
-            border-left: 1px solid rgba(255,255,255,0.05);
+            position: fixed; top: 0; right: -100%; width: 70%; height: 100%;
+            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
+            z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column; justify-content: center; padding-left: 12%;
+            border-left: 1px solid rgba(255,255,255,0.1);
         }
         #sideMenu.open { right: 0; }
-        
-        /* 背景オーバーレイ */
-        #overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-            opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s;
-        }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
 
-        .menu-item { opacity: 0; transform: translateY(20px); transition: 0.5s; margin-bottom: 2.5rem; }
-        #sideMenu.open .menu-item { opacity: 1; transform: translateY(0); }
-        .menu-item:nth-child(1) { transition-delay: 0.2s; }
-        .menu-item:nth-child(2) { transition-delay: 0.3s; }
-        .menu-item:nth-child(3) { transition-delay: 0.4s; }
-        .menu-item:nth-child(4) { transition-delay: 0.5s; }
+        .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 3rem; }
+        #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        .menu-item span { display: block; font-size: 1.8rem; font-family: 'Noto Serif JP', serif; font-weight: 700; }
-        .menu-item small { display: block; font-family: 'Oswald', sans-serif; font-size: 0.7rem; color: var(--main-cyan); letter-spacing: 0.3em; }
+        /* セクションヘッダー：日本語を主役に */
+        .section-header { margin-bottom: 1.8rem; }
+        .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
+        .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
 
-        .fade-in { animation: fadeIn 1.5s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div id="overlay" onclick="toggleMenu()"></div>
 
-    <header class="h-24 px-6 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/90 to-transparent">
-        <a href="index.html" class="flex items-center"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
         <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
             <span></span>
             <span></span>
@@ -74,56 +65,66 @@
     </header>
 
     <nav id="sideMenu">
-        <div class="menu-item"><a href="index.html"><span>トップ</span><small>TOP</small></a></div>
-        <div class="menu-item"><a href="standing.html"><span>順位表</span><small>STANDING</small></a></div>
-        <div class="menu-item"><a href="database.html"><span>データベース</span><small>DATABASE</small></a></div>
-        <div class="menu-item"><a href="https://note.com/goalink_jp" target="_blank"><span>スタッツなど</span><small>STATS & REPORTS (noteへ)</small></a></div>
-        <div class="menu-item">
-            <a href="https://x.com/Goalink_JP" target="_blank">
-                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </a>
-        </div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="index.html"><span class="font-serif text-2xl">トップ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TOP</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="database.html"><span class="font-serif text-2xl">データベース</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">DATABASE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">スタッツなど</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS (note)</small></a></div>
     </nav>
 
-    <main class="pt-32 px-6 max-w-screen-md mx-auto">
-        <div class="relative mb-20 fade-in">
-            <img src="hero.png" alt="" class="w-full aspect-video object-cover border-l border-white/10 shadow-2xl">
-            <div class="absolute bottom-[-1rem] right-0 text-right">
-                <p class="font-serif text-[0.6rem] tracking-[0.3em] opacity-40 italic">STADIUM X DATA LINKAGE</p>
-            </div>
+    <main class="pt-36 px-8 max-w-screen-md mx-auto">
+        <div class="mb-24 fade-in">
+            <img src="hero.png" alt="" class="w-full aspect-video object-cover border border-white/5 shadow-2xl rounded-sm">
         </div>
 
-        <section class="mb-20 relative fade-in" style="animation-delay: 0.2s;">
-            <div class="section-label">次節対戦</div>
-            <div class="pl-6"><div class="swiper nextSwiper"><div class="swiper-wrapper">
-                <div class="swiper-slide"><img src="next_j1.png"></div>
-                <div class="swiper-slide"><img src="next_j2.png"></div>
-                <div class="swiper-slide"><img src="next_j3.png"></div>
-            </div></div></div>
+        <section class="mb-20 fade-in" style="animation-delay: 0.2s;">
+            <div class="section-header">
+                <span class="section-title-en">Next Matches</span>
+                <span class="section-title-ja">次節対戦</span>
+            </div>
+            <div class="swiper nextSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="next_j1.png"></div>
+                    <div class="swiper-slide"><img src="next_j2.png"></div>
+                    <div class="swiper-slide"><img src="next_j3.png"></div>
+                </div>
+            </div>
         </section>
 
-        <section class="mb-24 relative fade-in" style="animation-delay: 0.4s;">
-            <div class="section-label">現在の順位</div>
-            <div class="pl-6"><div class="swiper standSwiper"><div class="swiper-wrapper">
-                <div class="swiper-slide"><img src="stand_j1.png"></div>
-                <div class="swiper-slide"><img src="stand_j2.png"></div>
-                <div class="swiper-slide"><img src="stand_j3.png"></div>
-            </div></div></div>
+        <section class="mb-28 fade-in" style="animation-delay: 0.4s;">
+            <div class="section-header">
+                <span class="section-title-en">Current Standings</span>
+                <span class="section-title-ja">現在の順位</span>
+            </div>
+            <div class="swiper standSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="stand_j1.png"></div>
+                    <div class="swiper-slide"><img src="stand_j2.png"></div>
+                    <div class="swiper-slide"><img src="stand_j3.png"></div>
+                </div>
+            </div>
         </section>
 
-        <div class="grid grid-cols-1 gap-px bg-white/10 border border-white/10 mb-20 fade-in" style="animation-delay: 0.6s;">
-            <a href="database.html" class="bg-[#0c0c0c] p-10 flex justify-between items-center group">
-                <div><span class="font-serif text-2xl block mb-1">データベース</span><small class="font-oswald text-[0.75rem] text-[#4bb8e0] tracking-[0.4em]">ARCHIVE COLLECTION</small></div>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:translate-x-2 transition-all">→</span>
+        <div class="grid grid-cols-1 gap-6 mb-24 fade-in" style="animation-delay: 0.6s;">
+            <a href="database.html" class="bg-zinc-900/30 border-l-2 border-white/10 p-10 flex justify-between items-center group transition-all hover:bg-zinc-800/50">
+                <div>
+                    <span class="font-serif text-2xl block mb-1">データベース</span>
+                    <small class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.4em] uppercase">Archive Collection</small>
+                </div>
+                <span class="opacity-20 group-hover:opacity-100 group-hover:translate-x-2 transition-all text-xl">→</span>
             </a>
-            <a href="https://note.com/goalink_jp" target="_blank" class="bg-[#0c0c0c] p-10 flex justify-between items-center group">
-                <div><span class="font-serif text-2xl block mb-1">スタッツなど</span><small class="font-oswald text-[0.75rem] text-[#4bb8e0] tracking-[0.4em]">STATS & REPORTS (noteへ)</small></div>
-                <span class="opacity-30 group-hover:opacity-100 group-hover:translate-x-2 transition-all">→</span>
+            <a href="https://note.com/goalink_jp" target="_blank" class="bg-zinc-900/30 border-l-2 border-white/10 p-10 flex justify-between items-center group transition-all hover:bg-zinc-800/50">
+                <div>
+                    <span class="font-serif text-2xl block mb-1">スタッツなど</span>
+                    <small class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.4em] uppercase">Stats & Reports (noteへ)</small>
+                </div>
+                <span class="opacity-20 group-hover:opacity-100 group-hover:translate-x-2 transition-all text-xl">→</span>
             </a>
         </div>
     </main>
 
-    <footer class="p-16 text-center opacity-30 font-oswald text-[0.6rem] tracking-[0.8em]">© 2026 GOALINK / POWERED BY HEKION</footer>
+    <footer class="p-20 text-center border-t border-white/5 mx-8">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
@@ -133,8 +134,8 @@
             document.getElementById('menuBtn').classList.toggle('active');
             document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
         }
-        new Swiper('.nextSwiper', { loop: true, autoplay: { delay: 4000 }, effect: 'fade', fadeEffect: { crossFade: true } });
-        new Swiper('.standSwiper', { loop: true, autoplay: { delay: 5000 } });
+        new Swiper('.nextSwiper', { loop: true, autoplay: { delay: 4500 }, effect: 'fade', fadeEffect: { crossFade: true } });
+        new Swiper('.standSwiper', { loop: true, autoplay: { delay: 5500 }, speed: 1000 });
     </script>
 </body>
 </html>

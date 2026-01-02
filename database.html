@@ -36,27 +36,14 @@
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2.5rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        /* 提示いただいたデザインをそのまま適用 */
-        .section-header-top { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
+        /* standing.htmlから完全に抜粋 */
+        .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
 
-        /* カードデザイン */
-        .link-card { 
-            background: rgba(255,255,255,0.03); 
-            padding: 1.5rem; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1); 
-            text-align: center; 
-            font-family: 'Noto Sans JP', sans-serif; 
-            font-size: 0.9rem; 
-        }
-        .link-card:hover { 
-            border-color: var(--main-cyan); 
-            color: var(--main-cyan); 
-            background: rgba(75, 184, 224, 0.08);
-            transform: translateY(-2px);
-        }
+        /* データベース独自のカードスタイル */
+        .link-card { background: rgba(255,255,255,0.03); padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; text-align: center; font-size: 0.9rem; }
+        .link-card:hover { border-color: var(--main-cyan); color: var(--main-cyan); background: rgba(75, 184, 224, 0.08); transform: translateY(-2px); }
 
         .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
@@ -68,10 +55,7 @@
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200]">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
-        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
-            <span></span>
-            <span></span>
-        </div>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger"><span></span><span></span></div>
     </header>
 
     <nav id="sideMenu">
@@ -87,23 +71,23 @@
         </div>
     </nav>
 
-    <main class="pt-36 px-8 max-w-screen-md mx-auto">
-        <div class="section-header-top fade-in" style="animation-delay: 0.1s;">
+    <main class="pt-36 px-8 max-w-screen-md mx-auto pb-20">
+        <div class="section-header fade-in" style="animation-delay: 0.1s;">
             <span class="section-title-en">Archive Collection</span>
             <h1 class="section-title-ja text-3xl">データベース</h1>
         </div>
 
-        <section class="mb-20 fade-in" style="animation-delay: 0.3s;">
-            <a href="https://docs.google.com/spreadsheets/d/11bVNzcKZcKk6bGhxzL_ioJwXFO0xZrysY97dHTb0bZA/edit?usp=drivesdk" target="_blank" class="group block relative bg-zinc-900/40 border border-white/10 p-10 text-center hover:border-[#4bb8e0] transition-all duration-500">
-                <div class="absolute top-0 left-0 w-1.5 h-full bg-[#4bb8e0]"></div>
+        <section class="mb-24 fade-in" style="animation-delay: 0.3s;">
+            <a href="https://docs.google.com/spreadsheets/d/11bVNzcKZcKk6bGhxzL_ioJwXFO0xZrysY97dHTb0bZA/edit?usp=drivesdk" target="_blank" 
+               class="block bg-zinc-900/40 border-2 border-[#4bb8e0] p-10 text-center hover:bg-[#4bb8e0]/10 transition-all duration-500">
                 <small class="font-oswald tracking-[0.6em] text-[#4bb8e0] text-[0.65rem] block mb-2">MASTER DATA</small>
                 <span class="block font-serif text-2xl">全カテゴリ日程表</span>
             </a>
         </section>
 
-        <div class="space-y-20 fade-in" style="animation-delay: 0.5s;">
+        <div class="space-y-28 fade-in" style="animation-delay: 0.5s;">
             <section>
-                <div class="border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                     <span class="section-title-en">J1 League Category</span>
                     <span class="section-title-ja text-xl italic">J1 リーグ</span>
                 </div>
@@ -115,7 +99,7 @@
             </section>
 
             <section>
-                <div class="border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                     <span class="section-title-en">J2・J3 East Category</span>
                     <span class="section-title-ja text-xl italic">J2・J3 EAST</span>
                 </div>
@@ -127,7 +111,7 @@
             </section>
 
             <section>
-                <div class="border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                     <span class="section-title-en">J2・J3 West Category</span>
                     <span class="section-title-ja text-xl italic">J2・J3 WEST</span>
                 </div>

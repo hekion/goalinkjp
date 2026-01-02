@@ -9,51 +9,71 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
-        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        /* 和モダン・フルスクリーンメニュー */
+        /* ロゴのサイズ調整：ヘッダー高さを維持しつつ最大化 */
+        .site-logo { height: 2.5rem; width: auto; object-fit: contain; }
+
+        /* オシャレなメニューボタン (和モダン・ミニマル) */
+        .menu-trigger {
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            cursor: pointer;
+        }
+        .menu-trigger span {
+            display: block;
+            height: 1px;
+            background-color: #fff;
+            transition: 0.3s;
+        }
+        .menu-trigger span:nth-child(1) { width: 100%; }
+        .menu-trigger span:nth-child(2) { width: 70%; }
+        .menu-trigger span:nth-child(3) { width: 40%; }
+        .menu-trigger:hover span { width: 100%; background-color: var(--main-cyan); }
+
+        /* フルスクリーンメニュー */
         .menu-full { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
         .menu-item { text-align: center; margin-bottom: 2.5rem; text-decoration: none; color: #fff; transition: 0.4s; }
         .menu-item span { display: block; font-size: 2.2rem; font-family: 'Noto Serif JP', serif; font-weight: 700; letter-spacing: 0.1em; }
         .menu-item small { display: block; font-family: 'Oswald', sans-serif; font-size: 0.8rem; letter-spacing: 0.4em; color: var(--main-cyan); margin-top: 0.2rem; }
-        .menu-item:hover { transform: scale(1.05); opacity: 0.7; }
 
-        /* スライド・フェード装飾 */
-        .swiper-slide img { width: 100%; height: auto; border-radius: 2px; }
+        /* 装飾 */
         .section-label { writing-mode: vertical-rl; position: absolute; left: -1rem; top: 0; font-family: 'Noto Serif JP', serif; font-size: 0.7rem; color: var(--main-cyan); letter-spacing: 0.2em; }
-        
         .fade-in { animation: fadeIn 1.5s ease-in forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <header class="p-6 flex justify-between items-center fixed top-0 w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
-        <a href="index.html">
-            <img src="goalinklogo.png" alt="Goalink" class="h-6">
+    <header class="h-20 px-6 flex justify-between items-center fixed top-0 w-full z-50 bg-gradient-to-b from-black/90 to-transparent">
+        <a href="index.html" class="flex items-center h-full">
+            <img src="goalinklogo.png" alt="Goalink" class="site-logo">
         </a>
-        <button onclick="toggleMenu()" class="text-2xl focus:outline-none">
-            <span id="menuIcon">一一一</span>
-        </button>
+        <div onclick="toggleMenu()" class="menu-trigger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </header>
 
     <nav id="fullMenu" class="menu-full">
-        <button onclick="toggleMenu()" class="absolute top-8 right-8 text-3xl font-light">✕</button>
+        <button onclick="toggleMenu()" class="absolute top-8 right-8 text-3xl font-light font-oswald tracking-widest text-gray-400">CLOSE</button>
         <a href="index.html" class="menu-item"><span>トップ</span><small>TOP</small></a>
         <a href="standing.html" class="menu-item"><span>順位表</span><small>STANDING</small></a>
         <a href="database.html" class="menu-item"><span>データベース</span><small>DATABASE</small></a>
-        <a href="https://note.com/goalink_jp" target="_blank" class="menu-item"><span>詳細解析</span><small>ANALYSIS (note)</small></a>
-        
-        <a href="https://x.com/Goalink_JP" target="_blank" class="mt-4 hover:opacity-70 transition-opacity">
-            <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
+        <a href="https://note.com/goalink_jp" target="_blank" class="menu-item"><span>スタッツなど</span><small>STATS & REPORTS (noteへ)</small></a>
+        <a href="https://x.com/Goalink_JP" target="_blank" class="mt-4"><svg class="w-6 h-6 fill-white hover:fill-[#4bb8e0] transition-colors" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
     </nav>
 
-    <main class="pt-24 px-6 max-w-screen-md mx-auto">
+    <main class="pt-32 px-6 max-w-screen-md mx-auto">
         <div class="relative mb-20 fade-in">
-            <img src="hero.png" alt="Main Visual" class="w-full aspect-video object-cover border-l border-white/20">
+            <img src="hero.png" alt="" class="w-full aspect-video object-cover border-l border-white/20 shadow-2xl">
             <div class="absolute bottom-[-1rem] right-0 text-right">
                 <p class="font-serif text-[0.6rem] tracking-[0.3em] opacity-40 italic">STADIUM X DATA LINKAGE</p>
             </div>
@@ -64,9 +84,9 @@
             <div class="pl-6">
                 <div class="swiper nextSwiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="next_j1.png" alt="J1 Next"></div>
-                        <div class="swiper-slide"><img src="next_j2.png" alt="J2 Next"></div>
-                        <div class="swiper-slide"><img src="next_j3.png" alt="J3 Next"></div>
+                        <div class="swiper-slide"><img src="next_j1.png"></div>
+                        <div class="swiper-slide"><img src="next_j2.png"></div>
+                        <div class="swiper-slide"><img src="next_j3.png"></div>
                     </div>
                 </div>
             </div>
@@ -77,63 +97,45 @@
             <div class="pl-6">
                 <div class="swiper standSwiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="stand_j1.png" alt="J1 Standing"></div>
-                        <div class="swiper-slide"><img src="stand_j2.png" alt="J2 Standing"></div>
-                        <div class="swiper-slide"><img src="stand_j3.png" alt="J3 Standing"></div>
+                        <div class="swiper-slide"><img src="stand_j1.png"></div>
+                        <div class="swiper-slide"><img src="stand_j2.png"></div>
+                        <div class="swiper-slide"><img src="stand_j3.png"></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <div class="grid grid-cols-1 gap-px bg-white/10 border border-white/10 mb-20 fade-in" style="animation-delay: 0.6s;">
-            <a href="database.html" class="bg-[#0c0c0c] p-10 flex justify-between items-center group transition-all">
+            <a href="database.html" class="bg-[#0c0c0c] p-10 flex justify-between items-center group">
                 <div>
                     <span class="font-serif text-2xl block mb-1">データベース</span>
-                    <small class="font-oswald text-[0.75rem] text-[#4bb8e0] tracking-[0.4em] uppercase">Archive Collection</small>
+                    <small class="font-oswald text-[0.75rem] text-[#4bb8e0] tracking-[0.4em]">ARCHIVE COLLECTION</small>
                 </div>
-                <span class="text-xl opacity-30 group-hover:opacity-100 group-hover:translate-x-2 transition-all">→</span>
+                <span class="opacity-30 group-hover:opacity-100 group-hover:translate-x-2 transition-all">→</span>
             </a>
-            <a href="https://note.com/goalink_jp" target="_blank" class="bg-[#0c0c0c] p-10 flex justify-between items-center group transition-all">
+            <a href="https://note.com/goalink_jp" target="_blank" class="bg-[#0c0c0c] p-10 flex justify-between items-center group">
                 <div>
-                    <span class="font-serif text-2xl block mb-1">詳細解析</span>
-                    <small class="font-oswald text-[0.75rem] text-[#4bb8e0] tracking-[0.4em] uppercase">Analysis (Note)</small>
+                    <span class="font-serif text-2xl block mb-1">スタッツなど</span>
+                    <small class="font-oswald text-[0.75rem] text-[#4bb8e0] tracking-[0.4em]">STATS & REPORTS (noteへ)</small>
                 </div>
-                <span class="text-xl opacity-30 group-hover:opacity-100 group-hover:translate-x-2 transition-all">→</span>
+                <span class="opacity-30 group-hover:opacity-100 group-hover:translate-x-2 transition-all">→</span>
             </a>
         </div>
     </main>
 
-    <footer class="p-16 text-center">
-        <p class="font-oswald text-[0.6rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    <footer class="p-16 text-center opacity-30 font-oswald text-[0.6rem] tracking-[0.8em]">
+        © 2026 GOALINK / POWERED BY HEKION
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // メニュー開閉
         function toggleMenu() {
             const m = document.getElementById('fullMenu');
-            if (m.style.display === 'flex') {
-                m.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            } else {
-                m.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+            document.body.style.overflow = (m.style.display === 'flex') ? 'hidden' : 'auto';
         }
-
-        // スライダー設定
-        new Swiper('.nextSwiper', { 
-            loop: true, 
-            autoplay: { delay: 4000, disableOnInteraction: false },
-            effect: 'fade',
-            fadeEffect: { crossFade: true }
-        });
-        
-        new Swiper('.standSwiper', { 
-            loop: true, 
-            autoplay: { delay: 5000, disableOnInteraction: false },
-            speed: 800
-        });
+        new Swiper('.nextSwiper', { loop: true, autoplay: { delay: 4000 }, effect: 'fade', fadeEffect: { crossFade: true } });
+        new Swiper('.standSwiper', { loop: true, autoplay: { delay: 5000 } });
     </script>
 </body>
 </html>

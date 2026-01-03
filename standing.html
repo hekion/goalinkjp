@@ -40,10 +40,14 @@
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
 
-        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); margin-top: 1rem; margin-bottom: 6rem; background: rgba(255,255,255,0.02); }
+        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
         
         .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* グループラベルの装飾 */
+        .group-label { display: flex; align-items: center; font-family: 'Oswald', sans-serif; font-size: 0.75rem; color: var(--main-cyan); letter-spacing: 0.4em; margin-bottom: 1rem; }
+        .group-label::before { content: ""; width: 3px; height: 12px; background-color: var(--main-cyan); margin-right: 12px; }
     </style>
 </head>
 <body>
@@ -77,43 +81,55 @@
             <h1 class="section-title-ja text-3xl">現在の順位</h1>
         </div>
 
-        <div class="fade-in" style="animation-delay: 0.3s;">
+        <div class="fade-in mb-20" style="animation-delay: 0.3s;">
             <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                 <span class="section-title-en">J1 League Category</span>
                 <span class="section-title-ja text-xl italic">J1 リーグ</span>
             </div>
             
-            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">EAST DISTRICT</h3>
-            <img src="stand_j1_east.png" alt="J1 EAST" class="stand-img">
+            <div class="mb-12">
+                <h3 class="group-label">EAST GROUP</h3>
+                <img src="stand_j1_east.png" alt="J1 EAST" class="stand-img">
+            </div>
 
-            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">WEST DISTRICT</h3>
-            <img src="stand_j1_west.png" alt="J1 WEST" class="stand-img">
+            <div class="mb-12">
+                <h3 class="group-label">WEST GROUP</h3>
+                <img src="stand_j1_west.png" alt="J1 WEST" class="stand-img">
+            </div>
         </div>
 
-        <div class="fade-in" style="animation-delay: 0.5s;">
+        <div class="fade-in mb-20" style="animation-delay: 0.5s;">
             <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                 <span class="section-title-en">J2・J3 East Category</span>
                 <span class="section-title-ja text-xl italic">J2・J3 EAST</span>
             </div>
             
-            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP A</h3>
-            <img src="stand_j2j3_east_a.png" alt="J2・J3 EAST-A" class="stand-img">
+            <div class="mb-12">
+                <h3 class="group-label">A GROUP</h3>
+                <img src="stand_j2j3_east_a.png" alt="J2・J3 EAST-A" class="stand-img">
+            </div>
 
-            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP B</h3>
-            <img src="stand_j2j3_east_b.png" alt="J2・J3 EAST-B" class="stand-img">
+            <div class="mb-12">
+                <h3 class="group-label">B GROUP</h3>
+                <img src="stand_j2j3_east_b.png" alt="J2・J3 EAST-B" class="stand-img">
+            </div>
         </div>
 
-        <div class="fade-in" style="animation-delay: 0.7s;">
+        <div class="fade-in mb-20" style="animation-delay: 0.7s;">
             <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
                 <span class="section-title-en">J2・J3 West Category</span>
                 <span class="section-title-ja text-xl italic">J2・J3 WEST</span>
             </div>
             
-            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP A</h3>
-            <img src="stand_j2j3_west_a.png" alt="J2・J3 WEST-A" class="stand-img">
+            <div class="mb-12">
+                <h3 class="group-label">A GROUP</h3>
+                <img src="stand_j2j3_west_a.png" alt="J2・J3 WEST-A" class="stand-img">
+            </div>
 
-            <h3 class="font-oswald text-xs tracking-[0.4em] opacity-40 mb-3 ml-1">GROUP B</h3>
-            <img src="stand_j2j3_west_b.png" alt="J2・J3 WEST-B" class="stand-img">
+            <div class="mb-12">
+                <h3 class="group-label">B GROUP</h3>
+                <img src="stand_j2j3_west_b.png" alt="J2・J3 WEST-B" class="stand-img">
+            </div>
         </div>
     </main>
 

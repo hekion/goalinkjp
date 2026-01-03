@@ -73,11 +73,11 @@
         </div>
     </nav>
 
-    <main class="pt-36 px-8 max-w-screen-md mx-auto">
-        <div class="mb-24 fade-in">
-            <img src="hero.png" alt="" class="w-full aspect-video object-cover border border-white/5 shadow-2xl rounded-sm">
-        </div>
+    <div class="pt-28 w-full fade-in">
+        <img src="hero.png" alt="" class="w-full aspect-video object-cover">
+    </div>
 
+    <main class="pt-12 px-8 max-w-screen-md mx-auto">
         <section class="mb-20 fade-in" style="animation-delay: 0.2s;">
             <div class="section-header">
                 <span class="section-title-en">Next Matches</span>
@@ -138,7 +138,6 @@
             document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // スライドの仕組みを「フェード」で統一
         const swiperConfig = {
             loop: true,
             effect: 'fade',

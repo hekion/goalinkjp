@@ -1,4 +1,4 @@
-const CACHE_NAME = 'goalink-v1';
+const CACHE_NAME = 'goalink-v2';
 
 const PAGES = [
   './',
@@ -10,6 +10,18 @@ const PAGES = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(PAGES))
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    )
   );
 });
 

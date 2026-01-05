@@ -40,7 +40,7 @@
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
 
-        /* --- 修正：リンクカードスタイル --- */
+        /* --- リンクカードスタイル（スマホ縦並び/PC横並び） --- */
         .link-card { 
             background: #000;
             padding: 1.4rem 1.2rem; 
@@ -70,12 +70,13 @@
             color: var(--main-cyan);
             opacity: 0.8;
         }
-        .link-card:active { 
+        /* スマホ・PC共通のタップ時/ホバー時のわずかな光 */
+        .link-card:active, .link-card:hover { 
             background: rgba(75, 184, 224, 0.1);
             border-color: var(--main-cyan);
         }
 
-        /* スマホは縦1列、PCは横3列 */
+        /* スマホは縦1列、PC（768px以上）は横3列 */
         .db-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -132,7 +133,7 @@
                     <span class="section-title-ja text-xl italic">J1 リーグ</span>
                 </div>
                 <div class="db-grid">
-                    <a href="https://docs.google.com/spreadsheets/d/1wXllYryBGIx4PhmCw6ojsfxM5UGMBA8K17NOZBagnCw/edit?usp=drivesdk" target="_blank" class="link-card"><span>選手リスト</span></a>
+                    <a href="https://docs.google.com/spreadsheets/d/1wXllYryBGIx4PhmKw6ojsfxM5UGMBA8K17NOZBagnCw/edit?usp=drivesdk" target="_blank" class="link-card"><span>選手リスト</span></a>
                     <a href="https://docs.google.com/spreadsheets/d/10R2lT4Fa3kMDLVYf2fAp4cYhe5QFxVZf2CXixQ20R04/edit?usp=drivesdk" target="_blank" class="link-card"><span>スタッツ</span></a>
                     <a href="https://docs.google.com/spreadsheets/d/10sZm1SJlPdADrrni6wNPBcDuzlvd5BIgbgbjkHMwqVo/edit?usp=drivesdk" target="_blank" class="link-card"><span>日程・対戦</span></a>
                 </div>

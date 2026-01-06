@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLAYERS | Goalink</title>
-    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -20,7 +19,7 @@
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
         .menu-trigger span:nth-child(1) { width: 100%; }
         .menu-trigger span:nth-child(2) { width: 60%; }
-        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
         .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
 
         #sideMenu {
@@ -172,7 +171,6 @@
             document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // ページトップボタンの制御
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {
@@ -186,10 +184,7 @@
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
+        // Service Workerの登録処理を完全に削除しました
     </script>
 </body>
 </html>

@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        html { scroll-behavior: smooth; } /* スムーズスクロール有効化 */
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
@@ -29,7 +30,7 @@
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
         /* セクションタイトル */
-        .section-header { margin-bottom: 2rem; border-left: 1px solid var(--main-cyan); padding-left: 1.5rem; }
+        .section-header { margin-bottom: 2rem; border-left: 1px solid var(--main-cyan); padding-left: 1.5rem; scroll-margin-top: 120px; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: var(--main-cyan); text-transform: uppercase; display: block; line-height: 1; }
 
         /* チームリスト */
@@ -73,7 +74,16 @@
 
     <main class="pt-36 pb-20 px-8 max-w-screen-lg mx-auto">
         
-        <section class="mb-20 fade-in">
+        <nav class="mb-12 flex flex-wrap gap-2 fade-in">
+            <a href="#j1east" class="font-oswald text-[0.6rem] tracking-[0.2em] border border-white/20 px-3 py-2 hover:border-[#4bb8e0] hover:text-[#4bb8e0] transition-all">J1 EAST</a>
+            <a href="#j1west" class="font-oswald text-[0.6rem] tracking-[0.2em] border border-white/20 px-3 py-2 hover:border-[#4bb8e0] hover:text-[#4bb8e0] transition-all">J1 WEST</a>
+            <a href="#j2j3eastA" class="font-oswald text-[0.6rem] tracking-[0.2em] border border-white/20 px-3 py-2 hover:border-[#4bb8e0] hover:text-[#4bb8e0] transition-all">J2.J3 EAST-A</a>
+            <a href="#j2j3eastB" class="font-oswald text-[0.6rem] tracking-[0.2em] border border-white/20 px-3 py-2 hover:border-[#4bb8e0] hover:text-[#4bb8e0] transition-all">J2.J3 EAST-B</a>
+            <a href="#j2j3westA" class="font-oswald text-[0.6rem] tracking-[0.2em] border border-white/20 px-3 py-2 hover:border-[#4bb8e0] hover:text-[#4bb8e0] transition-all">J2.J3 WEST-A</a>
+            <a href="#j2j3westB" class="font-oswald text-[0.6rem] tracking-[0.2em] border border-white/20 px-3 py-2 hover:border-[#4bb8e0] hover:text-[#4bb8e0] transition-all">J2.J3 WEST-B</a>
+        </nav>
+
+        <section id="j1east" class="mb-20 fade-in">
             <div class="section-header"><span class="section-title-en">J1 EAST</span></div>
             <div class="team-grid">
                 <a href="#" class="team-card"><span class="team-name">鹿島アントラーズ</span><span class="arrow">→</span></a>
@@ -89,7 +99,7 @@
             </div>
         </section>
 
-        <section class="mb-20 fade-in">
+        <section id="j1west" class="mb-20 fade-in">
             <div class="section-header"><span class="section-title-en">J1 WEST</span></div>
             <div class="team-grid">
                 <a href="#" class="team-card"><span class="team-name">清水エスパルス</span><span class="arrow">→</span></a>
@@ -105,7 +115,7 @@
             </div>
         </section>
 
-        <section class="mb-20 fade-in">
+        <section id="j2j3eastA" class="mb-20 fade-in">
             <div class="section-header"><span class="section-title-en">J2.J3 EAST-A</span></div>
             <div class="team-grid">
                 <a href="#" class="team-card"><span class="team-name">ヴァンラーレ八戸</span><span class="arrow">→</span></a>
@@ -121,7 +131,7 @@
             </div>
         </section>
 
-        <section class="mb-20 fade-in">
+        <section id="j2j3eastB" class="mb-20 fade-in">
             <div class="section-header"><span class="section-title-en">J2.J3 EAST-B</span></div>
             <div class="team-grid">
                 <a href="#" class="team-card"><span class="team-name">北海道コンサドーレ札幌</span><span class="arrow">→</span></a>
@@ -137,7 +147,7 @@
             </div>
         </section>
 
-        <section class="mb-20 fade-in">
+        <section id="j2j3westA" class="mb-20 fade-in">
             <div class="section-header"><span class="section-title-en">J2.J3 WEST-A</span></div>
             <div class="team-grid">
                 <a href="#" class="team-card"><span class="team-name">アルビレックス新潟</span><span class="arrow">→</span></a>
@@ -153,7 +163,7 @@
             </div>
         </section>
 
-        <section class="mb-20 fade-in">
+        <section id="j2j3westB" class="mb-20 fade-in">
             <div class="section-header"><span class="section-title-en">J2.J3 WEST-B</span></div>
             <div class="team-grid">
                 <a href="#" class="team-card"><span class="team-name">レイラック滋賀FC</span><span class="arrow">→</span></a>

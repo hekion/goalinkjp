@@ -170,7 +170,6 @@
         new Swiper('.nextSwiper', swiperConfig);
         new Swiper('.standSwiper', swiperConfig);
 
-        // ページトップボタンの制御
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {
@@ -184,10 +183,7 @@
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
+        // Service Workerの登録処理を完全に削除しました
     </script>
 </body>
 </html>

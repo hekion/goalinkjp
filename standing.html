@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STANDING | Goalink</title>
-    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -170,7 +169,6 @@
             document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // ページトップボタンの制御
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {
@@ -184,10 +182,7 @@
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
+        // Service Workerの登録処理を完全に削除しました
     </script>
 </body>
 </html>

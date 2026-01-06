@@ -45,14 +45,16 @@
 
         /* ページトップボタン */
         #pagetop {
-            position: fixed; right: 24px; bottom: 24px; width: 48px; height: 48px;
-            background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px);
+            text-decoration: none;
         }
         #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
         #pagetop:hover { border-color: var(--main-cyan); }
-        #pagetop svg { width: 18px; height: 18px; fill: var(--main-cyan); }
+        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
+        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
         .fade-in { animation: fadeIn 1s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -64,6 +66,7 @@
 
     <a href="#" id="pagetop" onclick="scrollToTop(event)">
         <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+        <span>TOP</span>
     </a>
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
@@ -78,7 +81,7 @@
         <div class="menu-item" style="transition-delay: 0.2s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.25s;"><a href="teams.html"><span class="font-serif text-2xl text-[#4bb8e0]">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="database.html"><span class="font-serif text-2xl">データベース</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">DATABASE</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.4s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">スタッツなど</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS (note)</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ（noteへ）</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
         <div class="menu-item" style="transition-delay: 0.5s;">
             <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
                 <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -201,7 +204,6 @@
     </footer>
 
     <script>
-        // サイドメニュー開閉
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('show');
@@ -209,7 +211,6 @@
             document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // ページトップボタンの制御
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {

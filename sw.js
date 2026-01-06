@@ -1,8 +1,9 @@
-const CACHE_NAME = 'goalink-v2';
+const CACHE_NAME = 'goalink-v3';
 
 const PAGES = [
   './',
   './index.html',
+  './teams.html',
   './database.html',
   './standing.html'
 ];

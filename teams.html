@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
-        html { scroll-behavior: smooth; } /* スムーズスクロール有効化 */
+        html { scroll-behavior: smooth; }
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
@@ -43,6 +43,17 @@
         .arrow { font-size: 0.8rem; opacity: 0.2; transition: 0.3s; }
         .team-card:hover .arrow { opacity: 1; transform: translateX(3px); color: var(--main-cyan); }
 
+        /* ページトップボタン */
+        #pagetop {
+            position: fixed; right: 24px; bottom: 24px; width: 48px; height: 48px;
+            background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px);
+        }
+        #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #pagetop:hover { border-color: var(--main-cyan); }
+        #pagetop svg { width: 18px; height: 18px; fill: var(--main-cyan); }
+
         .fade-in { animation: fadeIn 1s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -50,6 +61,10 @@
 <body>
 
     <div id="overlay" onclick="toggleMenu()"></div>
+
+    <a href="#" id="pagetop" onclick="scrollToTop(event)">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+    </a>
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
@@ -186,11 +201,27 @@
     </footer>
 
     <script>
+        // サイドメニュー開閉
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('show');
             document.getElementById('menuBtn').classList.toggle('active');
             document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
+        }
+
+        // ページトップボタンの制御
+        const pagetop = document.getElementById('pagetop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                pagetop.classList.add('show');
+            } else {
+                pagetop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>

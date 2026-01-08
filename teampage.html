@@ -47,9 +47,9 @@
         #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
-        /* 選手名装飾：常に表示される線 */
-        .name-container { position: relative; display: flex; flex-direction: column; overflow: hidden; }
-        .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
+        /* 選手名装飾：常に表示される線（修正：線の高さを確保） */
+        .name-container { position: relative; display: inline-flex; flex-direction: column; padding-bottom: 4px; }
+        .name-accent { position: absolute; bottom: 0; left: 0; height: 2px; width: 100%; }
 
         /* リスト行：スマホでのクリック感を出す */
         .player-row { 

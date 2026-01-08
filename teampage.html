@@ -128,7 +128,7 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec"; 
+        const SCRIPT_URL = "YOUR_GAS_DEPLOY_URL"; 
 
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
@@ -161,7 +161,7 @@
                 const teamColor = data.teamColor || '#FFFFFF';
                 document.getElementById('teamUnderline').style.backgroundColor = teamColor;
 
-                // チーム成績の反映 (将来的にGASからstatsオブジェクトが送られてきた時用)
+                // チーム成績の反映
                 if (data.stats) {
                     document.getElementById('stat-w').textContent = data.stats.win || '-';
                     document.getElementById('stat-d').textContent = data.stats.draw || '-';
@@ -174,8 +174,12 @@
 
                 document.getElementById('playerGrid').innerHTML = data.players.map((p, index) => {
                     const cleanDate = p.birthday ? p.birthday.toString().substring(0, 10).replace(/-/g, '.') : '----.--.--';
+                    
+                    // ID管理の追加
+                    const detailUrl = p.id ? `player-detail.html?id=${p.id}` : `player-detail.html?name=${encodeURIComponent(p.name)}`;
+
                     return `
-                    <a href="player-detail.html?name=${encodeURIComponent(p.name)}" 
+                    <a href="${detailUrl}" 
                        class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm"
                     >
                         <div class="flex items-center w-full md:flex-1">

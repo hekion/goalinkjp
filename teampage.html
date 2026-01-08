@@ -3,190 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEAM SQUAD | Goalink</title>
+    <title>TEAM DETAILS | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
-        html { scroll-behavior: smooth; }
-        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
-        
-        /* ヘッダー・共通パーツ */
+
+        /* ヘッダー */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
-        .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
-        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
-        .menu-trigger span:nth-child(1) { width: 100%; }
-        .menu-trigger span:nth-child(2) { width: 60%; }
-        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
-        .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
-
-        #sideMenu {
-            position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
-            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
-            z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            display: flex; flex-direction: column; justify-content: center; padding-left: 12%;
-            border-left: 1px solid rgba(255,255,255,0.1);
+        
+        /* 選手カード */
+        .player-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        #sideMenu.open { right: 0; }
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
-        #overlay.show { opacity: 1; visibility: visible; }
-
-        .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
-        #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
-
-        /* ページトップボタン */
-        #pagetop {
-            position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
-            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px);
-            text-decoration: none;
+        .player-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--main-cyan);
+            transform: translateY(-2px);
         }
-        #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
-        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
-        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        /* アニメーション */
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ローディングアニメーション */
+        .loader {
+            width: 20px; height: 20px;
+            border: 2px solid var(--main-cyan);
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
 
-    <div id="overlay" onclick="toggleMenu()"></div>
-
-    <a href="#" id="pagetop" onclick="scrollToTop(event)">
-        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
-        <span>TOP</span>
-    </a>
-
-    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
-        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
-            <span></span>
-            <span></span>
-        </div>
+        <a href="teams.html" class="font-oswald text-[0.7rem] tracking-[0.2em] border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-all">BACK TO LIST</a>
     </header>
 
-    <nav id="sideMenu">
-        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#"><span class="font-serif text-2xl opacity-50">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-[#4bb8e0]">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
-        
-        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
-            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
-                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
-            </a>
-        </div>
-    </nav>
-
-    <main class="pt-36 px-8 max-w-screen-md mx-auto pb-20">
-        <div class="fade-in" style="animation-delay: 0.1s;">
-            <a href="teams.html" class="group flex items-center gap-2 mb-4">
-                <svg class="w-3 h-3 fill-gray-500 group-hover:fill-[#4bb8e0] transition-colors" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                <span class="font-oswald text-[0.6rem] text-gray-500 tracking-[0.3em] uppercase group-hover:text-[#4bb8e0] transition-colors">Back to Teams List</span>
-            </a>
-            <h1 id="team-name-display" class="font-serif text-4xl mt-2 italic tracking-tight text-white">LOADING...</h1>
+    <main class="pt-40 pb-20 px-8 max-w-screen-lg mx-auto">
+        <div class="mb-16 text-center fade-in">
+            <span class="font-oswald text-[#4bb8e0] tracking-[0.4em] text-xs block mb-2 uppercase">Team Roster</span>
+            <h1 id="teamName" class="text-4xl md:text-5xl font-serif font-black tracking-tighter">
+                <span class="opacity-20">Loading...</span>
+            </h1>
+            <div class="w-12 h-[1px] bg-[#4bb8e0] mx-auto mt-6"></div>
         </div>
 
-        <section class="mt-16 mb-20 fade-in" style="animation-delay: 0.3s;">
-            <div class="border-l-4 border-[#4bb8e0] pl-5 mb-10">
-                <span class="font-oswald text-[0.65rem] tracking-[0.5em] color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; color: #4bb8e0;">Squad List</span>
-                <h2 class="font-serif text-xl italic text-white">選手一覧</h2>
+        <div id="playerGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="col-span-full text-center py-20">
+                <span class="loader"></span>
+                <p class="font-oswald text-[0.6rem] tracking-[0.2em] mt-4 opacity-40">FETCHING SQUAD DATA</p>
             </div>
-
-            <div id="player-list" class="space-y-4">
-                <p class="text-gray-500 animate-pulse font-oswald text-sm">Fetching data...</p>
-            </div>
-        </section>
+        </div>
     </main>
 
-    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-16">
+    <footer class="p-20 text-center border-t border-white/5 mx-8">
         <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
     </footer>
 
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('overlay');
-            const btn = document.getElementById('menuBtn');
-            menu.classList.toggle('open');
-            overlay.classList.toggle('show');
-            btn.classList.toggle('active');
-            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
-        }
+        // あなたが発行したGASのURL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec"; 
 
-        const pagetop = document.getElementById('pagetop');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
-                pagetop.classList.add('show');
-            } else {
-                pagetop.classList.remove('show');
-            }
-        });
+        async function loadPlayerData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const teamId = urlParams.get('id');
+            const playerGrid = document.getElementById('playerGrid');
+            const teamNameElement = document.getElementById('teamName');
 
-        function scrollToTop(e) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ここに以前お送りした teamMap { ... } を入れてください
-        const teamMap = {
-            "8":  { name: "鹿島アントラーズ", sheet: "鹿島", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
-            "9":  { name: "水戸ホーリーホック", sheet: "水戸", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
-            "13": { name: "浦和レッズ", sheet: "浦和", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
-            // ...以下、60チーム分を貼り付け
-        };
-
-        async function loadData() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            const config = teamMap[id];
-            const displayTitle = document.getElementById('team-name-display');
-            const listContainer = document.getElementById('player-list');
-
-            if (!config) {
-                displayTitle.textContent = "TEAM NOT FOUND";
+            if (!teamId) {
+                playerGrid.innerHTML = '<p class="text-center opacity-50 col-span-full font-serif text-sm">チームIDが正しくありません。</p>';
                 return;
             }
-            displayTitle.textContent = config.name;
-
-            const url = `https://docs.google.com/spreadsheets/d/${config.fileId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(config.sheet)}`;
 
             try {
-                const response = await fetch(url);
-                const csvText = await response.text();
-                const lines = csvText.split(/\r?\n/);
-                const dataLines = lines.slice(4); // 5行目から開始
+                // GASからデータを取得
+                const response = await fetch(`${SCRIPT_URL}?id=${teamId}`);
+                const data = await response.json();
 
-                listContainer.innerHTML = ''; 
+                if (data.error) {
+                    playerGrid.innerHTML = `
+                        <div class="col-span-full text-center py-10">
+                            <p class="text-red-400 font-serif text-sm mb-2">データが見つかりませんでした</p>
+                            <p class="text-[0.6rem] opacity-40 uppercase tracking-widest">${data.error}</p>
+                        </div>`;
+                    return;
+                }
 
-                dataLines.forEach(line => {
-                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, '').trim());
-                    const pos = cols[2]; // C
-                    const num = cols[3]; // D
-                    const name = cols[4]; // E
+                // チーム名をセット
+                teamNameElement.textContent = data.teamName;
+                document.title = `${data.teamName} | Goalink`;
 
-                    if (!name || name === "" || name === "氏名") return;
+                // 選手がいなかった場合
+                if (!data.players || data.players.length === 0) {
+                    playerGrid.innerHTML = '<p class="text-center opacity-50 col-span-full py-10 font-serif text-sm">現在、選手データが登録されていません。</p>';
+                    return;
+                }
 
-                    const html = `
-                        <div class="flex items-center gap-6 border-b border-white/10 pb-3 hover:bg-white/5 transition-colors group">
-                            <span class="font-oswald w-10 text-[#4bb8e0] text-sm font-light">${pos || '-'}</span>
-                            <span class="font-oswald w-6 text-center text-lg font-medium">${num || '-'}</span>
-                            <span class="font-serif text-lg tracking-wider group-hover:pl-2 transition-all text-white">${name}</span>
+                // 選手カードの生成（ポジション・背番号・名前）
+                playerGrid.innerHTML = data.players.map((p, index) => `
+                    <div class="player-card p-6 fade-in" style="animation-delay: ${index * 0.05}s">
+                        <div class="flex flex-col h-full">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.2em] border-b border-[#4bb8e0]/30 pb-1">
+                                    ${p.position || '---'}
+                                </span>
+                                <span class="font-oswald text-xl text-white/20">
+                                    #${p.number || '--'}
+                                </span>
+                            </div>
+                            <h2 class="text-xl font-serif font-bold tracking-widest leading-tight">
+                                ${p.name || 'Unknown'}
+                            </h2>
                         </div>
-                    `;
-                    listContainer.insertAdjacentHTML('beforeend', html);
-                });
-            } catch (error) {
-                listContainer.innerHTML = '<p class="text-red-500 font-oswald text-xs">FAILED TO LOAD DATA</p>';
+                    </div>
+                `).join('');
+
+            } catch (e) {
+                console.error(e);
+                playerGrid.innerHTML = `
+                    <div class="col-span-full text-center py-10">
+                        <p class="text-red-400 font-serif text-sm mb-2">システムエラーが発生しました</p>
+                        <p class="text-[0.6rem] opacity-40 uppercase tracking-widest">Connection Failed</p>
+                    </div>`;
             }
         }
-        loadData();
+
+        // 実行
+        loadPlayerData();
     </script>
 </body>
 </html>

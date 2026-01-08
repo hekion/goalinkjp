@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEAM SQUAD | Goalink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        .site-logo { height: 3.5rem; width: auto; }
+    </style>
+</head>
+<body class="pt-28 px-8">
+
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/95">
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
+        <a href="teams.html" class="font-oswald text-[0.7rem] tracking-widest border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-all">BACK TO LIST</a>
+    </header>
+
+    <main class="max-w-screen-md mx-auto">
+        <section class="mb-12">
+            <h1 id="team-name-display" class="font-serif text-4xl mt-2 italic tracking-tight text-white">LOADING...</h1>
+        </section>
+
+        <section class="mb-20">
+            <div class="border-l-4 border-[#4bb8e0] pl-5 mb-8">
+                <h2 class="font-serif text-2xl">選手一覧</h2>
+                <p class="font-oswald text-[0.6rem] text-gray-500 tracking-tighter uppercase">Squad List</p>
+            </div>
+
+            <div id="player-list" class="space-y-4">
+                <p class="text-gray-500 animate-pulse font-oswald text-sm">Fetching data from spreadsheet...</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 60チーム分の「住所録」
+        const teamMap = {
+            // J1選手リストファイル (1vQEz...)
+            "8":  { name: "鹿島アントラーズ", sheet: "鹿島", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "9":  { name: "水戸ホーリーホック", sheet: "水戸", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "13": { name: "浦和レッズ", sheet: "浦和", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "15": { name: "ジェフユナイテッド千葉", sheet: "千葉", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "16": { name: "柏レイソル", sheet: "柏", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "17": { name: "FC東京", sheet: "FC東京", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "18": { name: "東京ヴェルディ", sheet: "東京V", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "19": { name: "FC町田ゼルビア", sheet: "町田", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "20": { name: "川崎フロンターレ", sheet: "川崎", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "21": { name: "横浜F・マリノス", sheet: "横浜FM", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "31": { name: "清水エスパルス", sheet: "清水", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "34": { name: "名古屋グランパス", sheet: "名古屋", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "37": { name: "京都サンガF.C.", sheet: "京都", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "38": { name: "ガンバ大阪", sheet: "G大阪", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "39": { name: "セレッソ大阪", sheet: "C大阪", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "41": { name: "ヴィッセル神戸", sheet: "神戸", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "44": { name: "ファジアーノ岡山", sheet: "岡山", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "45": { name: "サンフレッチェ広島", sheet: "広島", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "52": { name: "アビスパ福岡", sheet: "福岡", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+            "55": { name: "V・ファーレン長崎", sheet: "長崎", fileId: "1vQEzvp0G3nZmYcyiAVe_bxuXJacYbI7h8rcCplO2U7YeIbSBUr4gcTW8Uy4Aeo_on1EggJLKb7MpRz" },
+
+            // J2/J3 EASTファイル (1R1Ou...)
+            "1":  { name: "北海道コンサドーレ札幌", sheet: "札幌", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "2":  { name: "ヴァンラーレ八戸", sheet: "八戸", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "3":  { name: "ベガルタ仙台", sheet: "仙台", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "4":  { name: "ブラウブリッツ秋田", sheet: "秋田", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "5":  { name: "モンテディオ山形", sheet: "山形", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "6":  { name: "福島ユナイテッドFC", sheet: "福島", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "7":  { name: "いわきFC", sheet: "いわき", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "10": { name: "栃木SC", sheet: "栃木", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "11": { name: "栃木シティFC", sheet: "栃木C", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "12": { name: "ザスパ群馬", sheet: "群馬", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "14": { name: "大宮アルディージャ", sheet: "大宮", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "22": { name: "横浜FC", sheet: "横浜FC", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "23": { name: "湘南ベルマーレ", sheet: "湘南", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "24": { name: "SC相模原", sheet: "相模原", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "25": { name: "ヴァンフォーレ甲府", sheet: "甲府", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "26": { name: "松本山雅FC", sheet: "松本", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "27": { name: "AC長野パルセイロ", sheet: "長野", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "32": { name: "ジュビロ磐田", sheet: "磐田", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "33": { name: "藤枝MYFC", sheet: "藤枝", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+            "35": { name: "FC岐阜", sheet: "岐阜", fileId: "1R1OuugKy4qa2tbK_49nb5mShGTCcChQVHzDtbF-wrHj78O6nIxK4J2sRLK63DWvn0z8SPKyom_ayyK" },
+
+            // J2/J3 WESTファイル (1SNSn...)
+            "28": { name: "アルビレックス新潟", sheet: "新潟", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "29": { name: "カターレ富山", sheet: "富山", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "30": { name: "ツエーゲン金沢", sheet: "金沢", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "36": { name: "レイラック滋賀", sheet: "滋賀", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "40": { name: "FC大阪", sheet: "FC大阪", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "42": { name: "奈良クラブ", sheet: "奈良", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "43": { name: "ガイナーレ鳥取", sheet: "鳥取", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "46": { name: "レノファ山口FC", sheet: "山口", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "47": { name: "カマタマーレ讃岐", sheet: "讃岐", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "48": { name: "徳島ヴォルティス", sheet: "徳島", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "49": { name: "愛媛FC", sheet: "愛媛", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "50": { name: "FC今治", sheet: "今治", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "51": { name: "高知ユナイテッドSC", sheet: "高知", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "53": { name: "ギラヴァンツ北九州", sheet: "北九州", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "54": { name: "サガン鳥栖", sheet: "鳥栖", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "56": { name: "ロアッソ熊本", sheet: "熊本", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "57": { name: "大分トリニータ", sheet: "大分", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "58": { name: "テゲバジャーロ宮崎", sheet: "宮崎", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "59": { name: "鹿児島ユナイテッドFC", sheet: "鹿児島", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" },
+            "60": { name: "FC琉球", sheet: "琉球", fileId: "1SNSni2W180b_oRYlaji-2qjyDPWXjkJbMSIbKvgy_aJQDHlNR6CwOLCg8sGreYR1W6ZhxJ7qFSFnT3" }
+        };
+
+        async function loadData() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const config = teamMap[id];
+
+            const displayTitle = document.getElementById('team-name-display');
+            const listContainer = document.getElementById('player-list');
+
+            if (!config) {
+                displayTitle.textContent = "TEAM NOT FOUND";
+                listContainer.innerHTML = '<p class="text-gray-500">IDが正しくありません。</p>';
+                return;
+            }
+
+            displayTitle.textContent = config.name;
+
+            // スプレッドシートから特定のシートをCSVとして取得するURL
+            const url = `https://docs.google.com/spreadsheets/d/${config.fileId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(config.sheet)}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network error');
+                
+                const csvText = await response.text();
+                
+                // CSV解析（簡易版：改行で分けてカンマで分ける）
+                const rows = csvText.split('\n').map(row => {
+                    // ダブルクォーテーションを削除して配列にする
+                    return row.split(',').map(cell => cell.replace(/^"(.*)"$/, '$1'));
+                });
+
+                listContainer.innerHTML = ''; // ローディングメッセージを消去
+
+                rows.forEach((row, index) => {
+                    if (index === 0) return; // ヘッダー行を無視
+                    
+                    // スプシの構成に合わせて順番を調整してください [0]:ポジション, [1]:番号, [2]:名前
+                    const [pos, num, name] = row;
+
+                    if (!name || name.trim() === "") return;
+
+                    const html = `
+                        <div class="flex items-center gap-6 border-b border-white/10 pb-3 hover:bg-white/5 transition-colors group">
+                            <span class="font-oswald w-10 text-[#4bb8e0] text-sm font-light">${pos}</span>
+                            <span class="font-oswald w-6 text-center text-lg font-medium">${num}</span>
+                            <span class="font-serif text-lg tracking-wider group-hover:pl-2 transition-all">${name}</span>
+                        </div>
+                    `;
+                    listContainer.insertAdjacentHTML('beforeend', html);
+                });
+
+                if (listContainer.innerHTML === '') {
+                    listContainer.innerHTML = '<p class="text-gray-500">選手データがありません。</p>';
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                listContainer.innerHTML = '<p class="text-red-500 font-oswald text-xs uppercase">Failed to load data. Please check spreadsheet settings.</p>';
+            }
+        }
+
+        // 実行
+        loadData();
+    </script>
+</body>
+</html>

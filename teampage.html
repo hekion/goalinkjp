@@ -12,7 +12,7 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
 
-        /* ヘッダー・メニューボタン (index.html準拠) */
+        /* ヘッダー・メニューボタン (standing.html準拠) */
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
         .menu-trigger span:nth-child(1) { width: 100%; }
@@ -20,7 +20,7 @@
         .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
         .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
 
-        /* サイドメニュー (index.html準拠) */
+        /* サイドメニュー (standing.html準拠) */
         #sideMenu {
             position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
             background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
@@ -34,7 +34,7 @@
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        /* ページトップボタン (index.html準拠) */
+        /* ページトップボタン (standing.html準拠) */
         #pagetop {
             position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
             background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -48,7 +48,7 @@
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
         /* 選手名装飾：常に表示される線 */
-        .name-container { position: relative; display: inline-block; }
+        .name-container { position: relative; display: flex; flex-direction: column; overflow: hidden; }
         .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
 
         /* リスト行：スマホでのクリック感を出す */
@@ -76,7 +76,7 @@
         <span>TOP</span>
     </a>
 
-    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/90 backdrop-blur-md">
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo h-14"></a>
         <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
             <span></span>
@@ -85,14 +85,16 @@
     </header>
 
     <nav id="sideMenu">
-        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#" class="text-white"><span class="font-serif text-2xl opacity-50">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html" class="text-white"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html" class="text-white"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html" class="text-white"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#"><span class="font-serif text-2xl opacity-50 text-white">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-white">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-white">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-white">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl text-white">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        
         <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
             <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
                 <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                <span class="font-serif text-xl text-gray-400 uppercase">Official X</span>
+                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
             </a>
         </div>
     </nav>
@@ -129,10 +131,13 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec"; 
 
         function toggleMenu() {
-            document.getElementById('sideMenu').classList.toggle('open');
-            document.getElementById('overlay').classList.toggle('show');
-            document.getElementById('menuBtn').classList.toggle('active');
-            document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const btn = document.getElementById('menuBtn');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('show');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
         }
 
         const pagetop = document.getElementById('pagetop');
@@ -159,28 +164,25 @@
                 document.getElementById('teamUnderline').style.backgroundColor = teamColor;
 
                 document.getElementById('playerGrid').innerHTML = data.players.map((p, index) => {
-                    // 日付フォーマットの強制修正 (T15...を削除)
                     const cleanDate = p.birthday ? p.birthday.toString().substring(0, 10).replace(/-/g, '.') : '----.--.--';
-                    
                     return `
                     <a href="player-detail.html?name=${encodeURIComponent(p.name)}" 
-                       class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm"
-                       style="border-color: rgba(255,255,255,0.05);"
+                       class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm overflow-hidden"
                     >
-                        <div class="flex items-center w-full md:flex-1">
-                            <span class="font-oswald text-[0.65rem] w-10 opacity-30 text-white uppercase">${p.position}</span>
-                            <span class="font-oswald text-2xl w-12 text-white">#${p.number}</span>
-                            <div class="name-container ml-4">
-                                <span class="font-serif font-black text-xl text-white tracking-widest leading-none">${p.name}</span>
+                        <div class="flex items-center w-full md:flex-1 min-w-0">
+                            <span class="font-oswald text-[0.65rem] w-10 shrink-0 opacity-30 text-white uppercase">${p.position}</span>
+                            <span class="font-oswald text-2xl w-12 shrink-0 text-white">#${p.number}</span>
+                            <div class="name-container ml-4 flex-1 min-w-0">
+                                <span class="font-serif font-black text-xl text-white tracking-widest leading-none whitespace-nowrap overflow-hidden text-ellipsis" style="font-size: clamp(0.75rem, 4vw, 1.25rem);">${p.name}</span>
                                 <div class="name-accent" style="background-color: ${teamColor}"></div>
                             </div>
                         </div>
-                        <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 my-4 md:my-0 px-6 tracking-widest uppercase">
+                        <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 my-4 md:my-0 px-6 tracking-widest uppercase shrink-0">
                             <span>${cleanDate}</span>
                             <span>${p.height}CM</span>
                             <span>${p.weight}KG</span>
                         </div>
-                        <div class="w-full md:w-1/3 grid grid-cols-5 gap-1 text-center font-oswald text-white">
+                        <div class="w-full md:w-1/3 grid grid-cols-5 gap-1 text-center font-oswald text-white shrink-0">
                             <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">APP</span><span class="text-sm">${p.games}</span></div>
                             <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">MIN</span><span class="text-sm">${p.minutes}</span></div>
                             <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">G</span><span class="text-sm">${p.goals}</span></div>

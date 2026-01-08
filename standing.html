@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEAM DETAILS | Goalink</title>
+    <title>STANDING | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        html { scroll-behavior: smooth; }
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
-
-        /* ヘッダー・メニューボタン (standing.html準拠) */
+        
+        /* ヘッダー・共通パーツ */
+        .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
         .menu-trigger span:nth-child(1) { width: 100%; }
@@ -20,7 +22,6 @@
         .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
         .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
 
-        /* サイドメニュー (standing.html準拠) */
         #sideMenu {
             position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
             background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
@@ -31,10 +32,25 @@
         #sideMenu.open { right: 0; }
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
+
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        /* ページトップボタン (standing.html準拠) */
+        /* セクションタイトル */
+        .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
+        .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
+        .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
+
+        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
+        
+        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* グループラベルの装飾 */
+        .group-label { display: flex; align-items: center; font-family: 'Oswald', sans-serif; font-size: 0.75rem; color: var(--main-cyan); letter-spacing: 0.4em; margin-bottom: 1rem; }
+        .group-label::before { content: ""; width: 3px; height: 12px; background-color: var(--main-cyan); margin-right: 12px; }
+
+        /* ページトップボタン */
         #pagetop {
             position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
             background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -46,25 +62,6 @@
         #pagetop:hover { border-color: var(--main-cyan); }
         #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
-
-        /* 選手名装飾：常に表示される線 */
-        .name-container { position: relative; display: inline-block; }
-        .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
-
-        /* リスト行：スマホでのクリック感を出す */
-        .player-row { 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.05); 
-            transition: 0.2s; 
-            text-decoration: none; 
-        }
-        .player-row:active { 
-            background: rgba(255,255,255,0.1) !important; 
-            transform: scale(0.98); 
-        }
-
-        .loader { width: 20px; height: 20px; border: 2px solid var(--main-cyan); border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -77,7 +74,7 @@
     </a>
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
-        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo h-14"></a>
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
         <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
             <span></span>
             <span></span>
@@ -85,11 +82,11 @@
     </header>
 
     <nav id="sideMenu">
-        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#"><span class="font-serif text-2xl opacity-50 text-white">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-white">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-white">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-white">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl text-white">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#"><span class="font-serif text-2xl opacity-50">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-[#4bb8e0]">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
         
         <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
             <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
@@ -99,37 +96,69 @@
         </div>
     </nav>
 
-    <main class="pt-48 pb-20 px-4 max-w-screen-xl mx-auto">
-        <div class="mb-16 text-center">
-            <a href="teams.html" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white mb-6 inline-block uppercase italic">← Back to Teams</a>
-            <h1 id="teamName" class="text-white text-4xl md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6 whitespace-nowrap">
-                <span class="loader"></span>
-            </h1>
-            <div id="teamUnderline" class="h-[1px] w-20 mx-auto mb-16 opacity-80" style="background-color: white;"></div>
+    <main class="pt-36 px-8 max-w-screen-md mx-auto pb-20">
+        <div class="section-header fade-in" style="animation-delay: 0.1s;">
+            <span class="section-title-en">League Standings</span>
+            <h1 class="section-title-ja text-3xl">現在の順位</h1>
+        </div>
+
+        <div class="fade-in mb-20" style="animation-delay: 0.3s;">
+            <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <span class="section-title-en">J1 League Category</span>
+                <span class="section-title-ja text-xl italic">J1 リーグ</span>
+            </div>
             
-            <div class="max-w-3xl mx-auto border-y border-white/10 py-8 mb-16">
-                <div class="grid grid-cols-7 gap-0 text-center font-oswald text-white/80">
-                    <div class="border-r border-white/10"><span class="block text-[0.55rem] opacity-30">W</span><span>-</span></div>
-                    <div class="border-r border-white/10"><span class="block text-[0.55rem] opacity-30">D</span><span>-</span></div>
-                    <div class="border-r border-white/10"><span class="block text-[0.55rem] opacity-30">L</span><span>-</span></div>
-                    <div class="border-r border-white/10"><span class="block text-[0.55rem] opacity-30">GF</span><span>-</span></div>
-                    <div class="border-r border-white/10"><span class="block text-[0.55rem] opacity-30">GA</span><span>-</span></div>
-                    <div class="border-r border-white/10"><span class="block text-[0.55rem] opacity-30">YEL</span><span>-</span></div>
-                    <div><span class="block text-[0.55rem] opacity-30">RED</span><span>-</span></div>
-                </div>
+            <div class="mb-12">
+                <h3 class="group-label">EAST GROUP</h3>
+                <img src="stand_j1_east.png" alt="J1 EAST" class="stand-img">
+            </div>
+
+            <div class="mb-12">
+                <h3 class="group-label">WEST GROUP</h3>
+                <img src="stand_j1_west.png" alt="J1 WEST" class="stand-img">
             </div>
         </div>
 
-        <div id="playerGrid" class="flex flex-col gap-2"></div>
+        <div class="fade-in mb-20" style="animation-delay: 0.5s;">
+            <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <span class="section-title-en">J2・J3 East Category</span>
+                <span class="section-title-ja text-xl italic">J2・J3 EAST</span>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="group-label">A GROUP</h3>
+                <img src="stand_j2j3_east_a.png" alt="J2・J3 EAST-A" class="stand-img">
+            </div>
+
+            <div class="mb-12">
+                <h3 class="group-label">B GROUP</h3>
+                <img src="stand_j2j3_east_b.png" alt="J2・J3 EAST-B" class="stand-img">
+            </div>
+        </div>
+
+        <div class="fade-in mb-20" style="animation-delay: 0.7s;">
+            <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
+                <span class="section-title-en">J2・J3 West Category</span>
+                <span class="section-title-ja text-xl italic">J2・J3 WEST</span>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="group-label">A GROUP</h3>
+                <img src="stand_j2j3_west_a.png" alt="J2・J3 WEST-A" class="stand-img">
+            </div>
+
+            <div class="mb-12">
+                <h3 class="group-label">B GROUP</h3>
+                <img src="stand_j2j3_west_b.png" alt="J2・J3 WEST-B" class="stand-img">
+            </div>
+        </div>
     </main>
 
-    <footer class="p-20 text-center border-t border-white/5 mx-8">
+    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-16">
         <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec"; 
-
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             const overlay = document.getElementById('overlay');
@@ -142,58 +171,18 @@
 
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) { pagetop.classList.add('show'); } 
-            else { pagetop.classList.remove('show'); }
+            if (window.scrollY > 400) {
+                pagetop.classList.add('show');
+            } else {
+                pagetop.classList.remove('show');
+            }
         });
 
         function scrollToTop(e) {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        async function loadPlayerData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const teamId = urlParams.get('id');
-            if (!teamId) return;
-
-            try {
-                const response = await fetch(`${SCRIPT_URL}?id=${teamId}`);
-                const data = await response.json();
-                document.getElementById('teamName').textContent = data.teamName;
-                const teamColor = data.teamColor || '#FFFFFF';
-                document.getElementById('teamUnderline').style.backgroundColor = teamColor;
-
-                document.getElementById('playerGrid').innerHTML = data.players.map((p, index) => {
-                    const cleanDate = p.birthday ? p.birthday.toString().substring(0, 10).replace(/-/g, '.') : '----.--.--';
-                    return `
-                    <a href="player-detail.html?name=${encodeURIComponent(p.name)}" 
-                       class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm"
-                    >
-                        <div class="flex items-center w-full md:flex-1">
-                            <span class="font-oswald text-[0.65rem] w-10 opacity-30 text-white uppercase">${p.position}</span>
-                            <span class="font-oswald text-2xl w-12 text-white">#${p.number}</span>
-                            <div class="name-container ml-4">
-                                <span class="font-serif font-black text-xl text-white tracking-widest leading-none">${p.name}</span>
-                                <div class="name-accent" style="background-color: ${teamColor}"></div>
-                            </div>
-                        </div>
-                        <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 my-4 md:my-0 px-6 tracking-widest uppercase">
-                            <span>${cleanDate}</span>
-                            <span>${p.height}CM</span>
-                            <span>${p.weight}KG</span>
-                        </div>
-                        <div class="w-full md:w-1/3 grid grid-cols-5 gap-1 text-center font-oswald text-white">
-                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">APP</span><span class="text-sm">${p.games}</span></div>
-                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">MIN</span><span class="text-sm">${p.minutes}</span></div>
-                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">G</span><span class="text-sm">${p.goals}</span></div>
-                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">Y</span><span class="text-sm">${p.yellow}</span></div>
-                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">R</span><span class="text-sm">${p.red}</span></div>
-                        </div>
-                    </a>`;
-                }).join('');
-            } catch (e) { console.error(e); }
-        }
-        loadPlayerData();
+        // Service Workerの登録処理を完全に削除しました
     </script>
 </body>
 </html>

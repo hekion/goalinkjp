@@ -47,14 +47,22 @@
         #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
-        /* 選手名装飾 */
+        /* 選手名装飾：常に表示される線 */
         .name-container { position: relative; display: inline-block; }
-        .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 0; transition: width 0.4s ease; }
-        .player-row:hover .name-accent { width: 100%; }
+        .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
 
-        .player-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; text-decoration: none; }
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* リスト行：スマホでのクリック感を出す */
+        .player-row { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            transition: 0.2s; 
+            text-decoration: none; 
+        }
+        .player-row:active { 
+            background: rgba(255,255,255,0.1) !important; 
+            transform: scale(0.98); 
+        }
+
         .loader { width: 20px; height: 20px; border: 2px solid var(--main-cyan); border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -90,7 +98,7 @@
     </nav>
 
     <main class="pt-48 pb-20 px-4 max-w-screen-xl mx-auto">
-        <div class="mb-16 text-center fade-in">
+        <div class="mb-16 text-center">
             <a href="teams.html" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white mb-6 inline-block uppercase italic">← Back to Teams</a>
             <h1 id="teamName" class="text-white text-4xl md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6 whitespace-nowrap">
                 <span class="loader"></span>
@@ -120,7 +128,6 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec"; 
 
-        // メニュー制御
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('show');
@@ -128,14 +135,10 @@
             document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // ページトップ制御
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
-                pagetop.classList.add('show');
-            } else {
-                pagetop.classList.remove('show');
-            }
+            if (window.scrollY > 400) { pagetop.classList.add('show'); } 
+            else { pagetop.classList.remove('show'); }
         });
 
         function scrollToTop(e) {
@@ -155,12 +158,14 @@
                 const teamColor = data.teamColor || '#FFFFFF';
                 document.getElementById('teamUnderline').style.backgroundColor = teamColor;
 
-                document.getElementById('playerGrid').innerHTML = data.players.map((p, index) => `
+                document.getElementById('playerGrid').innerHTML = data.players.map((p, index) => {
+                    // 日付フォーマットの強制修正 (T15...を削除)
+                    const cleanDate = p.birthday ? p.birthday.toString().substring(0, 10).replace(/-/g, '.') : '----.--.--';
+                    
+                    return `
                     <a href="player-detail.html?name=${encodeURIComponent(p.name)}" 
-                       class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm fade-in"
-                       style="animation-delay: ${index * 0.03}s"
-                       onmouseover="this.style.borderColor='${teamColor}'; this.style.background='rgba(255,255,255,0.06)';" 
-                       onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'; this.style.background='rgba(255,255,255,0.03)';"
+                       class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm"
+                       style="border-color: rgba(255,255,255,0.05);"
                     >
                         <div class="flex items-center w-full md:flex-1">
                             <span class="font-oswald text-[0.65rem] w-10 opacity-30 text-white uppercase">${p.position}</span>
@@ -171,7 +176,7 @@
                             </div>
                         </div>
                         <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 my-4 md:my-0 px-6 tracking-widest uppercase">
-                            <span>${p.birthday}</span>
+                            <span>${cleanDate}</span>
                             <span>${p.height}CM</span>
                             <span>${p.weight}KG</span>
                         </div>
@@ -182,8 +187,8 @@
                             <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">Y</span><span class="text-sm">${p.yellow}</span></div>
                             <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">R</span><span class="text-sm">${p.red}</span></div>
                         </div>
-                    </a>
-                `).join('');
+                    </a>`;
+                }).join('');
             } catch (e) { console.error(e); }
         }
         loadPlayerData();

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAYER DETAILS | Goalink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+
+        /* ヘッダー・メニューボタン */
+        .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
+        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .menu-trigger span:nth-child(1) { width: 100%; }
+        .menu-trigger span:nth-child(2) { width: 60%; }
+        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
+        .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
+
+        /* サイドメニュー */
+        #sideMenu {
+            position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
+            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
+            z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column; justify-content: center; padding-left: 12%;
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+        #sideMenu.open { right: 0; }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
+        #overlay.show { opacity: 1; visibility: visible; }
+        .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
+        #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
+
+        /* ページトップボタン */
+        #pagetop {
+            position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px);
+            text-decoration: none;
+        }
+        #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
+        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
+
+        /* 節ごとのカード */
+        .match-card { background: rgba(255,255,255,0.03); border-left: 2px solid var(--main-cyan); margin-bottom: 1rem; padding: 1.5rem; border-radius: 0 4px 4px 0; }
+        .loader { width: 20px; height: 20px; border: 2px solid var(--main-cyan); border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="toggleMenu()"></div>
+
+    <a href="#" id="pagetop" onclick="scrollToTop(event)">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+        <span>TOP</span>
+    </a>
+
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="h-14"></a>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav id="sideMenu">
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#"><span class="font-serif text-2xl opacity-50 text-white">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-white">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-white">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-white">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl text-white">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-48 pb-20 px-4 max-w-2xl mx-auto">
+        <div class="text-center mb-16">
+            <a href="javascript:history.back()" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white mb-6 inline-block uppercase italic">← Back</a>
+            <div class="font-oswald text-white/40 tracking-widest uppercase flex justify-center gap-4 text-sm">
+                <span id="playerTeam">---</span>
+                <span id="playerPosNo">--- #--</span>
+            </div>
+            <h1 id="playerName" class="text-4xl md:text-5xl font-serif font-black italic mt-4 tracking-tighter"><span class="loader"></span></h1>
+        </div>
+
+        <section class="mb-16">
+            <h2 class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 mb-6 uppercase italic">2026 SEASON TOTAL</h2>
+            <div class="grid grid-cols-5 gap-2 text-center font-oswald border-y border-white/10 py-8">
+                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest">GAMES</span><span id="total-games" class="text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest">MINS</span><span id="total-min" class="text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest">GOALS</span><span id="total-goals" class="text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest">YEL</span><span id="total-yel" class="text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest">RED</span><span id="total-red" class="text-2xl font-medium">-</span></div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 mb-6 uppercase italic">MATCH LOG</h2>
+            <div id="matchLog" class="flex flex-col"></div>
+        </section>
+    </main>
+
+    <footer class="p-20 text-center border-t border-white/5 mx-8">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    </footer>
+
+    <script>
+        const PLAYER_GAS_URL = "https://script.google.com/macros/s/AKfycbwq3oebwdXfBHjgtOzBpizT9h0eQ5h_3BxNeCgH357e7S3gutp6-a9UwtCS7ElT_IOq/exec";
+
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const btn = document.getElementById('menuBtn');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('show');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
+        }
+
+        const pagetop = document.getElementById('pagetop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) { pagetop.classList.add('show'); } 
+            else { pagetop.classList.remove('show'); }
+        });
+
+        function scrollToTop(e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        async function loadPlayerPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('id');
+            if (!playerId) return;
+
+            try {
+                const response = await fetch(`${PLAYER_GAS_URL}?id=${playerId}`);
+                const p = await response.json();
+                if (p.error) { document.getElementById('playerName').textContent = "NOT FOUND"; return; }
+
+                document.getElementById('playerName').textContent = p.name;
+                document.getElementById('playerTeam').textContent = p.teamName;
+                document.getElementById('playerPosNo').textContent = `${p.pos} #${p.no}`;
+                document.getElementById('total-games').textContent = p.total.games || 0;
+                document.getElementById('total-min').textContent = p.total.min || 0;
+                document.getElementById('total-goals').textContent = p.total.goals || 0;
+                document.getElementById('total-yel').textContent = p.total.yellow || 0;
+                document.getElementById('total-red').textContent = p.total.red || 0;
+
+                if (p.matches && p.matches.length > 0) {
+                    document.getElementById('matchLog').innerHTML = p.matches.map(m => `
+                        <div class="match-card">
+                            <div class="flex justify-between items-end mb-4 border-b border-white/5 pb-2">
+                                <span class="font-serif font-black italic text-xl tracking-tighter">${m.section}</span>
+                                <span class="font-oswald text-xs text-white/40 tracking-widest uppercase">${m.min} MIN PLAYED</span>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 text-center font-oswald text-xs">
+                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">GOAL</span><span>${m.goals}</span></div>
+                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">ASSIST</span><span>${m.assist}</span></div>
+                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">YELLOW</span><span>${m.yellow}</span></div>
+                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">RED</span><span>${m.red}</span></div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) { console.error(e); }
+        }
+        loadPlayerPage();
+    </script>
+</body>
+</html>

@@ -15,62 +15,85 @@
         /* ヘッダー */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         
-        /* 選手カード */
-        .player-card {
+        /* 選手行（1行1人） */
+        .player-row {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        .player-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: var(--main-cyan);
-            transform: translateY(-2px);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-decoration: none;
         }
 
-        /* アニメーション */
+        /* 選手名下の装飾ライン */
+        .name-accent {
+            height: 2px;
+            width: 15px;
+            margin-top: 4px;
+            transition: width 0.3s ease;
+        }
+        .player-row:hover .name-accent { width: 35px; }
+
+        /* フェードイン */
         .fade-in { animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ローディングアニメーション */
-        .loader {
-            width: 20px; height: 20px;
-            border: 2px solid var(--main-cyan);
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            animation: rotation 1s linear infinite;
-        }
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* ローディング */
+        .loader { width: 20px; height: 20px; border: 2px solid var(--main-cyan); border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
-    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black to-transparent">
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/90 backdrop-blur-md">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
-        <a href="teams.html" class="font-oswald text-[0.7rem] tracking-[0.2em] border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-all">BACK TO LIST</a>
+        
+        <button onclick="toggleMenu()" class="group flex flex-col items-end gap-1.5 focus:outline-none">
+            <span class="w-8 h-[1px] bg-white group-hover:w-10 transition-all"></span>
+            <span class="w-5 h-[1px] bg-white group-hover:w-10 transition-all"></span>
+            <p class="font-oswald text-[0.5rem] tracking-[0.3em] mt-1 opacity-60">MENU</p>
+        </button>
     </header>
 
-    <main class="pt-40 pb-20 px-8 max-w-screen-lg mx-auto">
-        <div class="mb-16 text-center fade-in">
-            <span class="font-oswald text-[#4bb8e0] tracking-[0.4em] text-xs block mb-2 uppercase">Team Roster</span>
-            <h1 id="teamName" class="text-4xl md:text-5xl font-serif font-black tracking-tighter">
-                <span class="opacity-20">Loading...</span>
-            </h1>
-            <div class="w-12 h-[1px] bg-[#4bb8e0] mx-auto mt-6"></div>
-        </div>
+    <div id="sideMenu" class="fixed inset-0 bg-black/98 z-[300] flex flex-col justify-center items-center gap-8 translate-x-full transition-transform duration-500 font-serif">
+        <button onclick="toggleMenu()" class="absolute top-10 right-10 text-white font-oswald text-xs tracking-widest uppercase">Close ×</button>
+        <a href="index.html" class="text-4xl hover:italic transition-all">HOME</a>
+        <a href="teams.html" class="text-4xl hover:italic transition-all">TEAMS</a>
+        <a href="#" class="text-4xl hover:italic transition-all opacity-20">NEWS</a>
+        <a href="#" class="text-4xl hover:italic transition-all opacity-20">ABOUT</a>
+    </div>
 
-        <div id="playerGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="col-span-full text-center py-20">
+    <main class="pt-48 pb-20 px-4 max-w-screen-xl mx-auto">
+        <div class="mb-16 text-center fade-in">
+            <a href="teams.html" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white mb-6 inline-block uppercase italic">← Back to Teams</a>
+            
+            <h1 id="teamName" class="text-white text-5xl md:text-7xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6">
                 <span class="loader"></span>
-                <p class="font-oswald text-[0.6rem] tracking-[0.2em] mt-4 opacity-40">FETCHING SQUAD DATA</p>
+            </h1>
+            <div id="teamUnderline" class="h-[1px] w-20 mx-auto mb-16 opacity-80" style="background-color: white;"></div>
+
+            <div class="max-w-3xl mx-auto border-y border-white/10 py-8 mb-16">
+                <p class="font-oswald text-[0.55rem] tracking-[0.4em] opacity-30 mb-6 italic">SEASON TOTALS</p>
+                <div class="grid grid-cols-7 gap-0 text-center font-oswald">
+                    <div class="border-r border-white/10 text-white"><span class="block text-[0.55rem] opacity-30 mb-1">W</span><span class="text-xl">-</span></div>
+                    <div class="border-r border-white/10 text-white"><span class="block text-[0.55rem] opacity-30 mb-1">D</span><span class="text-xl">-</span></div>
+                    <div class="border-r border-white/10 text-white"><span class="block text-[0.55rem] opacity-30 mb-1">L</span><span class="text-xl">-</span></div>
+                    <div class="border-r border-white/10 text-white"><span class="block text-[0.55rem] opacity-30 mb-1">GF</span><span class="text-xl">-</span></div>
+                    <div class="border-r border-white/10 text-white"><span class="block text-[0.55rem] opacity-30 mb-1">GA</span><span class="text-xl">-</span></div>
+                    <div class="border-r border-white/10 text-white"><span class="block text-[0.55rem] opacity-30 mb-1">YEL</span><span class="text-xl">-</span></div>
+                    <div class="text-white"><span class="block text-[0.55rem] opacity-30 mb-1">RED</span><span class="text-xl">-</span></div>
+                </div>
             </div>
         </div>
+
+        <div class="mb-6 flex items-center px-6 text-[0.55rem] opacity-20 tracking-[0.4em] font-oswald uppercase">
+            <div class="flex-1">Player Profile</div>
+            <div class="hidden md:flex flex-1 justify-around">Physical</div>
+            <div class="w-full md:w-1/3 grid grid-cols-5 text-center">Stats</div>
+        </div>
+
+        <div id="playerGrid" class="flex flex-col gap-2"></div>
     </main>
 
     <footer class="p-20 text-center border-t border-white/5 mx-8">
@@ -78,74 +101,67 @@
     </footer>
 
     <script>
-        // あなたが発行したGASのURL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec"; 
+
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('translate-x-full');
+        }
 
         async function loadPlayerData() {
             const urlParams = new URLSearchParams(window.location.search);
             const teamId = urlParams.get('id');
             const playerGrid = document.getElementById('playerGrid');
             const teamNameElement = document.getElementById('teamName');
+            const teamUnderline = document.getElementById('teamUnderline');
 
-            if (!teamId) {
-                playerGrid.innerHTML = '<p class="text-center opacity-50 col-span-full font-serif text-sm">チームIDが正しくありません。</p>';
-                return;
-            }
+            if (!teamId) return;
 
             try {
-                // GASからデータを取得
                 const response = await fetch(`${SCRIPT_URL}?id=${teamId}`);
                 const data = await response.json();
+                if (data.error) throw new Error(data.error);
 
-                if (data.error) {
-                    playerGrid.innerHTML = `
-                        <div class="col-span-full text-center py-10">
-                            <p class="text-red-400 font-serif text-sm mb-2">データが見つかりませんでした</p>
-                            <p class="text-[0.6rem] opacity-40 uppercase tracking-widest">${data.error}</p>
-                        </div>`;
-                    return;
-                }
-
-                // チーム名をセット
                 teamNameElement.textContent = data.teamName;
-                document.title = `${data.teamName} | Goalink`;
+                const teamColor = data.teamColor || '#FFFFFF';
+                teamUnderline.style.backgroundColor = teamColor;
 
-                // 選手がいなかった場合
-                if (!data.players || data.players.length === 0) {
-                    playerGrid.innerHTML = '<p class="text-center opacity-50 col-span-full py-10 font-serif text-sm">現在、選手データが登録されていません。</p>';
-                    return;
-                }
-
-                // 選手カードの生成（ポジション・背番号・名前）
+                // 選手リスト生成：1行1人の構造・文字は白・アクセントにチームカラー
                 playerGrid.innerHTML = data.players.map((p, index) => `
-                    <div class="player-card p-6 fade-in" style="animation-delay: ${index * 0.05}s">
-                        <div class="flex flex-col h-full">
-                            <div class="flex justify-between items-start mb-4">
-                                <span class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.2em] border-b border-[#4bb8e0]/30 pb-1">
-                                    ${p.position || '---'}
-                                </span>
-                                <span class="font-oswald text-xl text-white/20">
-                                    #${p.number || '--'}
-                                </span>
+                    <a href="player-detail.html?name=${encodeURIComponent(p.name)}" 
+                       class="player-row flex flex-col md:flex-row items-center p-5 rounded-sm fade-in"
+                       style="animation-delay: ${index * 0.03}s"
+                       onmouseover="this.style.borderColor='${teamColor}'; this.style.background='rgba(255,255,255,0.06)';" 
+                       onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'; this.style.background='rgba(255,255,255,0.03)';"
+                    >
+                        <div class="flex items-center w-full md:flex-1 mb-4 md:mb-0">
+                            <span class="font-oswald text-[0.65rem] w-10 font-bold opacity-30 text-white uppercase">${p.position}</span>
+                            <span class="font-oswald text-2xl w-12 text-white">#${p.number}</span>
+                            <div class="flex flex-col ml-4">
+                                <span class="font-serif font-black text-xl text-white tracking-widest leading-none">${p.name}</span>
+                                <div class="name-accent" style="background-color: ${teamColor}"></div>
                             </div>
-                            <h2 class="text-xl font-serif font-bold tracking-widest leading-tight">
-                                ${p.name || 'Unknown'}
-                            </h2>
                         </div>
-                    </div>
+
+                        <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 mb-4 md:mb-0 px-6 border-y border-white/5 md:border-none py-2 md:py-0 tracking-widest uppercase">
+                            <span>${p.birthday}</span>
+                            <span>${p.height}CM</span>
+                            <span>${p.weight}KG</span>
+                        </div>
+
+                        <div class="w-full md:w-1/3 grid grid-cols-5 gap-1 text-center font-oswald text-white">
+                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">APP</span><span class="text-sm">${p.games}</span></div>
+                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">MIN</span><span class="text-sm">${p.minutes}</span></div>
+                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">G</span><span class="text-sm">${p.goals}</span></div>
+                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">Y</span><span class="text-sm">${p.yellow}</span></div>
+                            <div class="flex flex-col"><span class="text-[0.5rem] opacity-20 mb-1">R</span><span class="text-sm">${p.red}</span></div>
+                        </div>
+                    </a>
                 `).join('');
 
             } catch (e) {
-                console.error(e);
-                playerGrid.innerHTML = `
-                    <div class="col-span-full text-center py-10">
-                        <p class="text-red-400 font-serif text-sm mb-2">システムエラーが発生しました</p>
-                        <p class="text-[0.6rem] opacity-40 uppercase tracking-widest">Connection Failed</p>
-                    </div>`;
+                playerGrid.innerHTML = `<div class="text-center py-20 opacity-40 font-oswald text-xs tracking-widest uppercase">Data Connection Error</div>`;
             }
         }
-
-        // 実行
         loadPlayerData();
     </script>
 </body>

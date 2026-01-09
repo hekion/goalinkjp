@@ -125,17 +125,18 @@
     </footer>
 
     <script>
+        // 先ほど「文字がめっちゃ出た」URL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
         let allMatches = [];
         let filterState = { area: 'ALL', teamId: '' };
 
-        // 地区ごとのチームIDリスト
+        // 地区ごとのチームID（スプレッドシートのD列・K列の数値と合わせる）
         const AREA_MAP = {
             EAST: [8, 13, 15, 16, 17, 18, 19],
             WEST: [20, 21] 
         };
 
-        // チームリスト
+        // チーム名リスト（セレクトボックス用）
         const TEAM_LIST = [
             {id: 8, name: "鹿島アントラーズ", area: "EAST"},
             {id: 13, name: "浦和レッズ", area: "EAST"},
@@ -158,6 +159,7 @@
             });
 
             try {
+                // cat=J1_EAST でスプレッドシートのタブを指定
                 const res = await fetch(`${SCRIPT_URL}?cat=J1_EAST`);
                 const data = await res.json();
                 allMatches = data.matches;

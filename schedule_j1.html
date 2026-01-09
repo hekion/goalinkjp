@@ -13,7 +13,7 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        /* ヘッダー・共通パーツ（index.html準拠） */
+        /* ヘッダー・共通パーツ */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -85,12 +85,6 @@
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl opacity-50">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
-        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
-            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
-                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
-            </a>
-        </div>
     </nav>
 
     <main class="pt-40 px-8 max-w-screen-md mx-auto min-h-screen">
@@ -125,29 +119,29 @@
     </footer>
 
     <script>
-        // 先ほど「文字がめっちゃ出た」URL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
         let allMatches = [];
         let filterState = { area: 'ALL', teamId: '' };
 
-        // 地区ごとのチームID（スプレッドシートのD列・K列の数値と合わせる）
-        const AREA_MAP = {
-            EAST: [8, 13, 15, 16, 17, 18, 19],
-            WEST: [20, 21] 
-        };
-
-        // チーム名リスト（セレクトボックス用）
         const TEAM_LIST = [
-            {id: 8, name: "鹿島アントラーズ", area: "EAST"},
-            {id: 13, name: "浦和レッズ", area: "EAST"},
-            {id: 15, name: "ジェフユナイテッド千葉", area: "EAST"},
-            {id: 16, name: "柏レイソル", area: "EAST"},
-            {id: 17, name: "FC東京", area: "EAST"},
-            {id: 18, name: "東京ヴェルディ", area: "EAST"},
-            {id: 19, name: "FC町田ゼルビア", area: "EAST"},
-            {id: 20, name: "川崎フロンターレ", area: "WEST"},
-            {id: 21, name: "横浜F・マリノス", area: "WEST"}
+            // EAST
+            {id: 8, name: "鹿島アントラーズ", area: "EAST"}, {id: 9, name: "水戸ホーリーホック", area: "EAST"},
+            {id: 13, name: "浦和レッズ", area: "EAST"}, {id: 15, name: "ジェフユナイテッド千葉", area: "EAST"},
+            {id: 16, name: "柏レイソル", area: "EAST"}, {id: 17, name: "FC東京", area: "EAST"},
+            {id: 18, name: "東京ヴェルディ", area: "EAST"}, {id: 19, name: "FC町田ゼルビア", area: "EAST"},
+            {id: 20, name: "川崎フロンターレ", area: "EAST"}, {id: 21, name: "横浜F・マリノス", area: "EAST"},
+            // WEST
+            {id: 31, name: "清水エスパルス", area: "WEST"}, {id: 34, name: "名古屋グランパス", area: "WEST"},
+            {id: 37, name: "京都サンガF.C.", area: "WEST"}, {id: 38, name: "ガンバ大阪", area: "WEST"},
+            {id: 39, name: "セレッソ大阪", area: "WEST"}, {id: 41, name: "ヴィッセル神戸", area: "WEST"},
+            {id: 44, name: "ファジアーノ岡山", area: "WEST"}, {id: 45, name: "サンフレッチェ広島", area: "WEST"},
+            {id: 52, name: "アビスパ福岡", area: "WEST"}, {id: 55, name: "V・ファーレン長崎", area: "WEST"}
         ];
+
+        const AREA_MAP = {
+            EAST: TEAM_LIST.filter(t => t.area === "EAST").map(t => t.id),
+            WEST: TEAM_LIST.filter(t => t.area === "WEST").map(t => t.id)
+        };
 
         async function initLoad() {
             const eastOpt = document.getElementById('opt-east');
@@ -159,8 +153,8 @@
             });
 
             try {
-                // cat=J1_EAST でスプレッドシートのタブを指定
-                const res = await fetch(`${SCRIPT_URL}?cat=J1_EAST`);
+                // type=j1 を指定して GAS から合体済みのデータを取得
+                const res = await fetch(`${SCRIPT_URL}?type=j1`);
                 const data = await res.json();
                 allMatches = data.matches;
                 render();
@@ -244,7 +238,6 @@
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         initLoad();
     </script>
 </body>

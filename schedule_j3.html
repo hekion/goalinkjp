@@ -124,24 +124,32 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             
-            // シンプルなフィルタリング
-            let filtered = allMatches.filter(m => {
-                // エリア判定：ALLなら常にtrue、そうでなければGASのsourceと完全一致
-                const areaMatch = (filterState.area === 'ALL' || m.source === filterState.area);
-                // チーム判定：未選択ならtrue、選択中ならID一致
-                const teamMatch = (!filterState.teamId || String(m.homeId) === String(filterState.teamId) || String(m.awayId) === String(filterState.teamId));
-                return areaMatch && teamMatch;
-            });
+            // 最も単純な条件分岐
+            let filtered = [];
+            
+            if (filterState.area === 'ALL' && !filterState.teamId) {
+                // ALLかつチーム未選択なら全部そのまま出す
+                filtered = allMatches;
+            } else {
+                // それ以外はフィルタリング
+                filtered = allMatches.filter(m => {
+                    const areaPass = (filterState.area === 'ALL') || (String(m.source).trim() === filterState.area);
+                    const teamPass = (!filterState.teamId) || (String(m.homeId).trim() === String(filterState.teamId) || String(m.awayId).trim() === String(filterState.teamId));
+                    return areaPass && teamPass;
+                });
+            }
 
             if (filtered.length === 0) {
-                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA</div>`;
+                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA FOUND</div>`;
                 return;
             }
 
             listDiv.innerHTML = filtered.map(match => {
-                const tag = (match.source === "J2_J3_WB") ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
-                const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
-                const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
+                const tag = String(match.source).includes('WB') ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
+                const hId = Number(match.homeId);
+                const aId = Number(match.awayId);
+                const hColor = TEAM_DATA[hId]?.color || "#333";
+                const aColor = TEAM_DATA[aId]?.color || "#333";
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
 
                 return `

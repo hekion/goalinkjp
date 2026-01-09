@@ -33,6 +33,10 @@
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
 
+        /* サイドメニュー内のテキスト色設定 */
+        .nav-link-active { color: var(--main-cyan) !important; }
+        .nav-link-inactive { color: #fff; opacity: 0.5; }
+
         .section-header { margin-bottom: 2.5rem; }
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 0.05em; display: block; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
@@ -48,6 +52,7 @@
             transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             position: relative;
             overflow: hidden;
+            text-decoration: none;
         }
         .hub-card::before {
             content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 3px;
@@ -73,22 +78,22 @@
     </header>
 
     <nav id="sideMenu">
-        <div class="mb-8"><a href="index.html" class="font-serif text-2xl opacity-50">TOP</a></div>
-        <div class="mb-8"><a href="schedule.html"><span class="font-serif text-2xl text-[#4bb8e0]">試合日程</span><small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
-        <div class="mb-8"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
-        <div class="mb-8"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
-        <div class="mb-8"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="mb-8"><a href="index.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">TOP</a></div>
+        <div class="mb-8"><a href="schedule.html" class="font-serif text-2xl nav-link-active">試合日程<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">SCHEDULE</small></a></div>
+        <div class="mb-8"><a href="teams.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">チーム一覧<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">TEAMS</small></a></div>
+        <div class="mb-8"><a href="standing.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">順位表<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">STANDING</small></a></div>
+        <div class="mb-8"><a href="database.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">個人成績<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">PLAYERS</small></a></div>
     </nav>
 
     <main class="pt-40 px-8 max-w-screen-md mx-auto min-h-screen">
         <div class="section-header fade-in">
-            <span class="section-title-en">Match Schedule</span>
-            <span class="section-title-ja">試合日程カテゴリ</span>
+            <span class="section-title-en">Select Category</span>
+            <span class="section-title-ja">試合日程を選択</span>
         </div>
 
         <div class="grid grid-cols-1 gap-6 fade-in" style="animation-delay: 0.2s;">
             
-            <a href="schedule_list.html" class="hub-card" style="--border-color: #ffffff;">
+            <a href="schedule_all.html" class="hub-card" style="--border-color: #ffffff;">
                 <div class="relative z-10">
                     <span class="font-serif text-2xl block mb-1">全カテゴリ 総合日程</span>
                     <small class="font-oswald text-[0.6rem] opacity-40 tracking-[0.3em] uppercase">All League Combined</small>
@@ -96,7 +101,7 @@
                 <span class="text-white opacity-20 text-xl font-light">→</span>
             </a>
 
-            <a href="schedule_list.html?cat=J1_EAST" class="hub-card" style="--border-color: #4bb8e0;">
+            <a href="schedule_j1.html" class="hub-card" style="--border-color: #4bb8e0;">
                 <div class="relative z-10">
                     <span class="font-serif text-2xl block mb-1">J1 リーグ日程</span>
                     <small class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.3em] uppercase">J1 League Matches</small>
@@ -104,7 +109,7 @@
                 <span class="text-[#4bb8e0] opacity-40 text-xl font-light">→</span>
             </a>
 
-            <a href="schedule_list.html?cat=J2_J3_EA" class="hub-card" style="--border-color: #00ff88;">
+            <a href="schedule_east.html" class="hub-card" style="--border-color: #00ff88;">
                 <div class="relative z-10">
                     <span class="font-serif text-2xl block mb-1">J2.J3 EAST 日程</span>
                     <small class="font-oswald text-[0.6rem] text-[#00ff88] tracking-[0.3em] uppercase">East Area (J2/J3)</small>
@@ -112,7 +117,7 @@
                 <span class="text-[#00ff88] opacity-40 text-xl font-light">→</span>
             </a>
 
-            <a href="schedule_list.html?cat=J2_J3_WA" class="hub-card" style="--border-color: #ff3366;">
+            <a href="schedule_west.html" class="hub-card" style="--border-color: #ff3366;">
                 <div class="relative z-10">
                     <span class="font-serif text-2xl block mb-1">J2.J3 WEST 日程</span>
                     <small class="font-oswald text-[0.6rem] text-[#ff3366] tracking-[0.3em] uppercase">West Area (J2/J3)</small>

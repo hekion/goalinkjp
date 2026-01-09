@@ -81,43 +81,33 @@
         let filterState = { area: 'ALL', teamId: '' };
 
         const TEAM_DATA = {
-            1: { name: "コンサドーレ札幌", area: "EA", color: "#FF0000" },
+            // 指定の20チーム
             2: { name: "ヴァンラーレ八戸", area: "EA", color: "#00A968" },
             3: { name: "ベガルタ仙台", area: "EA", color: "#FFD700" },
             4: { name: "ブラウブリッツ秋田", area: "EA", color: "#3498DB" },
             5: { name: "モンテディオ山形", area: "EA", color: "#2E59FF" },
-            6: { name: "福島ユナイテッドFC", area: "EA", color: "#FF2200" },
-            7: { name: "いわきFC", area: "EA", color: "#FF4422" },
-            8: { name: "鹿島アントラーズ", area: "EA", color: "#FF3131" },
-            9: { name: "水戸ホーリーホック", area: "EA", color: "#3182FF" },
             10: { name: "栃木SC", area: "EA", color: "#FFFF00" },
-            11: { name: "栃木シティ", area: "EB", color: "#24409E" },
-            12: { name: "ザスパ群馬", area: "EB", color: "#1B2E53" },
-            13: { name: "浦和レッズ", area: "EB", color: "#FF0000" },
+            11: { name: "栃木シティ", area: "EA", color: "#24409E" },
+            12: { name: "ザスパ群馬", area: "EA", color: "#1B2E53" },
+            22: { name: "横浜FC", area: "EA", color: "#56A9E3" },
+            23: { name: "湘南ベルマーレ", area: "EA", color: "#77FF00" },
+            24: { name: "SC相模原", area: "EA", color: "#008040" },
+            1: { name: "北海道コンサドーレ札幌", area: "EB", color: "#FF0000" },
+            6: { name: "福島ユナイテッドFC", area: "EB", color: "#FF2200" },
+            7: { name: "いわきFC", area: "EB", color: "#FF4422" },
             14: { name: "大宮アルディージャ", area: "EB", color: "#FF7700" },
-            15: { name: "ジェフユナイテッド千葉", area: "EB", color: "#FFEE00" },
-            16: { name: "柏レイソル", area: "EB", color: "#FFF200" },
-            17: { name: "FC東京", area: "EB", color: "#2E59FF" },
-            18: { name: "東京ヴェルディ", area: "EB", color: "#00B379" },
-            19: { name: "FC町田ゼルビア", area: "EB", color: "#24409E" },
-            20: { name: "川崎フロンターレ", area: "EB", color: "#00B2E5" },
-            21: { name: "横浜F・マリノス", area: "EB", color: "#0055FF" },
-            22: { name: "横浜FC", area: "EB", color: "#56A9E3" },
-            23: { name: "湘南ベルマーレ", area: "EB", color: "#77FF00" },
-            24: { name: "SC相模原", area: "EB", color: "#008040" },
             25: { name: "ヴァンフォーレ甲府", area: "EB", color: "#3344BB" },
             26: { name: "松本山雅FC", area: "EB", color: "#007733" },
             27: { name: "AC長野パルセイロ", area: "EB", color: "#FF8800" },
-            28: { name: "アルビレックス新潟", area: "EB", color: "#FF6600" },
-            // 西側のデータ（ソート用TEAM_DATAとして保持）
-            29: { color: "#2E59FF" }, 30: { color: "#FF0000" }, 31: { color: "#FF9900" }, 32: { color: "#99CCFF" },
-            33: { color: "#CC99FF" }, 34: { color: "#FF2200" }, 35: { color: "#008855" }, 36: { color: "#33CCFF" },
-            37: { color: "#CF73FF" }, 38: { color: "#3D5AFF" }, 39: { color: "#FF77BB" }, 40: { color: "#33BBFF" },
-            41: { color: "#A02040" }, 42: { color: "#2244AA" }, 43: { color: "#AAFF22" }, 44: { color: "#C7243A" },
-            45: { color: "#B37DFF" }, 46: { color: "#FF6600" }, 47: { color: "#99DDFF" }, 48: { color: "#0055AA" },
-            49: { color: "#FF8800" }, 50: { color: "#223366" }, 51: { color: "#FF2200" }, 52: { color: "#122A5B" },
-            53: { color: "#FFFF00" }, 54: { color: "#77CCFF" }, 55: { color: "#2E59FF" }, 56: { color: "#FF0000" },
-            57: { color: "#2E59FF" }, 58: { color: "#FFFFFF" }, 59: { color: "#334466" }, 60: { color: "#A02040" }
+            32: { name: "ジュビロ磐田", area: "EB", color: "#99CCFF" },
+            33: { name: "藤枝MYFC", area: "EB", color: "#CC99FF" },
+            35: { name: "FC岐阜", area: "EB", color: "#008855" },
+            // カラー参照用データ（J1等の対戦相手用）
+            8: { color: "#FF3131" }, 9: { color: "#3182FF" }, 13: { color: "#FF0000" }, 15: { color: "#FFEE00" },
+            16: { color: "#FFF200" }, 17: { color: "#2E59FF" }, 18: { color: "#00B379" }, 19: { color: "#24409E" },
+            20: { color: "#00B2E5" }, 21: { color: "#0055FF" }, 31: { color: "#FF9900" }, 34: { color: "#FF2200" },
+            37: { color: "#CF73FF" }, 38: { color: "#3D5AFF" }, 39: { color: "#FF77BB" }, 41: { color: "#A02040" },
+            44: { color: "#C7243A" }, 45: { color: "#B37DFF" }, 52: { color: "#122A5B" }, 55: { color: "#2E59FF" }
         };
 
         const TAG_MAP = {
@@ -137,7 +127,6 @@
             });
 
             try {
-                // type=j2j3_east で東側のデータを取得
                 const res = await fetch(`${SCRIPT_URL}?type=j2j3_east`);
                 const data = await res.json();
                 allMatches = data.matches;
@@ -172,9 +161,8 @@
             listDiv.innerHTML = filtered.map(match => {
                 const displayTag = TAG_MAP[match.source] || match.source;
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
-                const dateValue = match.date;
-                const dateParts = dateValue.split(/[\/\-]/);
-                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : dateValue;
+                const dateParts = match.date.split(/[\/\-]/);
+                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
                 const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
                 const awayColor = TEAM_DATA[match.awayId]?.color || "#333";

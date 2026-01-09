@@ -145,10 +145,11 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             let filtered = allMatches.filter(m => {
-                const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
+                const matchTeam = filterState.teamId ? (String(m.homeId) === String(filterState.teamId) || String(m.awayId) === String(filterState.teamId)) : true;
                 let matchArea = true;
                 if (filterState.area !== 'ALL') { 
-                    matchArea = m.source === filterState.area; 
+                    // 一致判定をより柔軟に修正
+                    matchArea = m.source && m.source.includes(filterState.area); 
                 }
                 return matchTeam && matchArea;
             });

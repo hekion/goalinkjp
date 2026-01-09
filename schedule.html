@@ -13,9 +13,10 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
+        /* ヘッダー・メニュー共通 */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
-        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s; }
+        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
         .menu-trigger span:nth-child(1) { width: 100%; }
         .menu-trigger span:nth-child(2) { width: 60%; }
         .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
@@ -32,9 +33,10 @@
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
 
-        .nav-link-active { color: var(--main-cyan) !important; }
-        .nav-link-inactive { color: #fff; opacity: 0.5; }
+        .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
+        #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
+        /* コンテンツ用スタイル */
         .section-header { margin-bottom: 2.5rem; }
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 0.05em; display: block; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
@@ -75,11 +77,18 @@
     </header>
 
     <nav id="sideMenu">
-        <div class="mb-8"><a href="index.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">TOP</a></div>
-        <div class="mb-8"><a href="schedule.html" class="font-serif text-2xl nav-link-active">試合日程<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">SCHEDULE</small></a></div>
-        <div class="mb-8"><a href="teams.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">チーム一覧<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">TEAMS</small></a></div>
-        <div class="mb-8"><a href="standing.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">順位表<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">STANDING</small></a></div>
-        <div class="mb-8"><a href="database.html" class="font-serif text-2xl nav-link-inactive hover:opacity-100 transition-all">個人成績<small class="font-oswald ml-3 text-[0.6rem] tracking-[0.3em] text-[#4bb8e0]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="https://hekion.github.io/goalinkjp/schedule.html"><span class="font-serif text-2xl text-[#4bb8e0]">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        
+        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+        </div>
     </nav>
 
     <main class="pt-40 px-8 max-w-screen-md mx-auto min-h-screen">
@@ -131,9 +140,13 @@
 
     <script>
         function toggleMenu() {
-            document.getElementById('sideMenu').classList.toggle('open');
-            document.getElementById('overlay').classList.toggle('show');
-            document.getElementById('menuBtn').classList.toggle('active');
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const btn = document.getElementById('menuBtn');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('show');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
         }
     </script>
 </body>

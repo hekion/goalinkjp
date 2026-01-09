@@ -11,9 +11,10 @@
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
-        .match-card { background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border-left: 2px solid var(--main-cyan); padding: 1.2rem 1.5rem; margin-bottom: 1.2rem; }
         
-        /* 6つのタグカラー設定 */
+        .match-card { background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border-left: 2px solid var(--main-cyan); padding: 1.2rem 1.5rem; margin-bottom: 1.2rem; }
+
+        /* 6つのカテゴリ別タグカラー */
         .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; border: 1px solid rgba(255,255,255,0.2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
         .tag-j1-e { color: #4bb8e0; border-color: #4bb8e0; background: rgba(75,184,224,0.1); }
         .tag-j1-w { color: #3b82f6; border-color: #3b82f6; background: rgba(59,130,246,0.1); }
@@ -23,11 +24,16 @@
         .tag-j2-wb { color: #f43f5e; border-color: #f43f5e; background: rgba(244,63,94,0.1); }
 
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
+        
+        /* 月別ボタン */
         .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 15px 0; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.75rem; padding: 0.6rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.2s; background: transparent; }
+        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.75rem; padding: 0.6rem 1.2rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.2s; background: transparent; }
         .month-btn.active { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); font-weight: bold; }
+
+        /* カテゴリタブ */
         .area-tab { flex: 1; text-align: center; padding: 1rem 0.5rem; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
         .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
         .color-line { height: 4px; width: 60px; margin-top: 6px; display: block; border-radius: 2px; }
         @media (min-width: 768px) { .color-line { width: 160px; } }
@@ -40,16 +46,19 @@
 
     <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
         <div id="month-filters" class="month-container mb-6"></div>
+
         <div class="mb-8 text-center md:text-left">
             <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">Full League Schedule</span>
-            <span class="font-serif text-3xl font-black italic block">ALL MATCHES</span>
+            <span class="font-serif text-3xl font-black italic">ALL MATCHES</span>
         </div>
+
         <div class="flex mb-10 border-t border-white/5">
             <div class="area-tab active" onclick="updateFilters('category', 'ALL', this)">ALL</div>
             <div class="area-tab" onclick="updateFilters('category', 'J1', this)">J1</div>
             <div class="area-tab" onclick="updateFilters('category', 'J2_J3_E', this)">J2.J3 EAST</div>
             <div class="area-tab" onclick="updateFilters('category', 'J2_J3_W', this)">J2.J3 WEST</div>
         </div>
+
         <div id="schedule-list" class="pb-24">
             <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">SYNCHRONIZING...</div>
         </div>
@@ -85,18 +94,27 @@
                 allMatches = results.flatMap(r => r.matches || []);
                 generateMonthButtons();
                 render();
-            } catch (e) { document.getElementById('schedule-list').innerHTML = 'LOAD ERROR'; }
+            } catch (e) {
+                document.getElementById('schedule-list').innerHTML = 'LOAD ERROR';
+            }
         }
 
         function generateMonthButtons() {
             const container = document.getElementById('month-filters');
-            const months = new Set(['ALL']);
+            const monthSet = new Set(['ALL']);
             allMatches.forEach(m => {
-                const parts = String(m.date).split('.');
-                if (parts[0]) months.add(parseInt(parts[0]) + "月");
+                // "02/06" などの形式から最初の数字を抽出
+                const dateStr = String(m.date);
+                const match = dateStr.match(/(\d+)\//);
+                if (match) monthSet.add(parseInt(match[1]) + "月");
             });
-            const sorted = Array.from(months).sort((a,b) => a === 'ALL' ? -1 : parseInt(a) - parseInt(b));
-            container.innerHTML = sorted.map(m => `<button class="month-btn ${m === filterState.month ? 'active' : ''}" onclick="updateFilters('month', '${m}', this)">${m}</button>`).join('');
+            const sorted = Array.from(monthSet).sort((a,b) => {
+                if (a === 'ALL') return -1;
+                return parseInt(a) - parseInt(b);
+            });
+            container.innerHTML = sorted.map(m => `
+                <button class="month-btn ${m === filterState.month ? 'active' : ''}" onclick="updateFilters('month', '${m}', this)">${m}</button>
+            `).join('');
         }
 
         function updateFilters(type, value, el) {
@@ -115,29 +133,44 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             let filtered = allMatches.filter(m => {
-                const s = String(m.source || "").trim();
-                const mMonth = String(m.date).split('.')[0] ? parseInt(String(m.date).split('.')[0]) + "月" : "";
-                return (filterState.category === 'ALL' || s.startsWith(filterState.category)) && (filterState.month === 'ALL' || mMonth === filterState.month);
+                const source = String(m.source || "");
+                const dateStr = String(m.date);
+                const monthMatch = dateStr.match(/(\d+)\//);
+                const mMonth = monthMatch ? parseInt(monthMatch[1]) + "月" : "";
+                
+                const catPass = (filterState.category === 'ALL' || source.startsWith(filterState.category));
+                const monthPass = (filterState.month === 'ALL' || mMonth === filterState.month);
+                return catPass && monthPass;
             });
 
+            // 日付順ソート (02/06 形式対応)
             filtered.sort((a, b) => {
-                const dA = new Date(2026, parseInt(String(a.date).split('.')[0])-1, parseInt(String(a.date).split('.')[1]));
-                const dB = new Date(2026, parseInt(String(b.date).split('.')[0])-1, parseInt(String(b.date).split('.')[1]));
-                return dA - dB || String(a.time).localeCompare(String(b.time));
+                const partsA = String(a.date).split('/').map(Number);
+                const partsB = String(b.date).split('/').map(Number);
+                if (partsA[0] !== partsB[0]) return partsA[0] - partsB[0];
+                if (partsA[1] !== partsB[1]) return partsA[1] - partsB[1];
+                return String(a.time).localeCompare(String(b.time));
             });
+
+            if (filtered.length === 0) {
+                listDiv.innerHTML = '<div class="text-center py-20 text-zinc-600">MATCH NOT FOUND</div>';
+                return;
+            }
 
             listDiv.innerHTML = filtered.map(match => {
                 const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
                 const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
                 
+                let tagName = "";
                 let tagClass = "tag";
-                let tagName = String(match.source);
-                if (tagName === 'J1_E') { tagName = 'J1 EAST'; tagClass += ' tag-j1-e'; }
-                else if (tagName === 'J1_W') { tagName = 'J1 WEST'; tagClass += ' tag-j1-w'; }
-                else if (tagName === 'J2_J3_EA') { tagName = 'J2.J3 EAST-A'; tagClass += ' tag-j2-ea'; }
-                else if (tagName === 'J2_J3_EB') { tagName = 'J2.J3 EAST-B'; tagClass += ' tag-j2-eb'; }
-                else if (tagName === 'J2_J3_WA') { tagName = 'J2.J3 WEST-A'; tagClass += ' tag-j2-wa'; }
-                else if (tagName === 'J2_J3_WB') { tagName = 'J2.J3 WEST-B'; tagClass += ' tag-j2-wb'; }
+                const s = match.source;
+                if (s === 'J1_E') { tagName = "J1 EAST"; tagClass += " tag-j1-e"; }
+                else if (s === 'J1_W') { tagName = "J1 WEST"; tagClass += " tag-j1-w"; }
+                else if (s === 'J2_J3_EA') { tagName = "J2.J3 EAST-A"; tagClass += " tag-j2-ea"; }
+                else if (s === 'J2_J3_EB') { tagName = "J2.J3 EAST-B"; tagClass += " tag-j2-eb"; }
+                else if (s === 'J2_J3_WA') { tagName = "J2.J3 WEST-A"; tagClass += " tag-j2-wa"; }
+                else if (s === 'J2_J3_WB') { tagName = "J2.J3 WEST-B"; tagClass += " tag-j2-wb"; }
+                else { tagName = s; }
 
                 return `
                     <div class="match-card">
@@ -149,18 +182,21 @@
                         </div>
                         <div class="flex items-center justify-center">
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span class="hidden md:inline">${match.homeName}</span><span class="inline md:hidden">${match.homeShort}</span>
+                                <span class="hidden md:inline">${match.homeName}</span>
+                                <span class="inline md:hidden">${match.homeShort}</span>
                                 <span class="color-line" style="background:${hColor}"></span>
                             </div>
                             <div class="mx-4 text-center">
                                 ${match.homeScore && match.homeScore !== "-" ? `<span class="font-oswald text-2xl font-medium">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs">VS</span>`}
                             </div>
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span class="hidden md:inline">${match.awayName}</span><span class="inline md:hidden">${match.awayShort}</span>
+                                <span class="hidden md:inline">${match.awayName}</span>
+                                <span class="inline md:hidden">${match.awayShort}</span>
                                 <span class="color-line" style="background:${aColor}"></span>
                             </div>
                         </div>
-                    </div>`;
+                    </div>
+                `;
             }).join('');
         }
         initLoad();

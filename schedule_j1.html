@@ -33,10 +33,9 @@
         .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
 
-        .team-container { display: flex; flex-direction: column; line-height: 1.1; }
+        /* チーム名とラインをどちらも中央に配置する設定 */
+        .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
         .color-line { height: 3px; width: 80px; margin-top: 1px; display: block; border-radius: 1px; }
-        .text-right .color-line { margin-left: auto; }
-        .text-left .color-line { margin-right: auto; }
 
         select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
     </style>
@@ -97,7 +96,7 @@
             44: { name: "ファジアーノ岡山", area: "WEST", color: "#C7243A" },
             45: { name: "サンフレッチェ広島", area: "WEST", color: "#B37DFF" },
             52: { name: "アビスパ福岡", area: "WEST", color: "#122A5B" },
-            55: { name: "V・ファーレン長崎", area: "WEST", color: "#2E59FF" }, // ← 青に変更
+            55: { name: "V・ファーレン長崎", area: "WEST", color: "#2E59FF" },
             2: { color: "#00A968" }, 3: { color: "#FFD700" }, 4: { color: "#3498DB" }, 5: { color: "#2E59FF" },
             10: { color: "#FFFF00" }, 11: { color: "#24409E" }, 12: { color: "#1B2E53" }, 22: { color: "#56A9E3" },
             23: { color: "#77FF00" }, 24: { color: "#008040" }, 1: { color: "#FF0000" }, 6: { color: "#FF2200" },
@@ -180,7 +179,7 @@
                             <span>${formattedDate}</span> <span class="ml-2">${match.time}</span> <span class="ml-2 text-zinc-500">${match.stadium}</span>
                         </div>
                         <div class="flex items-center justify-center">
-                            <div class="flex-1 team-container text-right font-serif text-lg md:text-xl">
+                            <div class="flex-1 team-container font-serif text-lg md:text-xl">
                                 <span>
                                     <span class="hidden md:inline">${match.homeName}</span>
                                     <span class="inline md:hidden">${match.homeShort}</span>
@@ -190,7 +189,7 @@
                             <div class="flex flex-col items-center mx-6 min-w-[70px]">
                                 ${isPlayed ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
                             </div>
-                            <div class="flex-1 team-container text-left font-serif text-lg md:text-xl">
+                            <div class="flex-1 team-container font-serif text-lg md:text-xl">
                                 <span>
                                     <span class="hidden md:inline">${match.awayName}</span>
                                     <span class="inline md:hidden">${match.awayShort}</span>

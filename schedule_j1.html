@@ -114,10 +114,7 @@
 
             <div class="mb-10">
                 <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
-                    <option value="">すべてのチームを選択</option>
-                    <optgroup label="EAST" id="opt-east"></optgroup>
-                    <optgroup label="WEST" id="opt-west"></optgroup>
-                </select>
+                    </select>
             </div>
         </div>
 
@@ -155,45 +152,41 @@
             44: { name: "ファジアーノ岡山", area: "WEST", color: "#C7243A" },
             45: { name: "サンフレッチェ広島", area: "WEST", color: "#B37DFF" },
             52: { name: "アビスパ福岡", area: "WEST", color: "#122A5B" },
-            55: { name: "V・ファーレン長崎", area: "WEST", color: "#2E59FF" },
-            2: { color: "#00A968" }, 3: { color: "#FFD700" }, 4: { color: "#3498DB" }, 5: { color: "#2E59FF" },
-            10: { color: "#FFFF00" }, 11: { color: "#24409E" }, 12: { color: "#1B2E53" }, 22: { color: "#56A9E3" },
-            23: { color: "#77FF00" }, 24: { color: "#008040" }, 1: { color: "#FF0000" }, 6: { color: "#FF2200" },
-            7: { color: "#FF4422" }, 14: { color: "#FF7700" }, 25: { color: "#3344BB" }, 26: { color: "#007733" },
-            27: { color: "#FF8800" }, 32: { color: "#99CCFF" }, 33: { color: "#CC99FF" }, 35: { color: "#008855" },
-            28: { color: "#FF6600" }, 29: { color: "#2E59FF" }, 30: { color: "#FF0000" }, 40: { color: "#33BBFF" },
-            42: { color: "#2244AA" }, 47: { color: "#99DDFF" }, 48: { color: "#0055AA" }, 49: { color: "#FF8800" },
-            50: { color: "#223366" }, 51: { color: "#FF2200" }, 36: { color: "#33CCFF" }, 43: { color: "#AAFF22" },
-            46: { color: "#FF6600" }, 53: { color: "#FFFF00" }, 54: { color: "#77CCFF" }, 56: { color: "#FF0000" },
-            57: { color: "#2E59FF" }, 58: { color: "#FFFFFF" }, 59: { color: "#334466" }, 60: { color: "#A02040" }
+            55: { name: "V・ファーレン長崎", area: "WEST", color: "#2E59FF" }
         };
 
-        const TAG_MAP = {
-            "J1_EAST": "J1 EAST", "J1_WEST": "J1 WEST",
-            "J2_J3_EA": "J2.J3 EAST-A", "J2_J3_EB": "J2.J3 EAST-B",
-            "J2_J3_WA": "J2.J3 WEST-A", "J2_J3_WB": "J2.J3 WEST-B"
-        };
+        const TEAM_COLORS = { 2: "#00A968", 3: "#FFD700", 4: "#3498DB", 5: "#2E59FF", 10: "#FFFF00", 11: "#24409E", 12: "#1B2E53", 22: "#56A9E3", 23: "#77FF00", 24: "#008040", 1: "#FF0000", 6: "#FF2200", 7: "#FF4422", 14: "#FF7700", 25: "#3344BB", 26: "#007733", 27: "#FF8800", 32: "#99CCFF", 33: "#CC99FF", 35: "#008855", 28: "#FF6600", 29: "#2E59FF", 30: "#FF0000", 40: "#33BBFF", 42: "#2244AA", 47: "#99DDFF", 48: "#0055AA", 49: "#FF8800", 50: "#223366", 51: "#FF2200", 36: "#33CCFF", 43: "#AAFF22", 46: "#FF6600", 53: "#FFFF00", 54: "#77CCFF", 56: "#FF0000", 57: "#2E59FF", 58: "#FFFFFF", 59: "#334466", 60: "#A02040" };
 
         async function initLoad() {
-            const eastOpt = document.getElementById('opt-east');
-            const westOpt = document.getElementById('opt-west');
-            Object.keys(TEAM_DATA).forEach(id => {
-                const team = TEAM_DATA[id];
-                if (team.name) {
-                    const opt = `<option value="${id}">${team.name}</option>`;
-                    if (team.area === "EAST") eastOpt.insertAdjacentHTML('beforeend', opt);
-                    else westOpt.insertAdjacentHTML('beforeend', opt);
-                }
-            });
-
+            updateTeamSelector();
             try {
                 const res = await fetch(`${SCRIPT_URL}?type=j1`);
                 const data = await res.json();
                 allMatches = data.matches;
                 render();
-            } catch (e) {
-                document.getElementById('schedule-list').innerHTML = 'ERROR';
+            } catch (e) { document.getElementById('schedule-list').innerHTML = 'ERROR'; }
+        }
+
+        // チーム選択プルダウンの動的更新
+        function updateTeamSelector() {
+            const selector = document.getElementById('team-selector');
+            const currentArea = filterState.area;
+            let html = '<option value="">すべてのチームを選択</option>';
+
+            const eastTeams = Object.keys(TEAM_DATA).filter(id => TEAM_DATA[id].area === "EAST");
+            const westTeams = Object.keys(TEAM_DATA).filter(id => TEAM_DATA[id].area === "WEST");
+
+            if (currentArea === 'ALL' || currentArea === 'EAST') {
+                html += '<optgroup label="EAST">';
+                eastTeams.forEach(id => html += `<option value="${id}">${TEAM_DATA[id].name}</option>`);
+                html += '</optgroup>';
             }
+            if (currentArea === 'ALL' || currentArea === 'WEST') {
+                html += '<optgroup label="WEST">';
+                westTeams.forEach(id => html += `<option value="${id}">${TEAM_DATA[id].name}</option>`);
+                html += '</optgroup>';
+            }
+            selector.innerHTML = html;
         }
 
         function updateFilters(type, value, el) {
@@ -202,7 +195,7 @@
                 document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
                 el.classList.add('active');
                 filterState.teamId = '';
-                document.getElementById('team-selector').value = '';
+                updateTeamSelector(); // エリアに合わせてプルダウンを更新
             } else if (type === 'team') {
                 filterState.teamId = value;
             }
@@ -219,42 +212,34 @@
             });
 
             listDiv.innerHTML = filtered.map(match => {
-                const displayTag = TAG_MAP[match.source] || match.source;
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
                 const dateParts = match.date.split(/[\/\-]/);
-                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
+                const formattedDate = dateParts.length >= 2 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
-                const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
-                const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
+                const homeColor = TEAM_DATA[match.homeId]?.color || TEAM_COLORS[match.homeId] || "#333";
+                const awayColor = TEAM_DATA[match.awayId]?.color || TEAM_COLORS[match.awayId] || "#333";
 
                 return `
                     <div class="match-card">
                         <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6 font-oswald text-[0.7rem] tracking-wider text-zinc-400">
                             <span class="font-serif text-white font-bold text-xs">第${match.section}節</span>
-                            <span class="tag">${displayTag}</span>
+                            <span class="tag">${match.source.replace('_', ' ')}</span>
                             <div class="flex items-center gap-3">
                                 <span>${formattedDate}</span>
                                 <span>${match.time}</span>
                                 <span class="text-zinc-500">${match.stadium}</span>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-center">
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span>
-                                    <span class="hidden md:inline">${match.homeName}</span>
-                                    <span class="inline md:hidden">${match.homeShort}</span>
-                                </span>
+                                <span><span class="hidden md:inline">${match.homeName}</span><span class="inline md:hidden">${match.homeShort}</span></span>
                                 <span class="color-line" style="background:${homeColor}"></span>
                             </div>
                             <div class="flex flex-col items-center mx-6 min-w-[70px]">
                                 ${isPlayed ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
                             </div>
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span>
-                                    <span class="hidden md:inline">${match.awayName}</span>
-                                    <span class="inline md:hidden">${match.awayShort}</span>
-                                </span>
+                                <span><span class="hidden md:inline">${match.awayName}</span><span class="inline md:hidden">${match.awayShort}</span></span>
                                 <span class="color-line" style="background:${awayColor}"></span>
                             </div>
                         </div>
@@ -263,7 +248,6 @@
             }).join('');
         }
 
-        // メニュー制御
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             const overlay = document.getElementById('overlay');
@@ -274,7 +258,6 @@
             document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
         }
 
-        // ページトップ制御
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) pagetop.classList.add('show');

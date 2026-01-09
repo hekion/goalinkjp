@@ -146,10 +146,11 @@
             const listDiv = document.getElementById('schedule-list');
             let filtered = allMatches.filter(m => {
                 const matchTeam = filterState.teamId ? (String(m.homeId) === String(filterState.teamId) || String(m.awayId) === String(filterState.teamId)) : true;
-                let matchArea = true;
-                if (filterState.area !== 'ALL') { 
-                    // 一致判定をより柔軟に修正
-                    matchArea = m.source && m.source.includes(filterState.area); 
+                let matchArea = false;
+                if (filterState.area === 'ALL') {
+                    matchArea = true;
+                } else {
+                    matchArea = m.source === filterState.area;
                 }
                 return matchTeam && matchArea;
             });
@@ -160,8 +161,9 @@
                 const dateParts = match.date.split(/[\/\-]/);
                 const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
-                const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
-                const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
+                // IDを数値に変換して確実にTEAM_DATAから色を取得
+                const homeColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
+                const awayColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
 
                 return `
                     <div class="match-card">

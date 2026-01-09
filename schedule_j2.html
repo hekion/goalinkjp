@@ -3,77 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J2/J3 EAST SCHEDULE - Goalink</title>
+    <title>J2/J3 EAST SCHEDULE | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
-        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        .match-card { 
-            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-            border-left: 2px solid var(--main-cyan);
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 1.2rem;
-        }
-        .tag {
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.6rem;
-            padding: 2px 8px;
-            background: rgba(75, 184, 224, 0.1);
-            color: var(--main-cyan);
-            border: 1px solid rgba(75, 184, 224, 0.3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-        
+        /* ヘッダー・共通パーツ */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
+        .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
+        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .menu-trigger span:nth-child(1) { width: 100%; }
+        .menu-trigger span:nth-child(2) { width: 60%; }
+        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
+        .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
+
+        #sideMenu { position: fixed; top: 0; right: -100%; width: 75%; height: 100%; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; justify-content: center; padding-left: 12%; border-left: 1px solid rgba(255,255,255,0.1); }
+        #sideMenu.open { right: 0; }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
+        #overlay.show { opacity: 1; visibility: visible; }
+        .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
+        #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
+
+        /* 大見出し */
+        .page-header { margin-bottom: 2rem; }
+        .page-title-en { font-family: 'Oswald', sans-serif; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
+        .page-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 0.05em; display: block; }
+
+        /* 日程トップに戻るボタン */
+        .back-to-schedule-btn { display: inline-flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.2em; color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.8rem 1.5rem; margin-bottom: 2.5rem; transition: 0.3s; background: rgba(255,255,255,0.03); }
+        .back-to-schedule-btn:hover { border-color: var(--main-cyan); color: var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
+        /* フィルタデザイン */
         .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
-
-        .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
-        
-        .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; transition: width 0.3s; }
-        @media (min-width: 768px) {
-            .color-line { width: 220px; }
-        }
-
         select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
+
+        /* 試合カード */
+        .match-card { background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border-left: 2px solid var(--main-cyan); padding: 1.2rem 1.5rem; margin-bottom: 1.2rem; }
+        .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; background: rgba(75, 184, 224, 0.1); color: var(--main-cyan); border: 1px solid rgba(75, 184, 224, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; border-radius: 2px; }
+        .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
+        .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; transition: width 0.3s; }
+        @media (min-width: 768px) { .color-line { width: 220px; } }
+
+        /* ページトップボタン（浮遊） */
+        #pagetop { position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px; background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px); text-decoration: none; }
+        #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
+        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
+
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/95">
+    <div id="overlay" onclick="toggleMenu()"></div>
+
+    <a href="#" id="pagetop" onclick="scrollToTop(event)">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+        <span>TOP</span>
+    </a>
+
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
+            <span></span><span></span>
+        </div>
     </header>
 
+    <nav id="sideMenu">
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="https://hekion.github.io/goalinkjp/schedule.html"><span class="font-serif text-2xl text-[#4bb8e0]">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        
+        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+        </div>
+    </nav>
+
     <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
-        <div class="mb-10">
-            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">J2/J3 EAST Schedule</span>
-            <span class="font-serif text-3xl font-black">J2・J3 EAST</span>
+        
+        <div class="page-header fade-in">
+            <span class="page-title-en">J2/J3 EAST Schedule</span>
+            <span class="page-title-ja">J2・J3 EAST</span>
         </div>
 
-        <div class="flex mb-4 border-t border-white/5">
-            <div class="area-tab active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
-            <div class="area-tab" onclick="updateFilters('area', 'J2_J3_EA', this)">GROUP A</div>
-            <div class="area-tab" onclick="updateFilters('area', 'J2_J3_EB', this)">GROUP B</div>
+        <div class="fade-in" style="animation-delay: 0.05s;">
+            <a href="https://hekion.github.io/goalinkjp/schedule.html" class="back-to-schedule-btn">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span>BACK TO SCHEDULE TOP</span>
+            </a>
         </div>
 
-        <div class="mb-10">
-            <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
-                <option value="">すべてのチームを選択</option>
-                <optgroup label="EAST A" id="opt-east-a"></optgroup>
-                <optgroup label="EAST B" id="opt-east-b"></optgroup>
-            </select>
+        <div class="fade-in" style="animation-delay: 0.1s;">
+            <div class="flex mb-4 border-t border-white/5">
+                <div class="area-tab active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
+                <div class="area-tab" onclick="updateFilters('area', 'J2_J3_EA', this)">GROUP A</div>
+                <div class="area-tab" onclick="updateFilters('area', 'J2_J3_EB', this)">GROUP B</div>
+            </div>
+
+            <div class="mb-10">
+                <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
+                    </select>
+            </div>
         </div>
 
-        <div id="schedule-list" class="pb-24">
+        <div id="schedule-list" class="pb-24 fade-in" style="animation-delay: 0.2s;">
             <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING...</div>
         </div>
     </main>
+
+    <footer class="p-20 text-center border-t border-white/5 mx-8">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    </footer>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
@@ -100,38 +152,42 @@
             27: { name: "AC長野パルセイロ", area: "EB", color: "#FF8800" },
             32: { name: "ジュビロ磐田", area: "EB", color: "#99CCFF" },
             33: { name: "藤枝MYFC", area: "EB", color: "#CC99FF" },
-            35: { name: "FC岐阜", area: "EB", color: "#008855" },
-            8: { color: "#FF3131" }, 9: { color: "#3182FF" }, 13: { color: "#FF0000" }, 15: { color: "#FFEE00" },
-            16: { color: "#FFF200" }, 17: { color: "#2E59FF" }, 18: { color: "#00B379" }, 19: { color: "#24409E" },
-            20: { color: "#00B2E5" }, 21: { color: "#0055FF" }, 31: { color: "#FF9900" }, 34: { color: "#FF2200" },
-            37: { color: "#CF73FF" }, 38: { color: "#3D5AFF" }, 39: { color: "#FF77BB" }, 41: { color: "#A02040" },
-            44: { color: "#C7243A" }, 45: { color: "#B37DFF" }, 52: { color: "#122A5B" }, 55: { color: "#2E59FF" }
+            35: { name: "FC岐阜", area: "EB", color: "#008855" }
         };
 
-        const TAG_MAP = {
-            "J2_J3_EA": "J2.J3 EAST-A", "J2_J3_EB": "J2.J3 EAST-B"
-        };
+        const TEAM_COLORS = { 8: "#FF3131", 9: "#3182FF", 13: "#FF0000", 15: "#FFEE00", 16: "#FFF200", 17: "#2E59FF", 18: "#00B379", 19: "#24409E", 20: "#00B2E5", 21: "#0055FF", 31: "#FF9900", 34: "#FF2200", 37: "#CF73FF", 38: "#3D5AFF", 39: "#FF77BB", 41: "#A02040", 44: "#C7243A", 45: "#B37DFF", 52: "#122A5B", 55: "#2E59FF" };
+
+        const TAG_MAP = { "J2_J3_EA": "J2.J3 EAST-A", "J2_J3_EB": "J2.J3 EAST-B" };
 
         async function initLoad() {
-            const optA = document.getElementById('opt-east-a');
-            const optB = document.getElementById('opt-east-b');
-            Object.keys(TEAM_DATA).forEach(id => {
-                const team = TEAM_DATA[id];
-                if (team.name) {
-                    const opt = `<option value="${id}">${team.name}</option>`;
-                    if (team.area === "EA") optA.insertAdjacentHTML('beforeend', opt);
-                    else optB.insertAdjacentHTML('beforeend', opt);
-                }
-            });
-
+            updateTeamSelector();
             try {
                 const res = await fetch(`${SCRIPT_URL}?type=j2j3_east`);
                 const data = await res.json();
                 allMatches = data.matches;
                 render();
-            } catch (e) {
-                document.getElementById('schedule-list').innerHTML = 'ERROR';
+            } catch (e) { document.getElementById('schedule-list').innerHTML = 'ERROR'; }
+        }
+
+        function updateTeamSelector() {
+            const selector = document.getElementById('team-selector');
+            const currentArea = filterState.area;
+            let html = '<option value="">すべてのチームを選択</option>';
+
+            const eaTeams = Object.keys(TEAM_DATA).filter(id => TEAM_DATA[id].area === "EA");
+            const ebTeams = Object.keys(TEAM_DATA).filter(id => TEAM_DATA[id].area === "EB");
+
+            if (currentArea === 'ALL' || currentArea === 'J2_J3_EA') {
+                html += '<optgroup label="EAST A">';
+                eaTeams.forEach(id => html += `<option value="${id}">${TEAM_DATA[id].name}</option>`);
+                html += '</optgroup>';
             }
+            if (currentArea === 'ALL' || currentArea === 'J2_J3_EB') {
+                html += '<optgroup label="EAST B">';
+                ebTeams.forEach(id => html += `<option value="${id}">${TEAM_DATA[id].name}</option>`);
+                html += '</optgroup>';
+            }
+            selector.innerHTML = html;
         }
 
         function updateFilters(type, value, el) {
@@ -140,7 +196,7 @@
                 document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
                 el.classList.add('active');
                 filterState.teamId = '';
-                document.getElementById('team-selector').value = '';
+                updateTeamSelector();
             } else if (type === 'team') {
                 filterState.teamId = value;
             }
@@ -152,9 +208,7 @@
             let filtered = allMatches.filter(m => {
                 const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
                 let matchArea = true;
-                if (filterState.area !== 'ALL') { 
-                    matchArea = m.source === filterState.area; 
-                }
+                if (filterState.area !== 'ALL') { matchArea = m.source === filterState.area; }
                 return matchTeam && matchArea;
             });
 
@@ -162,10 +216,10 @@
                 const displayTag = TAG_MAP[match.source] || match.source;
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
                 const dateParts = match.date.split(/[\/\-]/);
-                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
+                const formattedDate = dateParts.length >= 2 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
-                const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
-                const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
+                const homeColor = TEAM_DATA[match.homeId]?.color || TEAM_COLORS[match.homeId] || "#333";
+                const awayColor = TEAM_DATA[match.awayId]?.color || TEAM_COLORS[match.awayId] || "#333";
 
                 return `
                     <div class="match-card">
@@ -178,23 +232,16 @@
                                 <span class="text-zinc-500">${match.stadium}</span>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-center">
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span>
-                                    <span class="hidden md:inline">${match.homeName}</span>
-                                    <span class="inline md:hidden">${match.homeShort}</span>
-                                </span>
+                                <span><span class="hidden md:inline">${match.homeName}</span><span class="inline md:hidden">${match.homeShort}</span></span>
                                 <span class="color-line" style="background:${homeColor}"></span>
                             </div>
                             <div class="flex flex-col items-center mx-6 min-w-[70px]">
                                 ${isPlayed ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
                             </div>
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span>
-                                    <span class="hidden md:inline">${match.awayName}</span>
-                                    <span class="inline md:hidden">${match.awayShort}</span>
-                                </span>
+                                <span><span class="hidden md:inline">${match.awayName}</span><span class="inline md:hidden">${match.awayShort}</span></span>
                                 <span class="color-line" style="background:${awayColor}"></span>
                             </div>
                         </div>
@@ -202,6 +249,28 @@
                 `;
             }).join('');
         }
+
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const btn = document.getElementById('menuBtn');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('show');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
+        }
+
+        const pagetop = document.getElementById('pagetop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) pagetop.classList.add('show');
+            else pagetop.classList.remove('show');
+        });
+
+        function scrollToTop(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         initLoad();
     </script>
 </body>

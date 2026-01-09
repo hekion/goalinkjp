@@ -73,8 +73,8 @@
 
     <main class="pt-48 pb-20 px-4 max-w-2xl mx-auto">
         <div class="flex justify-center gap-8 mb-12">
-            <a id="backBtn" href="javascript:history.back()" class="font-oswald text-[0.55rem] tracking-[0.3em] text-[#4bb8e0] hover:text-white uppercase italic transition-colors">← Back to Team</a>
-            <a href="teams.html" class="font-oswald text-[0.55rem] tracking-[0.3em] text-white/30 hover:text-white uppercase italic transition-colors">Back to Team List</a>
+            <a id="backBtn" href="javascript:history.back()" class="font-serif text-[0.65rem] tracking-widest text-[#4bb8e0] hover:text-white transition-colors">← チーム詳細に戻る</a>
+            <a href="teams.html" class="font-serif text-[0.65rem] tracking-widest text-white/30 hover:text-white transition-colors">チームリストに戻る</a>
         </div>
 
         <div class="text-center mb-16">
@@ -91,18 +91,18 @@
         </div>
 
         <section class="mb-16">
-            <h2 class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 mb-6 uppercase italic">2026 SEASON TOTAL</h2>
-            <div class="grid grid-cols-5 gap-2 text-center font-oswald border-y border-white/10 py-8">
-                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest uppercase">Games</span><span id="total-games" class="text-2xl font-medium">-</span></div>
-                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest uppercase">Mins</span><span id="total-min" class="text-2xl font-medium">-</span></div>
-                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest uppercase">Goals</span><span id="total-goals" class="text-2xl font-medium">-</span></div>
-                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest uppercase">Yel</span><span id="total-yel" class="text-2xl font-medium">-</span></div>
-                <div><span class="block text-[0.5rem] opacity-30 mb-2 tracking-widest uppercase">Red</span><span id="total-red" class="text-2xl font-medium">-</span></div>
+            <h2 class="font-serif text-[0.6rem] tracking-[0.2em] text-white/30 mb-6 text-center lg:text-left">2026 シーズン通算成績</h2>
+            <div class="grid grid-cols-5 gap-2 text-center border-y border-white/10 py-8">
+                <div><span class="block text-[0.65rem] opacity-30 mb-2 font-serif">試合数</span><span id="total-games" class="font-oswald text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.65rem] opacity-30 mb-2 font-serif">出場時間</span><span id="total-min" class="font-oswald text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.65rem] opacity-30 mb-2 font-serif">得点</span><span id="total-goals" class="font-oswald text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.65rem] opacity-30 mb-2 font-serif">警告</span><span id="total-yel" class="font-oswald text-2xl font-medium">-</span></div>
+                <div><span class="block text-[0.65rem] opacity-30 mb-2 font-serif">退場</span><span id="total-red" class="font-oswald text-2xl font-medium">-</span></div>
             </div>
         </section>
 
         <section>
-            <h2 class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 mb-6 uppercase italic">Match Log</h2>
+            <h2 class="font-serif text-[0.6rem] tracking-[0.2em] text-white/30 mb-6 text-center lg:text-left">出場記録</h2>
             <div id="matchLog" class="flex flex-col"></div>
         </section>
     </main>
@@ -140,7 +140,7 @@
                 const p = await response.json();
 
                 if (p.error) {
-                    document.getElementById('playerName').textContent = "PLAYER NOT FOUND";
+                    document.getElementById('playerName').textContent = "選手データが見つかりません";
                     return;
                 }
 
@@ -149,40 +149,41 @@
                 document.getElementById('playerPos').textContent = p.pos;
                 document.getElementById('playerNo').textContent = `#${p.no}`;
                 
-                // チームカラーの下線（もしGASから色を返さない場合は、teampageから引き継ぐかデフォルト色に）
-                const accentColor = p.teamColor || '#4bb8e0';
-                document.getElementById('nameUnderline').style.backgroundColor = accentColor;
+                // チームカラーの下線
+                document.getElementById('nameUnderline').style.backgroundColor = p.teamColor || '#4bb8e0';
 
+                // 合計スタッツ
                 document.getElementById('total-games').textContent = p.total.games || 0;
                 document.getElementById('total-min').textContent = p.total.min || 0;
                 document.getElementById('total-goals').textContent = p.total.goals || 0;
                 document.getElementById('total-yel').textContent = p.total.yellow || 0;
                 document.getElementById('total-red').textContent = p.total.red || 0;
 
-                const formatVal = (v) => (v === 0 || v === "0" || v === "") ? "ー" : v;
+                // undefinedや0を横線にする関数
+                const fmt = (v) => (v === 0 || v === "0" || v === "" || v === undefined) ? "ー" : v;
 
                 if (p.matches && p.matches.length > 0) {
                     document.getElementById('matchLog').innerHTML = p.matches.map(m => `
                         <div class="match-card">
                             <div class="flex justify-between items-end mb-4 border-b border-white/5 pb-2">
                                 <span class="font-serif font-black italic text-xl tracking-tighter text-white">${m.section}</span>
-                                <span class="font-oswald text-xs text-white/40 tracking-widest uppercase">${formatVal(m.min)} MIN PLAYED</span>
+                                <span class="font-serif text-[0.65rem] text-white/40 tracking-widest">${fmt(m.min)} 分出場</span>
                             </div>
                             <div class="grid grid-cols-4 gap-2 text-center font-oswald text-xs">
-                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">Goal</span><span class="text-sm">${formatVal(m.goals)}</span></div>
-                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">Assist</span><span class="text-sm">${formatVal(m.assist)}</span></div>
-                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">Yellow</span><span class="text-sm">${formatVal(m.yellow)}</span></div>
-                                <div class="flex flex-col"><span class="opacity-30 mb-1 text-[0.5rem] tracking-tighter uppercase">Red</span><span class="text-sm">${formatVal(m.red)}</span></div>
+                                <div class="flex flex-col"><span class="font-serif opacity-30 mb-1 text-[0.6rem] tracking-tighter uppercase">得点</span><span class="text-sm">${fmt(m.goals)}</span></div>
+                                <div class="flex flex-col"><span class="font-serif opacity-30 mb-1 text-[0.6rem] tracking-tighter uppercase">アシスト</span><span class="text-sm">${fmt(m.assist)}</span></div>
+                                <div class="flex flex-col"><span class="font-serif opacity-30 mb-1 text-[0.6rem] tracking-tighter uppercase">警告</span><span class="text-sm">${fmt(m.yellow)}</span></div>
+                                <div class="flex flex-col"><span class="font-serif opacity-30 mb-1 text-[0.6rem] tracking-tighter uppercase">退場</span><span class="text-sm">${fmt(m.red)}</span></div>
                             </div>
                         </div>
                     `).join('');
                 } else {
-                    document.getElementById('matchLog').innerHTML = '<p class="text-white/20 text-center font-oswald text-xs py-10 tracking-widest uppercase">No match data available</p>';
+                    document.getElementById('matchLog').innerHTML = '<p class="text-white/20 text-center font-serif text-xs py-10 tracking-widest">出場データがありません</p>';
                 }
 
             } catch (e) {
                 console.error(e);
-                document.getElementById('playerName').textContent = "ERROR LOADING DATA";
+                document.getElementById('playerName').textContent = "ERROR";
             }
         }
         loadPlayerPage();

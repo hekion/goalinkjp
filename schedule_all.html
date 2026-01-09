@@ -15,17 +15,18 @@
         .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; background: rgba(75, 184, 224, 0.1); color: var(--main-cyan); border: 1px solid rgba(75, 184, 224, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         
-        /* 月別ボタンUI：最上部配置用 */
-        .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 10px 0; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        /* 月別ボタンUI：最上部 */
+        .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 15px 0; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.75rem; padding: 0.6rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.2s; }
-        .month-btn.active { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); font-weight: 500; }
+        .month-btn.active { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); font-weight: bold; }
 
+        /* カテゴリタブ */
         .area-tab { flex: 1; text-align: center; padding: 1rem 0.5rem; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
 
         .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
         .color-line { height: 4px; width: 60px; margin-top: 6px; display: block; border-radius: 2px; }
-        @media (min-width: 768px) { .color-line { width: 180px; } }
+        @media (min-width: 768px) { .color-line { width: 160px; } }
     </style>
 </head>
 <body>
@@ -36,9 +37,9 @@
     <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
         <div id="month-filters" class="month-container mb-6"></div>
 
-        <div class="mb-8 text-center md:text-left">
-            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">Full League Schedule</span>
-            <span class="font-serif text-3xl font-black italic">ALL SCHEDULE</span>
+        <div class="mb-8">
+            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase text-center md:text-left">Full League Schedule</span>
+            <span class="font-serif text-3xl font-black italic block text-center md:text-left">ALL MATCHES</span>
         </div>
 
         <div class="flex mb-10 border-t border-white/5">
@@ -49,7 +50,7 @@
         </div>
 
         <div id="schedule-list" class="pb-24">
-            <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING DATABASE...</div>
+            <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">SYNCHRONIZING...</div>
         </div>
     </main>
 
@@ -58,23 +59,68 @@
         let allMatches = [];
         let filterState = { category: 'ALL', month: 'ALL' };
 
-        // ご提示いただいた正確なカラーコードリスト
+        // 提示されたIDに正確にカラーを紐付け
         const TEAM_DATA = {
-            1: { color: "#FF3131" }, 2: { color: "#3182FF" }, 3: { color: "#FF0000" }, 4: { color: "#FFEE00" },
-            5: { color: "#FFF200" }, 6: { color: "#2E59FF" }, 7: { color: "#00B379" }, 8: { color: "#24409E" },
-            9: { color: "#00B2E5" }, 10: { color: "#0055FF" }, 11: { color: "#FF9900" }, 12: { color: "#FF2200" },
-            13: { color: "#CF73FF" }, 14: { color: "#3D5AFF" }, 15: { color: "#FF77BB" }, 16: { color: "#A02040" },
-            17: { color: "#C7243A" }, 18: { color: "#B37DFF" }, 19: { color: "#122A5B" }, 20: { color: "#0000FF" }, // 20長崎:青に変更
-            21: { color: "#00A968" }, 22: { color: "#FFD700" }, 23: { color: "#3498DB" }, 24: { color: "#2E59FF" },
-            25: { color: "#FFFF00" }, 26: { color: "#24409E" }, 27: { color: "#1B2E53" }, 28: { color: "#56A9E3" },
-            29: { color: "#77FF00" }, 30: { color: "#008040" }, 31: { color: "#FF0000" }, 32: { color: "#FF2200" },
-            33: { color: "#FF4422" }, 34: { color: "#FF7700" }, 35: { color: "#3344BB" }, 36: { color: "#007733" },
-            37: { color: "#FF8800" }, 38: { color: "#99CCFF" }, 39: { color: "#CC99FF" }, 40: { color: "#008855" },
-            41: { color: "#FF6600" }, 42: { color: "#2E59FF" }, 43: { color: "#FF0000" }, 44: { color: "#33BBFF" },
-            45: { color: "#2244AA" }, 46: { color: "#99DDFF" }, 47: { color: "#0055AA" }, 48: { color: "#FF8800" },
-            49: { color: "#223366" }, 50: { color: "#FF2200" }, 51: { color: "#33CCFF" }, 52: { color: "#AAFF22" },
-            53: { color: "#FF6600" }, 54: { color: "#FFFF00" }, 55: { color: "#77CCFF" }, 56: { color: "#FF0000" },
-            57: { color: "#2E59FF" }, 58: { color: "#FFFFFF" }, 59: { color: "#334466" }, 60: { color: "#A02040" }
+            1: { color: "#FF0000" }, // 札幌
+            2: { color: "#00A968" }, // 八戸
+            3: { color: "#FFD700" }, // 仙台
+            4: { color: "#3498DB" }, // 秋田
+            5: { color: "#2E59FF" }, // 山形
+            6: { color: "#FF2200" }, // 福島
+            7: { color: "#FF4422" }, // いわき
+            8: { color: "#FF3131" }, // 鹿島
+            9: { color: "#3182FF" }, // 水戸
+            10: { color: "#FFFF00" }, // 栃木
+            11: { color: "#24409E" }, // 栃木C
+            12: { color: "#1B2E53" }, // 群馬
+            13: { color: "#FF0000" }, // 浦和
+            14: { color: "#FF7700" }, // 大宮
+            15: { color: "#FFEE00" }, // 千葉
+            16: { color: "#FFF200" }, // 柏
+            17: { color: "#2E59FF" }, // FC東京
+            18: { color: "#00B379" }, // 東京V
+            19: { color: "#24409E" }, // 町田
+            20: { color: "#00B2E5" }, // 川崎
+            21: { color: "#0055FF" }, // 横浜FM
+            22: { color: "#56A9E3" }, // 横浜FC
+            23: { color: "#77FF00" }, // 湘南
+            24: { color: "#008040" }, // 相模原
+            25: { color: "#3344BB" }, // 甲府
+            26: { color: "#007733" }, // 松本
+            27: { color: "#FF8800" }, // 長野
+            28: { color: "#FF6600" }, // 新潟
+            29: { color: "#2E59FF" }, // 富山
+            30: { color: "#FF0000" }, // 金沢
+            31: { color: "#FF9900" }, // 清水
+            32: { color: "#99CCFF" }, // 磐田
+            33: { color: "#CC99FF" }, // 藤枝
+            34: { color: "#FF2200" }, // 名古屋
+            35: { color: "#008855" }, // 岐阜
+            36: { color: "#33CCFF" }, // 滋賀
+            37: { color: "#CF73FF" }, // 京都
+            38: { color: "#3D5AFF" }, // G大阪
+            39: { color: "#FF77BB" }, // C大阪
+            40: { color: "#33BBFF" }, // FC大阪
+            41: { color: "#A02040" }, // 神戸
+            42: { color: "#2244AA" }, // 奈良
+            43: { color: "#AAFF22" }, // 鳥取
+            44: { color: "#C7243A" }, // 岡山
+            45: { color: "#B37DFF" }, // 広島
+            46: { color: "#FF6600" }, // 山口
+            47: { color: "#99DDFF" }, // 讃岐
+            48: { color: "#0055AA" }, // 徳島
+            49: { color: "#FF8800" }, // 愛媛
+            50: { color: "#223366" }, // 今治
+            51: { color: "#FF2200" }, // 高知
+            52: { color: "#122A5B" }, // 福岡
+            53: { color: "#FFFF00" }, // 北九州
+            54: { color: "#77CCFF" }, // 鳥栖
+            55: { color: "#0000FF" }, // 長崎
+            56: { color: "#FF0000" }, // 熊本
+            57: { color: "#2E59FF" }, // 大分
+            58: { color: "#FFFFFF" }, // 宮崎
+            59: { color: "#334466" }, // 鹿児島
+            60: { color: "#A02040" }  // 琉球
         };
 
         async function initLoad() {
@@ -94,7 +140,10 @@
             const months = new Set(['ALL']);
             allMatches.forEach(m => {
                 const p = String(m.date).split('.');
-                if (p[1]) months.add(parseInt(p[1]) + "月");
+                if (p[1]) {
+                    const monthVal = parseInt(p[1]) + "月";
+                    months.add(monthVal);
+                }
             });
             const sorted = Array.from(months).sort((a,b) => a === 'ALL' ? -1 : parseInt(a) - parseInt(b));
             container.innerHTML = sorted.map(m => `<button class="month-btn ${m === 'ALL' ? 'active' : ''}" onclick="updateFilters('month', '${m}', this)">${m}</button>`).join('');

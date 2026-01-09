@@ -35,6 +35,13 @@
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .error-message { font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 1.5rem; border-radius: 2px; background: rgba(255, 107, 107, 0.05); }
+        
+        #playerName {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -64,18 +71,19 @@
 
         <div id="playerContent" class="hidden">
             <div class="mb-16 text-center">
-                <div class="flex flex-col items-center gap-2 mb-10">
-                    <a id="backBtn" href="#" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white transition-colors">← チーム詳細に戻る</a>
-                    <a href="teams.html" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white transition-colors">← チーム一覧に戻る</a>
+                <div class="flex justify-center items-center gap-6 mb-10">
+                    <a id="backBtn" href="#" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white transition-colors whitespace-nowrap">← チーム詳細に戻る</a>
+                    <a href="teams.html" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white transition-colors whitespace-nowrap">← チーム一覧に戻る</a>
                 </div>
 
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center w-full">
                     <div class="flex items-center gap-4 mb-4">
                         <span id="playerPos" class="font-oswald text-sm text-gray-400 tracking-[0.3em] uppercase"></span>
                         <span id="playerNumber" class="font-oswald text-3xl font-light italic text-white"></span>
                     </div>
                     
-                    <h1 id="playerName" class="text-white text-4xl md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6 whitespace-nowrap"></h1>
+                    <h1 id="playerName" class="text-white text-[10vw] md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6"></h1>
+                    
                     <div id="accentBar" class="h-[1px] w-16 mb-8 opacity-80"></div>
                     
                     <div class="flex gap-8 font-oswald text-[0.75rem] opacity-50 tracking-[0.2em] text-white uppercase italic">

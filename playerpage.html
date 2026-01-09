@@ -50,7 +50,6 @@
         <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-white">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-white">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-white">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl text-white">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
     </nav>
 
     <main class="pt-48 pb-20 px-6 max-w-screen-md mx-auto">
@@ -65,12 +64,19 @@
 
         <div id="playerContent" class="hidden">
             <div class="mb-16 text-center">
-                <a id="backBtn" href="#" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white mb-8 inline-block uppercase italic transition-colors">← Back to Team</a>
+                <div class="flex flex-col items-center gap-2 mb-8">
+                    <a id="backBtn" href="#" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white uppercase italic transition-colors">← Back to Team</a>
+                    <a href="teams.html" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white uppercase italic transition-colors">← Back to Team List</a>
+                </div>
+
                 <div class="flex flex-col items-center">
-                    <span id="playerPos" class="font-oswald text-xs text-gray-400 tracking-[0.3em] uppercase mb-4"></span>
+                    <div class="flex items-center gap-4 mb-4">
+                        <span id="playerPos" class="font-oswald text-xs text-gray-400 tracking-[0.3em] uppercase"></span>
+                        <span id="playerNumber" class="font-oswald text-2xl font-light italic text-white"></span>
+                    </div>
+                    
                     <h1 id="playerName" class="text-white text-4xl md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6 whitespace-nowrap"></h1>
                     <div id="accentBar" class="h-[1px] w-16 mb-8 opacity-80"></div>
-                    <span id="playerNumber" class="font-oswald text-2xl font-light italic text-white mb-8"></span>
                     
                     <div class="flex gap-8 font-oswald text-[0.7rem] opacity-50 tracking-[0.2em] text-white uppercase italic">
                         <span id="playerBirth"></span>
@@ -118,7 +124,6 @@
 
             try {
                 const response = await fetch(`${SCRIPT_URL}?id=${teamId}`);
-                if (!response.ok) throw new Error();
                 const data = await response.json();
                 const player = data.players.find(p => p.id == playerId);
                 if (!player) throw new Error();
@@ -126,7 +131,10 @@
                 document.getElementById('playerName').textContent = player.name;
                 document.getElementById('playerNumber').textContent = `#${player.number}`;
                 document.getElementById('playerPos').textContent = player.position;
-                document.getElementById('playerBirth').textContent = player.birthday || '----.--.--';
+                
+                // 日付を最初の10文字に制限
+                document.getElementById('playerBirth').textContent = player.birthday ? player.birthday.substring(0, 10) : '----.--.--';
+                
                 document.getElementById('playerHeight').textContent = player.height || '---';
                 document.getElementById('playerWeight').textContent = player.weight || '--';
                 

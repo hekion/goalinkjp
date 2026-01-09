@@ -11,14 +11,36 @@
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
-        .match-card { background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border-left: 2px solid var(--main-cyan); padding: 1.2rem 1.5rem; margin-bottom: 1.2rem; }
-        .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; background: rgba(75, 184, 224, 0.1); color: var(--main-cyan); border: 1px solid rgba(75, 184, 224, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+        
+        .match-card { 
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 2px solid var(--main-cyan);
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .tag {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            background: rgba(75, 184, 224, 0.1);
+            color: var(--main-cyan);
+            border: 1px solid rgba(75, 184, 224, 0.3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
         .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
+        
         .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; transition: width 0.3s; }
-        @media (min-width: 768px) { .color-line { width: 220px; } }
+        @media (min-width: 768px) {
+            .color-line { width: 220px; }
+        }
+
         select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
     </style>
 </head>
@@ -58,7 +80,6 @@
         let allMatches = [];
         let filterState = { area: 'ALL', teamId: '' };
 
-        // WESTのチームデータを定義
         const TEAM_DATA = {
             28: { name: "アルビレックス新潟", area: "WA", color: "#FF6600" },
             29: { name: "カターレ富山", area: "WA", color: "#2E59FF" },
@@ -82,7 +103,9 @@
             60: { name: "FC琉球", area: "WB", color: "#A02040" }
         };
 
-        const TAG_MAP = { "J2_J3_WA": "J2.J3 WEST-A", "J2_J3_WB": "J2.J3 WEST-B" };
+        const TAG_MAP = {
+            "J2_J3_WA": "J2.J3 WEST-A", "J2_J3_WB": "J2.J3 WEST-B"
+        };
 
         async function initLoad() {
             const optA = document.getElementById('opt-west-a');
@@ -122,7 +145,7 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             let filtered = allMatches.filter(m => {
-                // EASTと同じ比較（==）に戻し、型の違いを無視
+                // ID比較は型変換を許容する == を使用
                 const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
                 let matchArea = true;
                 if (filterState.area !== 'ALL') { 
@@ -137,9 +160,9 @@
                 const dateParts = match.date.split(/[\/\-]/);
                 const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
-                // EAST版と同じくIDで色を引く
-                const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
-                const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
+                // TEAM_DATAから色を引く際もIDの型ズレを考慮
+                const homeColor = (TEAM_DATA[match.homeId] || TEAM_DATA[Number(match.homeId)])?.color || "#333";
+                const awayColor = (TEAM_DATA[match.awayId] || TEAM_DATA[Number(match.awayId)])?.color || "#333";
 
                 return `
                     <div class="match-card">
@@ -152,6 +175,7 @@
                                 <span class="text-zinc-500">${match.stadium}</span>
                             </div>
                         </div>
+
                         <div class="flex items-center justify-center">
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
                                 <span>

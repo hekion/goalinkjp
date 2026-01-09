@@ -88,7 +88,7 @@
 
     <main class="pt-32 px-6 max-w-screen-md mx-auto min-h-screen">
         <div class="section-header fade-in">
-            <span class="section-title-en" id="en-title">MATCH SCHEDULE</span>
+            <span class="section-title-en" id="en-title">ALL MATCHES</span>
             <span class="section-title-ja" id="ja-title">試合日程</span>
         </div>
 
@@ -101,7 +101,7 @@
         </div>
 
         <div id="schedule-list" class="space-y-4 pb-20 fade-in" style="animation-delay: 0.2s;">
-            <div class="text-center py-20 text-gray-500 font-oswald tracking-widest">LOADING...</div>
+            <div class="text-center py-20 text-gray-500 font-oswald tracking-widest text-xs">LOADING DATA...</div>
         </div>
     </main>
 
@@ -115,14 +115,22 @@
         const params = new URLSearchParams(window.location.search);
         const teamId = params.get('id');
         const category = params.get('cat');
-        let currentMonth = "";
+        let currentMonth = params.get('month') || "";
 
         async function loadSchedule() {
             const listDiv = document.getElementById('schedule-list');
+            const enTitle = document.getElementById('en-title');
+            
             let fetchUrl = `${SCRIPT_URL}?`;
+            // パラメータがあれば追加、なければ全取得になる（GAS側の仕様）
             if (teamId) fetchUrl += `id=${teamId}`;
             if (category) fetchUrl += (teamId ? "&" : "") + `cat=${category}`;
-            if (currentMonth) fetchUrl += `&month=${currentMonth}`;
+            if (currentMonth) fetchUrl += (teamId || category ? "&" : "") + `month=${currentMonth}`;
+
+            // タイトルの書き換え
+            if (category) enTitle.innerText = category.replace('_', ' ');
+            else if (teamId) enTitle.innerText = "TEAM SCHEDULE";
+            else enTitle.innerText = "ALL MATCHES";
 
             try {
                 const response = await fetch(fetchUrl);
@@ -131,14 +139,11 @@
                 if (data.matches && data.matches.length > 0) {
                     listDiv.innerHTML = "";
                     data.matches.forEach(match => {
-                        // スコア判定： "-", 空文字, または未定義なら試合前
                         const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
-                        
                         const scoreDisplay = isPlayed 
                             ? `<div class="score-num">${match.homeScore} - ${match.awayScore}</div>`
                             : `<div class="vs-text">VS</div>`;
 
-                        // 時刻の修正（1899-12-30T形式への対応）
                         let timeStr = match.time || "--:--";
                         if (timeStr.includes('T')) {
                             const t = new Date(timeStr);
@@ -164,10 +169,10 @@
                         listDiv.insertAdjacentHTML('beforeend', html);
                     });
                 } else {
-                    listDiv.innerHTML = '<div class="text-center py-20 text-gray-500 font-oswald tracking-widest">NO MATCHES FOUND</div>';
+                    listDiv.innerHTML = '<div class="text-center py-20 text-gray-500 font-oswald tracking-widest text-xs">NO MATCHES FOUND</div>';
                 }
             } catch (e) {
-                listDiv.innerHTML = '<div class="text-center py-20 text-red-900 font-oswald tracking-widest">ERROR LOADING DATA</div>';
+                listDiv.innerHTML = '<div class="text-center py-20 text-red-900 font-oswald tracking-widest text-xs">ERROR LOADING DATA</div>';
             }
         }
 
@@ -175,8 +180,8 @@
             currentMonth = m;
             document.querySelectorAll('.month-btn').forEach(btn => {
                 btn.classList.remove('active');
-                const mLabel = m === '2' ? 'FEB' : m === '3' ? 'MAR' : m === '4' ? 'APR' : m === '5' ? 'MAY' : 'ALL';
-                if(btn.innerText === mLabel) btn.classList.add('active');
+                const label = m === '2' ? 'FEB' : m === '3' ? 'MAR' : m === '4' ? 'APR' : m === '5' ? 'MAY' : 'ALL';
+                if(btn.innerText === label) btn.classList.add('active');
             });
             loadSchedule();
         }

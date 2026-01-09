@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J1 SCHEDULE - Goalink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        
+        /* ヘッダー・共通パーツ（index.html準拠） */
+        .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
+        .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
+        .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .menu-trigger span:nth-child(1) { width: 100%; }
+        .menu-trigger span:nth-child(2) { width: 60%; }
+        .active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 100%; }
+        .active span:nth-child(2) { transform: translateY(-6.5px) rotate(-45deg); width: 100%; }
+
+        #sideMenu {
+            position: fixed; top: 0; right: -100%; width: 75%; height: 100%;
+            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px);
+            z-index: 150; transition: right 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column; justify-content: center; padding-left: 12%;
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+        #sideMenu.open { right: 0; }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
+        #overlay.show { opacity: 1; visibility: visible; }
+
+        .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
+        #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
+
+        /* 地区切り替えタブ */
+        .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
+        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
+        /* 試合カード */
+        .match-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .score-box { background: #000; min-width: 80px; text-align: center; padding: 0.6rem; border-radius: 2px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
+        
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ページトップボタン */
+        #pagetop {
+            position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px);
+            text-decoration: none;
+        }
+        #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
+        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="toggleMenu()"></div>
+
+    <a href="#" id="pagetop" onclick="scrollToTop(event)">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+        <span>TOP</span>
+    </a>
+
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav id="sideMenu">
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="schedule.html"><span class="font-serif text-2xl text-[#4bb8e0]">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl opacity-50">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-40 px-8 max-w-screen-md mx-auto min-h-screen">
+        <div class="mb-10 fade-in">
+            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">J1 League Schedule</span>
+            <span class="font-serif text-3xl font-black tracking-wider">J1 試合日程</span>
+        </div>
+
+        <div class="flex mb-8 border-t border-white/5 fade-in" style="animation-delay: 0.2s;">
+            <div class="area-tab active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
+            <div class="area-tab" onclick="updateFilters('area', 'EAST', this)">EAST</div>
+            <div class="area-tab" onclick="updateFilters('area', 'WEST', this)">WEST</div>
+        </div>
+
+        <div class="mb-12 fade-in" style="animation-delay: 0.3s;">
+            <div class="relative">
+                <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
+                    <option value="">すべてのチームを選択</option>
+                    <optgroup label="EAST" id="opt-east"></optgroup>
+                    <optgroup label="WEST" id="opt-west"></optgroup>
+                </select>
+            </div>
+        </div>
+
+        <div id="schedule-list" class="space-y-4 pb-24 fade-in" style="animation-delay: 0.4s;">
+            <div class="text-center py-20 text-gray-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING DATA...</div>
+        </div>
+    </main>
+
+    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-12">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    </footer>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
+        let allMatches = [];
+        let filterState = { area: 'ALL', teamId: '' };
+
+        // 地区ごとのチームIDリスト
+        const AREA_MAP = {
+            EAST: [8, 13, 15, 16, 17, 18, 19],
+            WEST: [20, 21] 
+        };
+
+        // チームリスト
+        const TEAM_LIST = [
+            {id: 8, name: "鹿島アントラーズ", area: "EAST"},
+            {id: 13, name: "浦和レッズ", area: "EAST"},
+            {id: 15, name: "ジェフユナイテッド千葉", area: "EAST"},
+            {id: 16, name: "柏レイソル", area: "EAST"},
+            {id: 17, name: "FC東京", area: "EAST"},
+            {id: 18, name: "東京ヴェルディ", area: "EAST"},
+            {id: 19, name: "FC町田ゼルビア", area: "EAST"},
+            {id: 20, name: "川崎フロンターレ", area: "WEST"},
+            {id: 21, name: "横浜F・マリノス", area: "WEST"}
+        ];
+
+        async function initLoad() {
+            const eastOpt = document.getElementById('opt-east');
+            const westOpt = document.getElementById('opt-west');
+            TEAM_LIST.forEach(t => {
+                const opt = `<option value="${t.id}">${t.name}</option>`;
+                if(t.area === "EAST") eastOpt.insertAdjacentHTML('beforeend', opt);
+                else westOpt.insertAdjacentHTML('beforeend', opt);
+            });
+
+            try {
+                const res = await fetch(`${SCRIPT_URL}?cat=J1_EAST`);
+                const data = await res.json();
+                allMatches = data.matches;
+                render();
+            } catch (e) {
+                document.getElementById('schedule-list').innerHTML = '<div class="text-center text-red-900 font-oswald text-xs">FAILED TO LOAD</div>';
+            }
+        }
+
+        function updateFilters(type, value, el) {
+            if (type === 'area') {
+                filterState.area = value;
+                document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+                filterState.teamId = '';
+                document.getElementById('team-selector').value = '';
+            } else if (type === 'team') {
+                filterState.teamId = value;
+            }
+            render();
+        }
+
+        function render() {
+            const listDiv = document.getElementById('schedule-list');
+            let filtered = allMatches.filter(m => {
+                const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
+                let matchArea = true;
+                if (filterState.area !== 'ALL') {
+                    const targetIds = AREA_MAP[filterState.area];
+                    matchArea = targetIds.includes(Number(m.homeId)) || targetIds.includes(Number(m.awayId));
+                }
+                return matchTeam && matchArea;
+            });
+
+            if (filtered.length === 0) {
+                listDiv.innerHTML = '<div class="text-center py-20 text-gray-600 font-oswald text-[0.6rem] tracking-[0.3em]">NO MATCHES FOUND</div>';
+                return;
+            }
+
+            listDiv.innerHTML = filtered.map(match => {
+                const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
+                return `
+                    <div class="match-card p-6 rounded-sm">
+                        <div class="flex justify-between text-[0.6rem] font-oswald text-gray-500 mb-5 border-b border-white/5 pb-2 uppercase tracking-tighter">
+                            <span class="text-[#4bb8e0] font-bold">Sec ${match.section}</span>
+                            <span>${match.date} ${match.time} / ${match.stadium}</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex-1 text-center font-serif text-lg leading-tight">
+                                <span class="hidden md:inline">${match.homeName}</span>
+                                <span class="inline md:hidden">${match.homeShort}</span>
+                            </div>
+                            <div class="score-box font-oswald">
+                                ${isPlayed 
+                                    ? `<span class="text-xl font-medium tracking-widest">${match.homeScore} - ${match.awayScore}</span>` 
+                                    : `<span class="text-[#4bb8e0] text-xs tracking-widest font-bold">VS</span>`}
+                            </div>
+                            <div class="flex-1 text-center font-serif text-lg leading-tight">
+                                <span class="hidden md:inline">${match.awayName}</span>
+                                <span class="inline md:hidden">${match.awayShort}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+            document.getElementById('menuBtn').classList.toggle('active');
+            document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
+        }
+
+        window.addEventListener('scroll', () => {
+            const pagetop = document.getElementById('pagetop');
+            if (window.scrollY > 400) pagetop.classList.add('show');
+            else pagetop.classList.remove('show');
+        });
+
+        function scrollToTop(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        initLoad();
+    </script>
+</body>
+</html>

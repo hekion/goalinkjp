@@ -20,7 +20,6 @@
         .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; }
         @media (min-width: 768px) { .color-line { width: 220px; } }
         
-        /* セレクトボックスの見た目を元に戻す */
         select { 
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); 
             background-repeat: no-repeat; 
@@ -66,6 +65,7 @@
         let allMatches = [];
         let filterState = { area: 'ALL', teamId: '' };
 
+        // 全チームの定義
         const TEAM_DATA = {
             28: { name: "アルビレックス新潟", area: "WA", color: "#FF6600" },
             29: { name: "カターレ富山", area: "WA", color: "#2E59FF" },
@@ -126,31 +126,36 @@
 
         function render() {
             const listDiv = document.getElementById('schedule-list');
-            let filtered = allMatches.filter(m => {
-                // チームフィルタ：IDが一致するか
-                const matchTeam = filterState.teamId ? (String(m.homeId) === String(filterState.teamId) || String(m.awayId) === String(filterState.teamId)) : true;
-                
-                // エリアフィルタ：ALLなら無条件で通す。それ以外はsource名にWA/WBが含まれているかチェック（空振り防止）
-                let matchArea = true;
-                if (filterState.area !== 'ALL') {
-                    const searchKey = filterState.area.includes('WA') ? 'EA' : 'EB'; // GAS側がEA/EBで返している可能性も考慮
-                    // もしダメならシンプルに source を含んでいるか確認
-                    matchArea = String(m.source).includes(filterState.area) || String(m.source).includes(filterState.area.slice(-2));
-                }
-                return matchTeam && matchArea;
-            });
+            
+            // 全データをベースにする
+            let filtered = [...allMatches];
 
-            if (filtered.length === 0 && allMatches.length > 0) {
-                // 万が一フィルターで消えすぎた場合、ALLの時は全件表示を保証
-                if(filterState.area === 'ALL' && !filterState.teamId) filtered = allMatches;
+            // 1. エリアフィルタ
+            if (filterState.area !== 'ALL') {
+                filtered = filtered.filter(m => {
+                    const s = String(m.source);
+                    if (filterState.area === 'J2_J3_WA') return s.includes('WA');
+                    if (filterState.area === 'J2_J3_WB') return s.includes('WB');
+                    return true;
+                });
+            }
+
+            // 2. チームフィルタ
+            if (filterState.teamId) {
+                filtered = filtered.filter(m => 
+                    String(m.homeId) === String(filterState.teamId) || 
+                    String(m.awayId) === String(filterState.teamId)
+                );
+            }
+
+            if (filtered.length === 0) {
+                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA</div>`;
+                return;
             }
 
             listDiv.innerHTML = filtered.map(match => {
-                // タグ表示：source名が何であれ、WAが含まれていればWEST-A、WBならWEST-Bと表示
-                let displayTag = "J2.J3 WEST";
-                if (String(match.source).includes('WA') || String(match.source).includes('EA')) displayTag = "J2.J3 WEST-A";
-                if (String(match.source).includes('WB') || String(match.source).includes('EB')) displayTag = "J2.J3 WEST-B";
-
+                const s = String(match.source);
+                const displayTag = s.includes('WB') ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
                 const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
                 const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCHEDULE - Goalink</title>
+    <title>SCHEDULE HUB - Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -13,6 +13,7 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
+        /* ヘッダー・メニュー共通 */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s; }
@@ -32,30 +33,28 @@
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
 
-        .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+        .section-header { margin-bottom: 2.5rem; }
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 0.05em; display: block; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
 
-        .month-btn { 
-            font-family: 'Oswald', sans-serif; font-size: 0.8rem; letter-spacing: 0.1em;
-            border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 1rem; transition: 0.3s;
+        /* ハブカードのスタイル */
+        .hub-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .month-btn.active { border-color: var(--main-cyan); color: var(--main-cyan); background: rgba(75, 184, 224, 0.1); }
-
-        .match-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
-        .score-box { background: #000; min-width: 80px; text-align: center; padding: 0.75rem; border-radius: 4px; }
-        .score-num { font-family: 'Oswald', sans-serif; font-size: 1.5rem; font-weight: 500; letter-spacing: 0.1em; }
-        .vs-text { color: var(--main-cyan); font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 0.9rem; }
-
-        #pagetop {
-            position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
-            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; text-decoration: none;
+        .hub-card::before {
+            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 3px;
+            background: var(--border-color, #333); transition: width 0.3s; z-index: 0;
         }
-        #pagetop.show { opacity: 1; visibility: visible; }
-        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
-        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); }
+        .hub-card:hover { background: rgba(255,255,255,0.07); transform: translateX(10px); }
+        .hub-card:hover::before { width: 6px; }
 
         .fade-in { animation: fadeIn 1s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -64,11 +63,6 @@
 <body>
 
     <div id="overlay" onclick="toggleMenu()"></div>
-
-    <a href="#" id="pagetop" onclick="scrollToTop(event)">
-        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
-        <span>TOP</span>
-    </a>
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
@@ -86,22 +80,46 @@
         <div class="mb-8"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
     </nav>
 
-    <main class="pt-32 px-6 max-w-screen-md mx-auto min-h-screen">
+    <main class="pt-40 px-8 max-w-screen-md mx-auto min-h-screen">
         <div class="section-header fade-in">
-            <span class="section-title-en" id="en-title">ALL MATCHES</span>
-            <span class="section-title-ja" id="ja-title">試合日程</span>
+            <span class="section-title-en">Match Schedule</span>
+            <span class="section-title-ja">試合日程カテゴリ</span>
         </div>
 
-        <div class="flex flex-wrap gap-2 mb-10 fade-in" style="animation-delay: 0.1s;">
-            <button class="month-btn active" onclick="filterMonth('')">ALL</button>
-            <button class="month-btn" onclick="filterMonth('2')">FEB</button>
-            <button class="month-btn" onclick="filterMonth('3')">MAR</button>
-            <button class="month-btn" onclick="filterMonth('4')">APR</button>
-            <button class="month-btn" onclick="filterMonth('5')">MAY</button>
-        </div>
+        <div class="grid grid-cols-1 gap-6 fade-in" style="animation-delay: 0.2s;">
+            
+            <a href="schedule_list.html" class="hub-card" style="--border-color: #ffffff;">
+                <div class="relative z-10">
+                    <span class="font-serif text-2xl block mb-1">全カテゴリ 総合日程</span>
+                    <small class="font-oswald text-[0.6rem] opacity-40 tracking-[0.3em] uppercase">All League Combined</small>
+                </div>
+                <span class="text-white opacity-20 text-xl font-light">→</span>
+            </a>
 
-        <div id="schedule-list" class="space-y-4 pb-20 fade-in" style="animation-delay: 0.2s;">
-            <div class="text-center py-20 text-gray-500 font-oswald tracking-widest text-xs">LOADING DATA...</div>
+            <a href="schedule_list.html?cat=J1_EAST" class="hub-card" style="--border-color: #4bb8e0;">
+                <div class="relative z-10">
+                    <span class="font-serif text-2xl block mb-1">J1 リーグ日程</span>
+                    <small class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.3em] uppercase">J1 League Matches</small>
+                </div>
+                <span class="text-[#4bb8e0] opacity-40 text-xl font-light">→</span>
+            </a>
+
+            <a href="schedule_list.html?cat=J2_J3_EA" class="hub-card" style="--border-color: #00ff88;">
+                <div class="relative z-10">
+                    <span class="font-serif text-2xl block mb-1">J2.J3 EAST 日程</span>
+                    <small class="font-oswald text-[0.6rem] text-[#00ff88] tracking-[0.3em] uppercase">East Area (J2/J3)</small>
+                </div>
+                <span class="text-[#00ff88] opacity-40 text-xl font-light">→</span>
+            </a>
+
+            <a href="schedule_list.html?cat=J2_J3_WA" class="hub-card" style="--border-color: #ff3366;">
+                <div class="relative z-10">
+                    <span class="font-serif text-2xl block mb-1">J2.J3 WEST 日程</span>
+                    <small class="font-oswald text-[0.6rem] text-[#ff3366] tracking-[0.3em] uppercase">West Area (J2/J3)</small>
+                </div>
+                <span class="text-[#ff3366] opacity-40 text-xl font-light">→</span>
+            </a>
+
         </div>
     </main>
 
@@ -110,95 +128,11 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
-        
-        const params = new URLSearchParams(window.location.search);
-        const teamId = params.get('id');
-        const category = params.get('cat');
-        let currentMonth = params.get('month') || "";
-
-        async function loadSchedule() {
-            const listDiv = document.getElementById('schedule-list');
-            const enTitle = document.getElementById('en-title');
-            
-            let fetchUrl = `${SCRIPT_URL}?`;
-            // パラメータがあれば追加、なければ全取得になる（GAS側の仕様）
-            if (teamId) fetchUrl += `id=${teamId}`;
-            if (category) fetchUrl += (teamId ? "&" : "") + `cat=${category}`;
-            if (currentMonth) fetchUrl += (teamId || category ? "&" : "") + `month=${currentMonth}`;
-
-            // タイトルの書き換え
-            if (category) enTitle.innerText = category.replace('_', ' ');
-            else if (teamId) enTitle.innerText = "TEAM SCHEDULE";
-            else enTitle.innerText = "ALL MATCHES";
-
-            try {
-                const response = await fetch(fetchUrl);
-                const data = await response.json();
-
-                if (data.matches && data.matches.length > 0) {
-                    listDiv.innerHTML = "";
-                    data.matches.forEach(match => {
-                        const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
-                        const scoreDisplay = isPlayed 
-                            ? `<div class="score-num">${match.homeScore} - ${match.awayScore}</div>`
-                            : `<div class="vs-text">VS</div>`;
-
-                        let timeStr = match.time || "--:--";
-                        if (timeStr.includes('T')) {
-                            const t = new Date(timeStr);
-                            timeStr = t.getHours().toString().padStart(2, '0') + ":" + t.getMinutes().toString().padStart(2, '0');
-                        }
-
-                        const html = `
-                            <div class="match-card p-5 rounded-sm">
-                                <div class="flex justify-between text-[0.65rem] font-oswald text-gray-500 tracking-tighter mb-4 border-b border-white/5 pb-2">
-                                    <span>${match.section}</span>
-                                    <span>${match.date} ${timeStr}</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <div class="flex-1 text-center font-serif text-lg leading-tight">${match.homeName}</div>
-                                    <div class="score-box">${scoreDisplay}</div>
-                                    <div class="flex-1 text-center font-serif text-lg leading-tight">${match.awayName}</div>
-                                </div>
-                                <div class="mt-4 text-center text-[0.6rem] text-gray-500 font-oswald tracking-widest uppercase">
-                                    at ${match.stadium}
-                                </div>
-                            </div>
-                        `;
-                        listDiv.insertAdjacentHTML('beforeend', html);
-                    });
-                } else {
-                    listDiv.innerHTML = '<div class="text-center py-20 text-gray-500 font-oswald tracking-widest text-xs">NO MATCHES FOUND</div>';
-                }
-            } catch (e) {
-                listDiv.innerHTML = '<div class="text-center py-20 text-red-900 font-oswald tracking-widest text-xs">ERROR LOADING DATA</div>';
-            }
-        }
-
-        function filterMonth(m) {
-            currentMonth = m;
-            document.querySelectorAll('.month-btn').forEach(btn => {
-                btn.classList.remove('active');
-                const label = m === '2' ? 'FEB' : m === '3' ? 'MAR' : m === '4' ? 'APR' : m === '5' ? 'MAY' : 'ALL';
-                if(btn.innerText === label) btn.classList.add('active');
-            });
-            loadSchedule();
-        }
-
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('show');
             document.getElementById('menuBtn').classList.toggle('active');
         }
-
-        function scrollToTop(e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        window.addEventListener('scroll', () => {
-            const pt = document.getElementById('pagetop');
-            window.scrollY > 400 ? pt.classList.add('show') : pt.classList.remove('show');
-        });
-
-        loadSchedule();
     </script>
 </body>
 </html>

@@ -8,10 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        html { scroll-behavior: smooth; }
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
 
+        /* ヘッダー・メニュー共通 */
+        .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
         .menu-trigger span:nth-child(1) { width: 100%; }
@@ -32,6 +35,7 @@
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
+        /* ページトップボタン */
         #pagetop {
             position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
             background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -40,18 +44,17 @@
             text-decoration: none;
         }
         #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #pagetop:hover { border-color: var(--main-cyan); }
         #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
+        /* チーム詳細固有スタイル */
         .name-container { position: relative; display: inline-block; }
         .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
-
         .player-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; text-decoration: none; }
         .player-row:active { background: rgba(255,255,255,0.1) !important; transform: scale(0.98); }
-
         .loader { width: 20px; height: 20px; border: 2px solid var(--main-cyan); border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         .error-message { font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 1rem; border-radius: 2px; background: rgba(255, 107, 107, 0.05); }
     </style>
 </head>
@@ -64,12 +67,12 @@
     </a>
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
-        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="h-14"></a>
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
         <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger"><span></span><span></span></div>
     </header>
 
     <nav id="sideMenu">
-        <div class="menu-item" style="transition-delay: 0.1s;"><a href="#"><span class="font-serif text-2xl opacity-50">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="https://hekion.github.io/goalinkjp/schedule.html"><span class="font-serif text-2xl">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
         <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>

@@ -78,7 +78,7 @@
 
     <main class="pt-48 pb-20 px-4 max-w-screen-xl mx-auto">
         <div class="mb-16 text-center">
-            <a href="teams.html" class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 hover:text-white mb-6 inline-block uppercase italic transition-colors">← チーム一覧に戻る</a>
+            <a href="teams.html" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white mb-6 inline-block transition-colors">← チーム一覧に戻る</a>
             <h1 id="teamName" class="text-white text-4xl md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6 whitespace-nowrap">
                 <span id="headerLoader" class="loader"></span>
             </h1>
@@ -153,7 +153,6 @@
 
                 document.getElementById('playerGrid').innerHTML = data.players.map(p => {
                     const detailUrl = `playerpage.html?id=${p.id}&tid=${teamId}`;
-                    // 日付を最初の10文字に制限
                     const birthDisplay = p.birthday ? p.birthday.substring(0, 10) : '----.--.--';
                     
                     return `
@@ -167,7 +166,7 @@
                             </div>
                         </div>
                         
-                        <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 my-4 md:my-0 px-2 tracking-widest uppercase italic">
+                        <div class="flex flex-1 w-full justify-between md:justify-around text-[0.7rem] font-oswald text-white/40 my-4 md:my-0 px-4 tracking-widest uppercase italic">
                             <span>${birthDisplay}</span>
                             <span>${p.height || '---'}CM</span>
                             <span>${p.weight || '--'}KG</span>

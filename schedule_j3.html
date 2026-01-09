@@ -80,6 +80,7 @@
         let allMatches = [];
         let filterState = { area: 'ALL', teamId: '' };
 
+        // WESTのチームデータ（IDと色のマッピングをWEST専用に修正）
         const TEAM_DATA = {
             28: { name: "アルビレックス新潟", area: "WA", color: "#FF6600" },
             29: { name: "カターレ富山", area: "WA", color: "#2E59FF" },
@@ -145,7 +146,7 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             let filtered = allMatches.filter(m => {
-                // ID比較は型変換を許容する == を使用
+                // GASの row[3] と row[10] が ID なので、HTML側でもそれ（homeId, awayId）を比較
                 const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
                 let matchArea = true;
                 if (filterState.area !== 'ALL') { 
@@ -157,12 +158,14 @@
             listDiv.innerHTML = filtered.map(match => {
                 const displayTag = TAG_MAP[match.source] || match.source;
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
-                const dateParts = match.date.split(/[\/\-]/);
+                
+                // GASの getDisplayValues で届く日付文字列をフォーマット
+                const dateParts = match.date ? match.date.split(/[\/\-]/) : [];
                 const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
-                // TEAM_DATAから色を引く際もIDの型ズレを考慮
-                const homeColor = (TEAM_DATA[match.homeId] || TEAM_DATA[Number(match.homeId)])?.color || "#333";
-                const awayColor = (TEAM_DATA[match.awayId] || TEAM_DATA[Number(match.awayId)])?.color || "#333";
+                // TEAM_DATAからIDをキーにして色を取得
+                const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
+                const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
 
                 return `
                     <div class="match-card">

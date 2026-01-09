@@ -15,18 +15,17 @@
         .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; background: rgba(75, 184, 224, 0.1); color: var(--main-cyan); border: 1px solid rgba(75, 184, 224, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         
-        .area-tab { flex: 1; text-align: center; padding: 1rem 0.5rem; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
-        
-        .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.7rem; padding: 0.5rem 1.2rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; }
+        /* 月別ボタンUI：最上部配置用 */
+        .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 10px 0; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.75rem; padding: 0.6rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.2s; }
         .month-btn.active { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); font-weight: 500; }
 
+        .area-tab { flex: 1; text-align: center; padding: 1rem 0.5rem; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
         .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
-        .color-line { height: 3px; width: 60px; margin-top: 4px; display: block; border-radius: 1px; }
+        .color-line { height: 4px; width: 60px; margin-top: 6px; display: block; border-radius: 2px; }
         @media (min-width: 768px) { .color-line { width: 180px; } }
-        
-        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
     </style>
 </head>
 <body>
@@ -35,24 +34,18 @@
     </header>
 
     <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
+        <div id="month-filters" class="month-container mb-6"></div>
+
         <div class="mb-8 text-center md:text-left">
             <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">Full League Schedule</span>
-            <span class="font-serif text-3xl font-black italic">ALL MATCHES</span>
+            <span class="font-serif text-3xl font-black italic">ALL SCHEDULE</span>
         </div>
 
-        <div class="flex mb-6 border-t border-white/5">
+        <div class="flex mb-10 border-t border-white/5">
             <div class="area-tab active" onclick="updateFilters('category', 'ALL', this)">ALL</div>
             <div class="area-tab" onclick="updateFilters('category', 'J1', this)">J1</div>
             <div class="area-tab" onclick="updateFilters('category', 'J2_J3_E', this)">J2.J3 EAST</div>
             <div class="area-tab" onclick="updateFilters('category', 'J2_J3_W', this)">J2.J3 WEST</div>
-        </div>
-
-        <div id="month-filters" class="month-container mb-8"></div>
-
-        <div class="mb-10">
-            <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
-                <option value="">すべてのチームを表示</option>
-            </select>
         </div>
 
         <div id="schedule-list" class="pb-24">
@@ -63,23 +56,24 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
         let allMatches = [];
-        let filterState = { category: 'ALL', teamId: '', month: 'ALL' };
+        let filterState = { category: 'ALL', month: 'ALL' };
 
+        // ご提示いただいた正確なカラーコードリスト
         const TEAM_DATA = {
-            1: { color: "#E2001A" }, 2: { color: "#003973" }, 3: { color: "#F0E400" }, 4: { color: "#004098" },
-            5: { color: "#000000" }, 6: { color: "#E2001A" }, 7: { color: "#005128" }, 8: { color: "#E2001A" },
-            9: { color: "#003366" }, 10: { color: "#FF3399" }, 11: { color: "#004098" }, 12: { color: "#E2001A" },
-            13: { color: "#0055A5" }, 14: { color: "#F39800" }, 15: { color: "#009944" }, 16: { color: "#003366" },
-            17: { color: "#D70C16" }, 18: { color: "#F39800" }, 19: { color: "#0041FF" }, 20: { color: "#660099" },
-            21: { color: "#EEFF00" }, 22: { color: "#0055AA" }, 23: { color: "#000000" }, 24: { color: "#FF0000" },
-            25: { color: "#0000FF" }, 26: { color: "#009944" }, 27: { color: "#FFCC00" }, 28: { color: "#FF6600" },
-            29: { color: "#2E59FF" }, 30: { color: "#FF0000" }, 31: { color: "#003366" }, 32: { color: "#FFD700" },
-            33: { color: "#005128" }, 34: { color: "#FF0000" }, 35: { color: "#0000FF" }, 36: { color: "#33CCFF" },
-            37: { color: "#F39800" }, 38: { color: "#0055AA" }, 39: { color: "#0000FF" }, 40: { color: "#33BBFF" },
-            41: { color: "#FF0000" }, 42: { color: "#2244AA" }, 43: { color: "#AAFF22" }, 44: { color: "#660099" },
-            45: { color: "#003366" }, 46: { color: "#FF6600" }, 47: { color: "#99DDFF" }, 48: { color: "#0055AA" },
-            49: { color: "#FF8800" }, 50: { color: "#223366" }, 51: { color: "#FF2200" }, 52: { color: "#FFD700" },
-            53: { color: "#FFFF00" }, 54: { color: "#77CCFF" }, 55: { color: "#005128" }, 56: { color: "#FF0000" },
+            1: { color: "#FF3131" }, 2: { color: "#3182FF" }, 3: { color: "#FF0000" }, 4: { color: "#FFEE00" },
+            5: { color: "#FFF200" }, 6: { color: "#2E59FF" }, 7: { color: "#00B379" }, 8: { color: "#24409E" },
+            9: { color: "#00B2E5" }, 10: { color: "#0055FF" }, 11: { color: "#FF9900" }, 12: { color: "#FF2200" },
+            13: { color: "#CF73FF" }, 14: { color: "#3D5AFF" }, 15: { color: "#FF77BB" }, 16: { color: "#A02040" },
+            17: { color: "#C7243A" }, 18: { color: "#B37DFF" }, 19: { color: "#122A5B" }, 20: { color: "#0000FF" }, // 20長崎:青に変更
+            21: { color: "#00A968" }, 22: { color: "#FFD700" }, 23: { color: "#3498DB" }, 24: { color: "#2E59FF" },
+            25: { color: "#FFFF00" }, 26: { color: "#24409E" }, 27: { color: "#1B2E53" }, 28: { color: "#56A9E3" },
+            29: { color: "#77FF00" }, 30: { color: "#008040" }, 31: { color: "#FF0000" }, 32: { color: "#FF2200" },
+            33: { color: "#FF4422" }, 34: { color: "#FF7700" }, 35: { color: "#3344BB" }, 36: { color: "#007733" },
+            37: { color: "#FF8800" }, 38: { color: "#99CCFF" }, 39: { color: "#CC99FF" }, 40: { color: "#008855" },
+            41: { color: "#FF6600" }, 42: { color: "#2E59FF" }, 43: { color: "#FF0000" }, 44: { color: "#33BBFF" },
+            45: { color: "#2244AA" }, 46: { color: "#99DDFF" }, 47: { color: "#0055AA" }, 48: { color: "#FF8800" },
+            49: { color: "#223366" }, 50: { color: "#FF2200" }, 51: { color: "#33CCFF" }, 52: { color: "#AAFF22" },
+            53: { color: "#FF6600" }, 54: { color: "#FFFF00" }, 55: { color: "#77CCFF" }, 56: { color: "#FF0000" },
             57: { color: "#2E59FF" }, 58: { color: "#FFFFFF" }, 59: { color: "#334466" }, 60: { color: "#A02040" }
         };
 
@@ -89,7 +83,6 @@
                 const results = await Promise.all(types.map(t => fetch(`${SCRIPT_URL}?type=${t}`).then(r => r.json())));
                 allMatches = results.flatMap(r => r.matches || []);
                 generateMonthButtons();
-                generateTeamSelector();
                 render();
             } catch (e) {
                 document.getElementById('schedule-list').innerHTML = 'LOAD ERROR';
@@ -100,18 +93,11 @@
             const container = document.getElementById('month-filters');
             const months = new Set(['ALL']);
             allMatches.forEach(m => {
-                const parts = String(m.date).split('.');
-                if (parts[1]) months.add(parseInt(parts[1]) + "月");
+                const p = String(m.date).split('.');
+                if (p[1]) months.add(parseInt(p[1]) + "月");
             });
             const sorted = Array.from(months).sort((a,b) => a === 'ALL' ? -1 : parseInt(a) - parseInt(b));
             container.innerHTML = sorted.map(m => `<button class="month-btn ${m === 'ALL' ? 'active' : ''}" onclick="updateFilters('month', '${m}', this)">${m}</button>`).join('');
-        }
-
-        function generateTeamSelector() {
-            const selector = document.getElementById('team-selector');
-            const teams = {};
-            allMatches.forEach(m => { teams[m.homeId] = m.homeName; teams[m.awayId] = m.awayName; });
-            Object.keys(teams).sort((a,b) => a-b).forEach(id => { selector.add(new Option(teams[id], id)); });
         }
 
         function updateFilters(type, value, el) {
@@ -119,8 +105,6 @@
                 filterState.category = value;
                 document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
                 el.classList.add('active');
-            } else if (type === 'team') {
-                filterState.teamId = value;
             } else if (type === 'month') {
                 filterState.month = value;
                 document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
@@ -135,9 +119,8 @@
                 const s = String(m.source || "").trim();
                 const mMonth = String(m.date).split('.')[1] ? parseInt(String(m.date).split('.')[1]) + "月" : "";
                 const catPass = (filterState.category === 'ALL') || s.startsWith(filterState.category);
-                const teamPass = (!filterState.teamId) || (String(m.homeId) === filterState.teamId || String(m.awayId) === filterState.teamId);
                 const monthPass = (filterState.month === 'ALL') || (mMonth === filterState.month);
-                return catPass && teamPass && monthPass;
+                return catPass && monthPass;
             });
 
             filtered.sort((a, b) => {
@@ -147,19 +130,12 @@
                     if (dA - dB !== 0) return dA - dB;
                     return String(a.time).localeCompare(String(b.time));
                 }
-                return isNaN(dA) ? 1 : -1;
+                return (parseInt(a.section) || 0) - (parseInt(b.section) || 0);
             });
 
-            if (filtered.length === 0) {
-                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA FOUND</div>`;
-                return;
-            }
-
             listDiv.innerHTML = filtered.map(match => {
-                const hId = Number(match.homeId);
-                const aId = Number(match.awayId);
-                const hColor = TEAM_DATA[hId]?.color || "#333";
-                const aColor = TEAM_DATA[aId]?.color || "#333";
+                const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
+                const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
                 
                 let displayTag = String(match.source)
                     .replace('J2_J3_EA', 'J2.J3 EAST-A').replace('J2_J3_EB', 'J2.J3 EAST-B')

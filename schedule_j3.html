@@ -65,7 +65,6 @@
         let allMatches = [];
         let filterState = { area: 'ALL', teamId: '' };
 
-        // チームデータ定義
         const TEAM_DATA = {
             28: { name: "アルビレックス新潟", area: "WA", color: "#FF6600" },
             29: { name: "カターレ富山", area: "WA", color: "#2E59FF" },
@@ -125,25 +124,24 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             
-            // フィルタリング処理：GASのプロパティ名に完全に合わせる
+            // シンプルなフィルタリング
             let filtered = allMatches.filter(m => {
-                const isAreaMatch = (filterState.area === 'ALL') || (String(m.source) === filterState.area);
-                const isTeamMatch = (!filterState.teamId) || 
-                                   (String(m.homeId) === String(filterState.teamId) || String(m.awayId) === String(filterState.teamId));
-                return isAreaMatch && isTeamMatch;
+                // エリア判定：ALLなら常にtrue、そうでなければGASのsourceと完全一致
+                const areaMatch = (filterState.area === 'ALL' || m.source === filterState.area);
+                // チーム判定：未選択ならtrue、選択中ならID一致
+                const teamMatch = (!filterState.teamId || String(m.homeId) === String(filterState.teamId) || String(m.awayId) === String(filterState.teamId));
+                return areaMatch && teamMatch;
             });
 
             if (filtered.length === 0) {
-                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">NO DATA</div>`;
+                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA</div>`;
                 return;
             }
 
             listDiv.innerHTML = filtered.map(match => {
-                const tag = String(match.source) === "J2_J3_WB" ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
+                const tag = (match.source === "J2_J3_WB") ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
                 const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
                 const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
-                
-                // GASは homeScore と awayScore で返している
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
 
                 return `

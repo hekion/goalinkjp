@@ -124,34 +124,39 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             
-            // --- ここを極限までシンプルにしました ---
-            let filtered = [...allMatches];
+            // フィルタリング処理：条件をバラバラに判定せず、1つのフィルターで整理
+            let filtered = allMatches.filter(m => {
+                const sourceStr = String(m.source);
+                const homeIdStr = String(m.homeId);
+                const awayIdStr = String(m.awayId);
+                const selectedTeamIdStr = String(filterState.teamId);
 
-            // ALL以外の時は、source(J2_J3_WAなど)の中に WA か WB が含まれているかだけ見る
-            if (filterState.area !== 'ALL') {
-                filtered = filtered.filter(m => String(m.source).includes(filterState.area));
-            }
+                // 1. エリア判定 (ALLならパス、WAならWAを含む、WBならWBを含む)
+                const isAreaMatch = (filterState.area === 'ALL') || 
+                                   (filterState.area === 'WA' && sourceStr.includes('WA')) || 
+                                   (filterState.area === 'WB' && sourceStr.includes('WB'));
 
-            // チーム選択がある時だけ絞る
-            if (filterState.teamId) {
-                filtered = filtered.filter(m => 
-                    String(m.homeId) === String(filterState.teamId) || 
-                    String(m.awayId) === String(filterState.teamId)
-                );
-            }
+                // 2. チーム判定 (未選択ならパス、選択されていれば一致を確認)
+                const isTeamMatch = (!filterState.teamId) || 
+                                   (homeIdStr === selectedTeamIdStr || awayIdStr === selectedTeamIdStr);
+
+                return isAreaMatch && isTeamMatch;
+            });
 
             if (filtered.length === 0) {
-                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA</div>`;
+                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">NO DATA FOUND</div>`;
                 return;
             }
 
-            // 表示処理
+            // 日付順にソート (ここでAとBが混ざっても時系列になります)
+            filtered.sort((a, b) => new Date(a.date.replace(/\./g, '/')) - new Date(b.date.replace(/\./g, '/')));
+
             listDiv.innerHTML = filtered.map(match => {
                 const s = String(match.source);
                 const tag = s.includes('WB') ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
                 const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
                 const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
-                const isPlayed = match.homeScore && match.homeScore !== "-";
+                const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
 
                 return `
                     <div class="match-card">

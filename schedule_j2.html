@@ -53,13 +53,13 @@
     <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
         <div class="mb-10">
             <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">J2/J3 EAST Schedule</span>
-            <span class="font-serif text-3xl font-black">J2・J3 東日本 試合日程</span>
+            <span class="font-serif text-3xl font-black">J2・J3 EAST</span>
         </div>
 
         <div class="flex mb-4 border-t border-white/5">
             <div class="area-tab active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
-            <div class="area-tab" onclick="updateFilters('area', 'EA', this)">GROUP A</div>
-            <div class="area-tab" onclick="updateFilters('area', 'EB', this)">GROUP B</div>
+            <div class="area-tab" onclick="updateFilters('area', 'J2_J3_EA', this)">GROUP A</div>
+            <div class="area-tab" onclick="updateFilters('area', 'J2_J3_EB', this)">GROUP B</div>
         </div>
 
         <div class="mb-10">
@@ -81,7 +81,6 @@
         let filterState = { area: 'ALL', teamId: '' };
 
         const TEAM_DATA = {
-            // 指定の20チーム
             2: { name: "ヴァンラーレ八戸", area: "EA", color: "#00A968" },
             3: { name: "ベガルタ仙台", area: "EA", color: "#FFD700" },
             4: { name: "ブラウブリッツ秋田", area: "EA", color: "#3498DB" },
@@ -102,7 +101,6 @@
             32: { name: "ジュビロ磐田", area: "EB", color: "#99CCFF" },
             33: { name: "藤枝MYFC", area: "EB", color: "#CC99FF" },
             35: { name: "FC岐阜", area: "EB", color: "#008855" },
-            // カラー参照用データ（J1等の対戦相手用）
             8: { color: "#FF3131" }, 9: { color: "#3182FF" }, 13: { color: "#FF0000" }, 15: { color: "#FFEE00" },
             16: { color: "#FFF200" }, 17: { color: "#2E59FF" }, 18: { color: "#00B379" }, 19: { color: "#24409E" },
             20: { color: "#00B2E5" }, 21: { color: "#0055FF" }, 31: { color: "#FF9900" }, 34: { color: "#FF2200" },
@@ -154,7 +152,9 @@
             let filtered = allMatches.filter(m => {
                 const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
                 let matchArea = true;
-                if (filterState.area !== 'ALL') { matchArea = m.source.includes(`_E${filterState.area}`); }
+                if (filterState.area !== 'ALL') { 
+                    matchArea = m.source === filterState.area; 
+                }
                 return matchTeam && matchArea;
             });
 

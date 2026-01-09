@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J2/J3 WEST SCHEDULE - Goalink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-cyan: #4bb8e0; --sumi-black: #0c0c0c; }
+        body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        
+        .match-card { 
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 2px solid var(--main-cyan);
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .tag {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            background: rgba(75, 184, 224, 0.1);
+            color: var(--main-cyan);
+            border: 1px solid rgba(75, 184, 224, 0.3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
+        .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
+        .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
+        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
+        .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
+        
+        .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; transition: width 0.3s; }
+        @media (min-width: 768px) {
+            .color-line { width: 220px; }
+        }
+
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
+    </style>
+</head>
+<body>
+
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/95">
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
+    </header>
+
+    <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
+        <div class="mb-10">
+            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">J2/J3 WEST Schedule</span>
+            <span class="font-serif text-3xl font-black">J2・J3 WEST</span>
+        </div>
+
+        <div class="flex mb-4 border-t border-white/5">
+            <div class="area-tab active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
+            <div class="area-tab" onclick="updateFilters('area', 'J2_J3_WA', this)">GROUP A</div>
+            <div class="area-tab" onclick="updateFilters('area', 'J2_J3_WB', this)">GROUP B</div>
+        </div>
+
+        <div class="mb-10">
+            <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
+                <option value="">すべてのチームを選択</option>
+                <optgroup label="WEST A" id="opt-west-a"></optgroup>
+                <optgroup label="WEST B" id="opt-west-b"></optgroup>
+            </select>
+        </div>
+
+        <div id="schedule-list" class="pb-24">
+            <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING...</div>
+        </div>
+    </main>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
+        let allMatches = [];
+        let filterState = { area: 'ALL', teamId: '' };
+
+        const TEAM_DATA = {
+            28: { name: "アルビレックス新潟", area: "WA", color: "#FF6600" },
+            29: { name: "カターレ富山", area: "WA", color: "#2E59FF" },
+            30: { name: "ツエーゲン金沢", area: "WA", color: "#FF0000" },
+            40: { name: "FC大阪", area: "WA", color: "#33BBFF" },
+            42: { name: "奈良クラブ", area: "WA", color: "#2244AA" },
+            43: { name: "カマタマーレ讃岐", area: "WA", color: "#AAFF22" },
+            46: { name: "徳島ヴォルティス", area: "WA", color: "#FF6600" },
+            47: { name: "愛媛FC", area: "WA", color: "#99DDFF" },
+            48: { name: "FC今治", area: "WA", color: "#0055AA" },
+            49: { name: "高知ユナイテッドSC", area: "WA", color: "#FF8800" },
+            36: { name: "レイラック滋賀", area: "WB", color: "#33CCFF" },
+            44: { name: "ガイナーレ鳥取", area: "WB", color: "#C7243A" },
+            50: { name: "レノファ山口FC", area: "WB", color: "#223366" },
+            51: { name: "ギラヴァンツ北九州", area: "WB", color: "#FF2200" },
+            53: { name: "サガン鳥栖", area: "WB", color: "#FFFF00" },
+            54: { name: "ロアッソ熊本", area: "WB", color: "#77CCFF" },
+            56: { name: "大分トリニータ", area: "WB", color: "#FF0000" },
+            58: { name: "テゲバジャーロ宮崎", area: "WB", color: "#FFFFFF" },
+            59: { name: "鹿児島ユナイテッドFC", area: "WB", color: "#334466" },
+            60: { name: "FC琉球", area: "WB", color: "#A02040" },
+            // 他リーグ・他地区のカラー参照データ
+            31: { color: "#FF9900" }, 34: { color: "#FF2200" }, 37: { color: "#CF73FF" }, 38: { color: "#3D5AFF" },
+            39: { color: "#FF77BB" }, 41: { color: "#A02040" }, 45: { color: "#B37DFF" }, 52: { color: "#122A5B" },
+            55: { color: "#2E59FF" }, 57: { color: "#2E59FF" }
+        };
+
+        const TAG_MAP = {
+            "J2_J3_WA": "J2.J3 WEST-A", "J2_J3_WB": "J2.J3 WEST-B"
+        };
+
+        async function initLoad() {
+            const optA = document.getElementById('opt-west-a');
+            const optB = document.getElementById('opt-west-b');
+            Object.keys(TEAM_DATA).forEach(id => {
+                const team = TEAM_DATA[id];
+                if (team.name) {
+                    const opt = `<option value="${id}">${team.name}</option>`;
+                    if (team.area === "WA") optA.insertAdjacentHTML('beforeend', opt);
+                    else optB.insertAdjacentHTML('beforeend', opt);
+                }
+            });
+
+            try {
+                const res = await fetch(`${SCRIPT_URL}?type=j2j3_west`);
+                const data = await res.json();
+                allMatches = data.matches;
+                render();
+            } catch (e) {
+                document.getElementById('schedule-list').innerHTML = 'ERROR';
+            }
+        }
+
+        function updateFilters(type, value, el) {
+            if (type === 'area') {
+                filterState.area = value;
+                document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+                filterState.teamId = '';
+                document.getElementById('team-selector').value = '';
+            } else if (type === 'team') {
+                filterState.teamId = value;
+            }
+            render();
+        }
+
+        function render() {
+            const listDiv = document.getElementById('schedule-list');
+            let filtered = allMatches.filter(m => {
+                const matchTeam = filterState.teamId ? (m.homeId == filterState.teamId || m.awayId == filterState.teamId) : true;
+                let matchArea = true;
+                if (filterState.area !== 'ALL') { 
+                    matchArea = m.source === filterState.area; 
+                }
+                return matchTeam && matchArea;
+            });
+
+            listDiv.innerHTML = filtered.map(match => {
+                const displayTag = TAG_MAP[match.source] || match.source;
+                const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
+                const dateParts = match.date.split(/[\/\-]/);
+                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
+
+                const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
+                const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
+
+                return `
+                    <div class="match-card">
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6 font-oswald text-[0.7rem] tracking-wider text-zinc-400">
+                            <span class="font-serif text-white font-bold text-xs">第${match.section}節</span>
+                            <span class="tag">${displayTag}</span>
+                            <div class="flex items-center gap-3">
+                                <span>${formattedDate}</span>
+                                <span>${match.time}</span>
+                                <span class="text-zinc-500">${match.stadium}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center">
+                            <div class="flex-1 team-container font-serif text-lg md:text-xl">
+                                <span>
+                                    <span class="hidden md:inline">${match.homeName}</span>
+                                    <span class="inline md:hidden">${match.homeShort}</span>
+                                </span>
+                                <span class="color-line" style="background:${homeColor}"></span>
+                            </div>
+                            <div class="flex flex-col items-center mx-6 min-w-[70px]">
+                                ${isPlayed ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
+                            </div>
+                            <div class="flex-1 team-container font-serif text-lg md:text-xl">
+                                <span>
+                                    <span class="hidden md:inline">${match.awayName}</span>
+                                    <span class="inline md:hidden">${match.awayShort}</span>
+                                </span>
+                                <span class="color-line" style="background:${awayColor}"></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        initLoad();
+    </script>
+</body>
+</html>

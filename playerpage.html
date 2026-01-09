@@ -34,6 +34,10 @@
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
+        /* 選手名装飾 */
+        .name-container { position: relative; display: inline-block; }
+        .name-accent { position: absolute; bottom: -4px; left: 0; height: 3px; width: 100%; }
+
         /* 節ごとのカード */
         .match-card { 
             background: rgba(255,255,255,0.03); 
@@ -53,7 +57,7 @@
     <div id="overlay" onclick="toggleMenu()"></div>
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
-        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="h-14"></a>
+        <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo h-14"></a>
         <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
             <span></span>
             <span></span>
@@ -65,26 +69,25 @@
         <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-white">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-white">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-white">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl text-white">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
-        
-        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
-            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
-                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
-            </a>
-        </div>
     </nav>
 
     <main class="pt-48 pb-20 px-4 max-w-2xl mx-auto">
+        <div class="flex justify-center gap-8 mb-12">
+            <a id="backBtn" href="javascript:history.back()" class="font-oswald text-[0.55rem] tracking-[0.3em] text-[#4bb8e0] hover:text-white uppercase italic transition-colors">← Back to Team</a>
+            <a href="teams.html" class="font-oswald text-[0.55rem] tracking-[0.3em] text-white/30 hover:text-white uppercase italic transition-colors">Back to Team List</a>
+        </div>
+
         <div class="text-center mb-16">
-            <a id="backBtn" href="javascript:history.back()" class="font-oswald text-[0.6rem] tracking-[0.4em] text-[#4bb8e0] hover:text-white mb-6 inline-block uppercase italic transition-colors">← Back to Team</a>
-            <div id="playerMeta" class="font-oswald text-white/40 tracking-widest uppercase flex justify-center gap-4 text-sm">
-                <span id="playerTeam">---</span>
-                <span id="playerPosNo">--- #--</span>
+            <div id="playerMeta" class="font-oswald text-white/40 tracking-[0.3em] uppercase flex justify-center gap-4 text-xs mb-2">
+                <span id="playerPos">---</span>
+                <span id="playerNo">#--</span>
             </div>
-            <h1 id="playerName" class="text-4xl md:text-5xl font-serif font-black italic mt-4 tracking-tighter">
-                <span class="loader"></span>
-            </h1>
+            <div class="name-container">
+                <h1 id="playerName" class="text-4xl md:text-5xl font-serif font-black italic tracking-tighter text-white">
+                    <span class="loader"></span>
+                </h1>
+                <div id="nameUnderline" class="name-accent"></div>
+            </div>
         </div>
 
         <section class="mb-16">
@@ -100,8 +103,7 @@
 
         <section>
             <h2 class="font-oswald text-[0.6rem] tracking-[0.4em] text-white/30 mb-6 uppercase italic">Match Log</h2>
-            <div id="matchLog" class="flex flex-col">
-                </div>
+            <div id="matchLog" class="flex flex-col"></div>
         </section>
     </main>
 
@@ -110,7 +112,6 @@
     </footer>
 
     <script>
-        // ★選手データ取得用のGAS URL
         const PLAYER_GAS_URL = "https://script.google.com/macros/s/AKfycbwq3oebwdXfBHjgtOzBpizT9h0eQ5h_3BxNeCgH357e7S3gutp6-a9UwtCS7ElT_IOq/exec";
 
         function toggleMenu() {
@@ -126,9 +127,8 @@
         async function loadPlayerPage() {
             const urlParams = new URLSearchParams(window.location.search);
             const playerId = urlParams.get('id');
-            const teamId = urlParams.get('tid'); // teampageから渡されたチームID
+            const teamId = urlParams.get('tid');
 
-            // チームIDがあれば戻るボタンのリンクを書き換える
             if (teamId) {
                 document.getElementById('backBtn').href = `teampage.html?id=${teamId}`;
             }
@@ -146,17 +146,19 @@
 
                 // 基本情報の反映
                 document.getElementById('playerName').textContent = p.name;
-                document.getElementById('playerTeam').textContent = p.teamName;
-                document.getElementById('playerPosNo').textContent = `${p.pos} #${p.no}`;
+                document.getElementById('playerPos').textContent = p.pos;
+                document.getElementById('playerNo').textContent = `#${p.no}`;
+                
+                // チームカラーの下線（もしGASから色を返さない場合は、teampageから引き継ぐかデフォルト色に）
+                const accentColor = p.teamColor || '#4bb8e0';
+                document.getElementById('nameUnderline').style.backgroundColor = accentColor;
 
-                // 総成績
                 document.getElementById('total-games').textContent = p.total.games || 0;
                 document.getElementById('total-min').textContent = p.total.min || 0;
                 document.getElementById('total-goals').textContent = p.total.goals || 0;
                 document.getElementById('total-yel').textContent = p.total.yellow || 0;
                 document.getElementById('total-red').textContent = p.total.red || 0;
 
-                // 節スタッツ：データが0または空なら「ー」を表示するロジック
                 const formatVal = (v) => (v === 0 || v === "0" || v === "") ? "ー" : v;
 
                 if (p.matches && p.matches.length > 0) {

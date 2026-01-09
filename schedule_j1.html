@@ -27,15 +27,21 @@
             border: 1px solid rgba(75, 184, 224, 0.3);
             letter-spacing: 0.1em;
             text-transform: uppercase;
+            white-space: nowrap;
         }
         
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
 
-        /* チーム名とラインをどちらも中央に配置する設定 */
+        /* チームコンテナとライン設定 */
         .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
-        .color-line { height: 3px; width: 80px; margin-top: 1px; display: block; border-radius: 1px; }
+        
+        /* 下線の長さ: スマホは80px、PC(md以上)は札幌に対応する220px */
+        .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; transition: width 0.3s; }
+        @media (min-width: 768px) {
+            .color-line { width: 220px; }
+        }
 
         select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
     </style>
@@ -162,22 +168,24 @@
             listDiv.innerHTML = filtered.map(match => {
                 const displayTag = TAG_MAP[match.source] || match.source;
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
-                const dateValue = match.date;
-                const dateParts = dateValue.split(/[\/\-]/);
-                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : dateValue;
+                const dateParts = match.date.split(/[\/\-]/);
+                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
                 const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
                 const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
 
                 return `
                     <div class="match-card">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="font-serif text-xs font-bold">第${match.section}節</span>
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6 font-oswald text-[0.7rem] tracking-wider text-zinc-400">
+                            <span class="font-serif text-white font-bold text-xs">第${match.section}節</span>
                             <span class="tag">${displayTag}</span>
+                            <div class="flex items-center gap-3">
+                                <span>${formattedDate}</span>
+                                <span>${match.time}</span>
+                                <span class="text-zinc-500">${match.stadium}</span>
+                            </div>
                         </div>
-                        <div class="font-oswald text-[0.75rem] text-zinc-400 mb-5 tracking-wider">
-                            <span>${formattedDate}</span> <span class="ml-2">${match.time}</span> <span class="ml-2 text-zinc-500">${match.stadium}</span>
-                        </div>
+
                         <div class="flex items-center justify-center">
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
                                 <span>

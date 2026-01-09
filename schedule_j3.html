@@ -124,15 +124,12 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             
-            // 【修正ポイント】エラーにならないよう、フィルタリングを慎重に行う
             let filtered = allMatches.filter(m => {
                 const s = String(m.source || "").trim();
                 const hId = String(m.homeId || "").trim();
                 const aId = String(m.awayId || "").trim();
-
                 const areaPass = (filterState.area === 'ALL') || (s === filterState.area);
                 const teamPass = (!filterState.teamId) || (hId === String(filterState.teamId) || aId === String(filterState.teamId));
-                
                 return areaPass && teamPass;
             });
 
@@ -141,8 +138,14 @@
                 return;
             }
 
-            // 【超重要】日付が「未定」でもクラッシュしないソート
+            // 【修正：2段階ソート】
             filtered.sort((a, b) => {
+                // 1. まず「節」で並べる (数字として比較)
+                const secA = parseInt(a.section) || 0;
+                const secB = parseInt(b.section) || 0;
+                if (secA !== secB) return secA - secB;
+
+                // 2. 同じ節の中で「日付」で並べる
                 const dateA = new Date(String(a.date).replace(/\./g, '/'));
                 const dateB = new Date(String(b.date).replace(/\./g, '/'));
                 
@@ -150,9 +153,10 @@
                 const isBValid = !isNaN(dateB.getTime());
 
                 if (!isAValid && !isBValid) return 0;
-                if (!isAValid) return 1; // 未定を後ろへ
-                if (!isBValid) return -1; // 未定を後ろへ
+                if (!isAValid) return 1; // 節の中での「未定」を最後に
+                if (!isBValid) return -1;
 
+                // 3. 日付も同じなら「時間」で並べる
                 if (dateA - dateB !== 0) return dateA - dateB;
                 return String(a.time).localeCompare(String(b.time));
             });

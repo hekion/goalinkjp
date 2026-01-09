@@ -124,28 +124,42 @@
         function render() {
             const listDiv = document.getElementById('schedule-list');
             
-            // 最も単純な条件分岐
-            let filtered = [];
-            
-            if (filterState.area === 'ALL' && !filterState.teamId) {
-                // ALLかつチーム未選択なら全部そのまま出す
-                filtered = allMatches;
-            } else {
-                // それ以外はフィルタリング
-                filtered = allMatches.filter(m => {
-                    const areaPass = (filterState.area === 'ALL') || (String(m.source).trim() === filterState.area);
-                    const teamPass = (!filterState.teamId) || (String(m.homeId).trim() === String(filterState.teamId) || String(m.awayId).trim() === String(filterState.teamId));
-                    return areaPass && teamPass;
-                });
-            }
+            // 【修正ポイント】エラーにならないよう、フィルタリングを慎重に行う
+            let filtered = allMatches.filter(m => {
+                const s = String(m.source || "").trim();
+                const hId = String(m.homeId || "").trim();
+                const aId = String(m.awayId || "").trim();
+
+                const areaPass = (filterState.area === 'ALL') || (s === filterState.area);
+                const teamPass = (!filterState.teamId) || (hId === String(filterState.teamId) || aId === String(filterState.teamId));
+                
+                return areaPass && teamPass;
+            });
 
             if (filtered.length === 0) {
-                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600">NO DATA FOUND</div>`;
+                listDiv.innerHTML = `<div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">NO DATA</div>`;
                 return;
             }
 
+            // 【超重要】日付が「未定」でもクラッシュしないソート
+            filtered.sort((a, b) => {
+                const dateA = new Date(String(a.date).replace(/\./g, '/'));
+                const dateB = new Date(String(b.date).replace(/\./g, '/'));
+                
+                const isAValid = !isNaN(dateA.getTime());
+                const isBValid = !isNaN(dateB.getTime());
+
+                if (!isAValid && !isBValid) return 0;
+                if (!isAValid) return 1; // 未定を後ろへ
+                if (!isBValid) return -1; // 未定を後ろへ
+
+                if (dateA - dateB !== 0) return dateA - dateB;
+                return String(a.time).localeCompare(String(b.time));
+            });
+
             listDiv.innerHTML = filtered.map(match => {
-                const tag = String(match.source).includes('WB') ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
+                const s = String(match.source || "");
+                const tag = s.includes('WB') ? "J2.J3 WEST-B" : "J2.J3 WEST-A";
                 const hId = Number(match.homeId);
                 const aId = Number(match.awayId);
                 const hColor = TEAM_DATA[hId]?.color || "#333";

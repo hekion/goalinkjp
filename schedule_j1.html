@@ -16,8 +16,8 @@
         .match-card { 
             background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
             border-left: 2px solid var(--main-cyan);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.2rem;
         }
         .tag {
             font-family: 'Oswald', sans-serif;
@@ -27,24 +27,18 @@
             color: var(--main-cyan);
             border: 1px solid rgba(75, 184, 224, 0.3);
             letter-spacing: 0.1em;
-        }
-        .vs-badge {
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.7rem;
-            color: var(--main-cyan);
-            margin: 0 1.5rem;
-            opacity: 0.8;
+            text-transform: uppercase;
         }
         
-        /* 既存パーツ */
-        .site-logo { height: 3.5rem; }
-        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); }
-        select { background-color: #111; border: 1px solid #333; appearance: none; padding: 1rem; width: 100%; color: white; }
+        /* 既存共通パーツ */
+        .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
+        .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
+        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
     </style>
 </head>
 <body>
 
-    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/90">
+    <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-black/95">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
     </header>
 
@@ -54,23 +48,24 @@
             <span class="font-serif text-3xl font-black">J1 試合日程</span>
         </div>
 
-        <div class="flex mb-6 border-b border-white/10">
-            <div class="area-tab flex-1 text-center py-4 cursor-pointer font-oswald text-xs tracking-widest active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
-            <div class="area-tab flex-1 text-center py-4 cursor-pointer font-oswald text-xs tracking-widest" onclick="updateFilters('area', 'EAST', this)">EAST</div>
-            <div class="area-tab flex-1 text-center py-4 cursor-pointer font-oswald text-xs tracking-widest" onclick="updateFilters('area', 'WEST', this)">WEST</div>
+        <div class="flex mb-8 border-t border-white/5">
+            <div class="area-tab active" onclick="updateFilters('area', 'ALL', this)">ALL</div>
+            <div class="area-tab" onclick="updateFilters('area', 'EAST', this)">EAST</div>
+            <div class="area-tab" onclick="updateFilters('area', 'WEST', this)">WEST</div>
         </div>
 
         <div id="schedule-list" class="pb-24">
-            <div class="text-center py-20 text-zinc-600 font-oswald text-xs tracking-widest">LOADING...</div>
+            <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING...</div>
         </div>
     </main>
 
     <script>
+        // ★新しいデプロイURLに差し替えてください
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
         let allMatches = [];
         let filterState = { area: 'ALL' };
 
-        // シート名を表示用タグに変換する辞書
+        // タグの表示名称変換
         const TAG_MAP = {
             "J1_EAST": "J1 EAST",
             "J1_WEST": "J1 WEST",
@@ -87,63 +82,69 @@
                 allMatches = data.matches;
                 render();
             } catch (e) {
-                document.getElementById('schedule-list').innerHTML = "ERROR";
+                document.getElementById('schedule-list').innerHTML = '<div class="text-center text-red-900 font-oswald text-xs">FAILED TO LOAD</div>';
             }
         }
 
         function updateFilters(type, value, el) {
             filterState.area = value;
-            document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active', 'text-[#4bb8e0]'));
-            el.classList.add('active', 'text-[#4bb8e0]');
+            document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
             render();
         }
 
         function render() {
             const listDiv = document.getElementById('schedule-list');
             
-            // 地区フィルタ（ソース名にEAST/WESTが含まれるかで判定）
             let filtered = allMatches.filter(m => {
                 if (filterState.area === 'ALL') return true;
                 return m.source.includes(filterState.area);
             });
 
-            listDiv.innerHTML = filtered.map(match => {
-                const displayTag = TAG_MAP[match.source] || match.source;
-                const isPlayed = match.homeScore && match.homeScore !== "-";
+            listDiv.innerHTML = filtered.length === 0 
+                ? '<div class="text-center py-20 text-zinc-600 font-oswald text-xs">NO MATCHES</div>'
+                : filtered.map(match => {
+                    const displayTag = TAG_MAP[match.source] || match.source;
+                    const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
+                    
+                    // 日付フォーマットの整形 (yyyy/MM/dd -> MM/dd)
+                    const dateValue = match.date;
+                    const dateParts = dateValue.split(/[\/\-]/);
+                    const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : dateValue;
 
-                return `
-                    <div class="match-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="font-serif text-sm font-bold tracking-tighter">第${match.section}節</span>
-                            <span class="tag">${displayTag}</span>
-                        </div>
-
-                        <div class="font-oswald text-[0.7rem] text-zinc-400 tracking-wider mb-6 flex gap-4 border-b border-white/5 pb-2">
-                            <span>${match.date.replace(/\//g, '.')}</span>
-                            <span>${match.time}</span>
-                            <span class="text-zinc-500">${match.stadium}</span>
-                        </div>
-
-                        <div class="flex items-center justify-center py-2">
-                            <div class="flex-1 text-right font-serif text-lg md:text-xl">
-                                <span class="hidden md:inline">${match.homeName}</span>
-                                <span class="inline md:hidden">${match.homeShort}</span>
-                            </div>
-                            
-                            <div class="flex flex-col items-center mx-4 min-w-[60px]">
-                                ${isPlayed 
-                                    ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` 
-                                    : `<span class="vs-badge font-bold">VS</span>`}
+                    return `
+                        <div class="match-card">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-serif text-xs font-bold">第${match.section}節</span>
+                                <span class="tag">${displayTag}</span>
                             </div>
 
-                            <div class="flex-1 text-left font-serif text-lg md:text-xl">
-                                <span class="hidden md:inline">${match.awayName}</span>
-                                <span class="inline md:hidden">${match.awayShort}</span>
+                            <div class="font-oswald text-[0.75rem] text-zinc-400 mb-5 tracking-wider">
+                                <span>${formattedDate}</span>
+                                <span class="ml-2">${match.time}</span>
+                                <span class="ml-2 text-zinc-500">${match.stadium}</span>
+                            </div>
+
+                            <div class="flex items-center justify-center">
+                                <div class="flex-1 text-right font-serif text-lg md:text-xl">
+                                    <span class="hidden md:inline">${match.homeName}</span>
+                                    <span class="inline md:hidden">${match.homeShort}</span>
+                                </div>
+                                
+                                <div class="flex flex-col items-center mx-6 min-w-[70px]">
+                                    ${isPlayed 
+                                        ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` 
+                                        : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
+                                </div>
+
+                                <div class="flex-1 text-left font-serif text-lg md:text-xl">
+                                    <span class="hidden md:inline">${match.awayName}</span>
+                                    <span class="inline md:hidden">${match.awayShort}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
         }
 
         initLoad();

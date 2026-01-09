@@ -14,20 +14,19 @@
         .match-card { background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border-left: 2px solid var(--main-cyan); padding: 1.2rem 1.5rem; margin-bottom: 1.2rem; }
         .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; background: rgba(75, 184, 224, 0.1); color: var(--main-cyan); border: 1px solid rgba(75, 184, 224, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
-        .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
-        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
-        .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
-        .color-line { height: 3px; width: 80px; margin-top: 2px; display: block; border-radius: 1px; }
-        @media (min-width: 768px) { .color-line { width: 220px; } }
         
-        select { 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); 
-            background-repeat: no-repeat; 
-            background-position: right 1rem center; 
-            background-size: 1em; 
-            -webkit-appearance: none; 
-            appearance: none; 
-        }
+        .area-tab { flex: 1; text-align: center; padding: 1rem 0.5rem; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+        
+        .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.7rem; padding: 0.5rem 1.2rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; }
+        .month-btn.active { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); font-weight: 500; }
+
+        .team-container { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1; }
+        .color-line { height: 3px; width: 60px; margin-top: 4px; display: block; border-radius: 1px; }
+        @media (min-width: 768px) { .color-line { width: 180px; } }
+        
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; -webkit-appearance: none; appearance: none; }
     </style>
 </head>
 <body>
@@ -36,17 +35,19 @@
     </header>
 
     <main class="pt-40 px-6 max-w-screen-md mx-auto min-h-screen">
-        <div class="mb-10">
+        <div class="mb-8 text-center md:text-left">
             <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] block mb-2 uppercase">Full League Schedule</span>
-            <span class="font-serif text-3xl font-black">全試合スケジュール</span>
+            <span class="font-serif text-3xl font-black italic">ALL MATCHES</span>
         </div>
 
-        <div class="flex mb-4 border-t border-white/5">
+        <div class="flex mb-6 border-t border-white/5">
             <div class="area-tab active" onclick="updateFilters('category', 'ALL', this)">ALL</div>
             <div class="area-tab" onclick="updateFilters('category', 'J1', this)">J1</div>
-            <div class="area-tab" onclick="updateFilters('category', 'J2_J3_E', this)">EAST</div>
-            <div class="area-tab" onclick="updateFilters('category', 'J2_J3_W', this)">WEST</div>
+            <div class="area-tab" onclick="updateFilters('category', 'J2_J3_E', this)">J2.J3 EAST</div>
+            <div class="area-tab" onclick="updateFilters('category', 'J2_J3_W', this)">J2.J3 WEST</div>
         </div>
+
+        <div id="month-filters" class="month-container mb-8"></div>
 
         <div class="mb-10">
             <select id="team-selector" onchange="updateFilters('team', this.value)" class="w-full bg-zinc-900/50 border border-white/10 text-white p-4 font-serif text-sm focus:border-[#4bb8e0] outline-none rounded-none">
@@ -55,48 +56,62 @@
         </div>
 
         <div id="schedule-list" class="pb-24">
-            <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING DATA...</div>
+            <div class="text-center py-20 text-zinc-600 font-oswald text-[0.6rem] tracking-[0.3em]">LOADING DATABASE...</div>
         </div>
     </main>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytul6B0qqse-KLLsXZgMVml9FCjBvo0V42-FQ6p9C1U7ReCvt1BwVWnkoQOPdYRBq8/exec";
         let allMatches = [];
-        let filterState = { category: 'ALL', teamId: '' };
+        let filterState = { category: 'ALL', teamId: '', month: 'ALL' };
 
-        // チームデータ統合（J1/J2/J3をすべて含めてください）
         const TEAM_DATA = {
-            1: { name: "コンサドーレ札幌", color: "#FF0000" },
-            // ... 他の全チーム
-            28: { name: "アルビレックス新潟", color: "#FF6600" },
-            60: { name: "FC琉球", color: "#A02040" }
+            1: { color: "#E2001A" }, 2: { color: "#003973" }, 3: { color: "#F0E400" }, 4: { color: "#004098" },
+            5: { color: "#000000" }, 6: { color: "#E2001A" }, 7: { color: "#005128" }, 8: { color: "#E2001A" },
+            9: { color: "#003366" }, 10: { color: "#FF3399" }, 11: { color: "#004098" }, 12: { color: "#E2001A" },
+            13: { color: "#0055A5" }, 14: { color: "#F39800" }, 15: { color: "#009944" }, 16: { color: "#003366" },
+            17: { color: "#D70C16" }, 18: { color: "#F39800" }, 19: { color: "#0041FF" }, 20: { color: "#660099" },
+            21: { color: "#EEFF00" }, 22: { color: "#0055AA" }, 23: { color: "#000000" }, 24: { color: "#FF0000" },
+            25: { color: "#0000FF" }, 26: { color: "#009944" }, 27: { color: "#FFCC00" }, 28: { color: "#FF6600" },
+            29: { color: "#2E59FF" }, 30: { color: "#FF0000" }, 31: { color: "#003366" }, 32: { color: "#FFD700" },
+            33: { color: "#005128" }, 34: { color: "#FF0000" }, 35: { color: "#0000FF" }, 36: { color: "#33CCFF" },
+            37: { color: "#F39800" }, 38: { color: "#0055AA" }, 39: { color: "#0000FF" }, 40: { color: "#33BBFF" },
+            41: { color: "#FF0000" }, 42: { color: "#2244AA" }, 43: { color: "#AAFF22" }, 44: { color: "#660099" },
+            45: { color: "#003366" }, 46: { color: "#FF6600" }, 47: { color: "#99DDFF" }, 48: { color: "#0055AA" },
+            49: { color: "#FF8800" }, 50: { color: "#223366" }, 51: { color: "#FF2200" }, 52: { color: "#FFD700" },
+            53: { color: "#FFFF00" }, 54: { color: "#77CCFF" }, 55: { color: "#005128" }, 56: { color: "#FF0000" },
+            57: { color: "#2E59FF" }, 58: { color: "#FFFFFF" }, 59: { color: "#334466" }, 60: { color: "#A02040" }
         };
 
         async function initLoad() {
             try {
-                // 3つのエンドポイントから並列取得
                 const types = ['j1', 'j2j3_east', 'j2j3_west'];
                 const results = await Promise.all(types.map(t => fetch(`${SCRIPT_URL}?type=${t}`).then(r => r.json())));
                 allMatches = results.flatMap(r => r.matches || []);
-                
-                // セレクトボックス生成
-                const selector = document.getElementById('team-selector');
-                const teams = {};
-                allMatches.forEach(m => {
-                    teams[m.homeId] = m.homeName;
-                    teams[m.awayId] = m.awayName;
-                });
-                Object.keys(teams).sort((a,b) => a - b).forEach(id => {
-                    const opt = document.createElement('option');
-                    opt.value = id;
-                    opt.textContent = teams[id];
-                    selector.appendChild(opt);
-                });
-
+                generateMonthButtons();
+                generateTeamSelector();
                 render();
             } catch (e) {
                 document.getElementById('schedule-list').innerHTML = 'LOAD ERROR';
             }
+        }
+
+        function generateMonthButtons() {
+            const container = document.getElementById('month-filters');
+            const months = new Set(['ALL']);
+            allMatches.forEach(m => {
+                const parts = String(m.date).split('.');
+                if (parts[1]) months.add(parseInt(parts[1]) + "月");
+            });
+            const sorted = Array.from(months).sort((a,b) => a === 'ALL' ? -1 : parseInt(a) - parseInt(b));
+            container.innerHTML = sorted.map(m => `<button class="month-btn ${m === 'ALL' ? 'active' : ''}" onclick="updateFilters('month', '${m}', this)">${m}</button>`).join('');
+        }
+
+        function generateTeamSelector() {
+            const selector = document.getElementById('team-selector');
+            const teams = {};
+            allMatches.forEach(m => { teams[m.homeId] = m.homeName; teams[m.awayId] = m.awayName; });
+            Object.keys(teams).sort((a,b) => a-b).forEach(id => { selector.add(new Option(teams[id], id)); });
         }
 
         function updateFilters(type, value, el) {
@@ -106,41 +121,33 @@
                 el.classList.add('active');
             } else if (type === 'team') {
                 filterState.teamId = value;
+            } else if (type === 'month') {
+                filterState.month = value;
+                document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+                el.classList.add('active');
             }
             render();
         }
 
         function render() {
             const listDiv = document.getElementById('schedule-list');
-            
             let filtered = allMatches.filter(m => {
                 const s = String(m.source || "").trim();
-                const hId = String(m.homeId || "").trim();
-                const aId = String(m.awayId || "").trim();
-                const categoryPass = (filterState.category === 'ALL') || s.startsWith(filterState.category);
-                const teamPass = (!filterState.teamId) || (hId === filterState.teamId || aId === filterState.teamId);
-                return categoryPass && teamPass;
+                const mMonth = String(m.date).split('.')[1] ? parseInt(String(m.date).split('.')[1]) + "月" : "";
+                const catPass = (filterState.category === 'ALL') || s.startsWith(filterState.category);
+                const teamPass = (!filterState.teamId) || (String(m.homeId) === filterState.teamId || String(m.awayId) === filterState.teamId);
+                const monthPass = (filterState.month === 'ALL') || (mMonth === filterState.month);
+                return catPass && teamPass && monthPass;
             });
 
-            // 【ソート：日付 -> 時間 -> 節】
             filtered.sort((a, b) => {
-                const dateA = new Date(String(a.date).replace(/\./g, '/'));
-                const dateB = new Date(String(b.date).replace(/\./g, '/'));
-                const isAValid = !isNaN(dateA.getTime());
-                const isBValid = !isNaN(dateB.getTime());
-
-                // 1. 日付で比較
-                if (!isAValid && !isBValid) return 0;
-                if (!isAValid) return 1;
-                if (!isBValid) return -1;
-                if (dateA - dateB !== 0) return dateA - dateB;
-
-                // 2. 時間で比較
-                const timeComp = String(a.time).localeCompare(String(b.time));
-                if (timeComp !== 0) return timeComp;
-
-                // 3. 節で比較
-                return (parseInt(a.section) || 0) - (parseInt(b.section) || 0);
+                const dA = new Date(String(a.date).replace(/\./g, '/'));
+                const dB = new Date(String(b.date).replace(/\./g, '/'));
+                if (!isNaN(dA) && !isNaN(dB)) {
+                    if (dA - dB !== 0) return dA - dB;
+                    return String(a.time).localeCompare(String(b.time));
+                }
+                return isNaN(dA) ? 1 : -1;
             });
 
             if (filtered.length === 0) {
@@ -149,30 +156,36 @@
             }
 
             listDiv.innerHTML = filtered.map(match => {
-                const s = String(match.source || "");
-                const tag = s.replace(/_/g, ' ');
-                const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
-                const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
-                const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
+                const hId = Number(match.homeId);
+                const aId = Number(match.awayId);
+                const hColor = TEAM_DATA[hId]?.color || "#333";
+                const aColor = TEAM_DATA[aId]?.color || "#333";
+                
+                let displayTag = String(match.source)
+                    .replace('J2_J3_EA', 'J2.J3 EAST-A').replace('J2_J3_EB', 'J2.J3 EAST-B')
+                    .replace('J2_J3_WA', 'J2.J3 WEST-A').replace('J2_J3_WB', 'J2.J3 WEST-B')
+                    .replace('J1_E', 'J1 EAST').replace('J1_W', 'J1 WEST');
 
                 return `
                     <div class="match-card">
                         <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6 font-oswald text-[0.7rem] tracking-wider text-zinc-400">
                             <span class="font-serif text-white font-bold text-xs">第${match.section}節</span>
-                            <span class="tag">${tag}</span>
+                            <span class="tag">${displayTag}</span>
                             <span>${match.date} ${match.time}</span>
                             <span class="text-zinc-500">${match.stadium}</span>
                         </div>
                         <div class="flex items-center justify-center">
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span>${match.homeName}</span>
+                                <span class="hidden md:inline">${match.homeName}</span>
+                                <span class="inline md:hidden">${match.homeShort}</span>
                                 <span class="color-line" style="background:${hColor}"></span>
                             </div>
-                            <div class="mx-6 min-w-[70px] text-center">
-                                ${isPlayed ? `<span class="font-oswald text-2xl font-medium">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs">VS</span>`}
+                            <div class="mx-4 text-center">
+                                ${match.homeScore && match.homeScore !== "-" ? `<span class="font-oswald text-2xl font-medium">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs">VS</span>`}
                             </div>
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
-                                <span>${match.awayName}</span>
+                                <span class="hidden md:inline">${match.awayName}</span>
+                                <span class="inline md:hidden">${match.awayShort}</span>
                                 <span class="color-line" style="background:${aColor}"></span>
                             </div>
                         </div>

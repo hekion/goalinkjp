@@ -15,12 +15,11 @@
         .tag { font-family: 'Oswald', sans-serif; font-size: 0.6rem; padding: 2px 8px; background: rgba(75, 184, 224, 0.1); color: var(--main-cyan); border: 1px solid rgba(75, 184, 224, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         
-        /* 月別ボタンUI：最上部 */
+        /* 月別ボタンUI */
         .month-container { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 15px 0; -webkit-overflow-scrolling: touch; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.75rem; padding: 0.6rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.2s; }
+        .month-btn { flex: 0 0 auto; font-family: 'Oswald', sans-serif; font-size: 0.75rem; padding: 0.6rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.2s; background: transparent; }
         .month-btn.active { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); font-weight: bold; }
 
-        /* カテゴリタブ */
         .area-tab { flex: 1; text-align: center; padding: 1rem 0.5rem; font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
 
@@ -59,68 +58,22 @@
         let allMatches = [];
         let filterState = { category: 'ALL', month: 'ALL' };
 
-        // 提示されたIDに正確にカラーを紐付け
         const TEAM_DATA = {
-            1: { color: "#FF0000" }, // 札幌
-            2: { color: "#00A968" }, // 八戸
-            3: { color: "#FFD700" }, // 仙台
-            4: { color: "#3498DB" }, // 秋田
-            5: { color: "#2E59FF" }, // 山形
-            6: { color: "#FF2200" }, // 福島
-            7: { color: "#FF4422" }, // いわき
-            8: { color: "#FF3131" }, // 鹿島
-            9: { color: "#3182FF" }, // 水戸
-            10: { color: "#FFFF00" }, // 栃木
-            11: { color: "#24409E" }, // 栃木C
-            12: { color: "#1B2E53" }, // 群馬
-            13: { color: "#FF0000" }, // 浦和
-            14: { color: "#FF7700" }, // 大宮
-            15: { color: "#FFEE00" }, // 千葉
-            16: { color: "#FFF200" }, // 柏
-            17: { color: "#2E59FF" }, // FC東京
-            18: { color: "#00B379" }, // 東京V
-            19: { color: "#24409E" }, // 町田
-            20: { color: "#00B2E5" }, // 川崎
-            21: { color: "#0055FF" }, // 横浜FM
-            22: { color: "#56A9E3" }, // 横浜FC
-            23: { color: "#77FF00" }, // 湘南
-            24: { color: "#008040" }, // 相模原
-            25: { color: "#3344BB" }, // 甲府
-            26: { color: "#007733" }, // 松本
-            27: { color: "#FF8800" }, // 長野
-            28: { color: "#FF6600" }, // 新潟
-            29: { color: "#2E59FF" }, // 富山
-            30: { color: "#FF0000" }, // 金沢
-            31: { color: "#FF9900" }, // 清水
-            32: { color: "#99CCFF" }, // 磐田
-            33: { color: "#CC99FF" }, // 藤枝
-            34: { color: "#FF2200" }, // 名古屋
-            35: { color: "#008855" }, // 岐阜
-            36: { color: "#33CCFF" }, // 滋賀
-            37: { color: "#CF73FF" }, // 京都
-            38: { color: "#3D5AFF" }, // G大阪
-            39: { color: "#FF77BB" }, // C大阪
-            40: { color: "#33BBFF" }, // FC大阪
-            41: { color: "#A02040" }, // 神戸
-            42: { color: "#2244AA" }, // 奈良
-            43: { color: "#AAFF22" }, // 鳥取
-            44: { color: "#C7243A" }, // 岡山
-            45: { color: "#B37DFF" }, // 広島
-            46: { color: "#FF6600" }, // 山口
-            47: { color: "#99DDFF" }, // 讃岐
-            48: { color: "#0055AA" }, // 徳島
-            49: { color: "#FF8800" }, // 愛媛
-            50: { color: "#223366" }, // 今治
-            51: { color: "#FF2200" }, // 高知
-            52: { color: "#122A5B" }, // 福岡
-            53: { color: "#FFFF00" }, // 北九州
-            54: { color: "#77CCFF" }, // 鳥栖
-            55: { color: "#0000FF" }, // 長崎
-            56: { color: "#FF0000" }, // 熊本
-            57: { color: "#2E59FF" }, // 大分
-            58: { color: "#FFFFFF" }, // 宮崎
-            59: { color: "#334466" }, // 鹿児島
-            60: { color: "#A02040" }  // 琉球
+            1: { color: "#FF0000" }, 2: { color: "#00A968" }, 3: { color: "#FFD700" }, 4: { color: "#3498DB" },
+            5: { color: "#2E59FF" }, 6: { color: "#FF2200" }, 7: { color: "#FF4422" }, 8: { color: "#FF3131" },
+            9: { color: "#3182FF" }, 10: { color: "#FFFF00" }, 11: { color: "#24409E" }, 12: { color: "#1B2E53" },
+            13: { color: "#FF0000" }, 14: { color: "#FF7700" }, 15: { color: "#FFEE00" }, 16: { color: "#FFF200" },
+            17: { color: "#2E59FF" }, 18: { color: "#00B379" }, 19: { color: "#24409E" }, 20: { color: "#00B2E5" },
+            21: { color: "#0055FF" }, 22: { color: "#56A9E3" }, 23: { color: "#77FF00" }, 24: { color: "#008040" },
+            25: { color: "#3344BB" }, 26: { color: "#007733" }, 27: { color: "#FF8800" }, 28: { color: "#FF6600" },
+            29: { color: "#2E59FF" }, 30: { color: "#FF0000" }, 31: { color: "#FF9900" }, 32: { color: "#99CCFF" },
+            33: { color: "#CC99FF" }, 34: { color: "#FF2200" }, 35: { color: "#008855" }, 36: { color: "#33CCFF" },
+            37: { color: "#CF73FF" }, 38: { color: "#3D5AFF" }, 39: { color: "#FF77BB" }, 40: { color: "#33BBFF" },
+            41: { color: "#A02040" }, 42: { color: "#2244AA" }, 43: { color: "#AAFF22" }, 44: { color: "#C7243A" },
+            45: { color: "#B37DFF" }, 46: { color: "#FF6600" }, 47: { color: "#99DDFF" }, 48: { color: "#0055AA" },
+            49: { color: "#FF8800" }, 50: { color: "#223366" }, 51: { color: "#FF2200" }, 52: { color: "#122A5B" },
+            53: { color: "#FFFF00" }, 54: { color: "#77CCFF" }, 55: { color: "#0000FF" }, 56: { color: "#FF0000" },
+            57: { color: "#2E59FF" }, 58: { color: "#FFFFFF" }, 59: { color: "#334466" }, 60: { color: "#A02040" }
         };
 
         async function initLoad() {
@@ -128,8 +81,13 @@
                 const types = ['j1', 'j2j3_east', 'j2j3_west'];
                 const results = await Promise.all(types.map(t => fetch(`${SCRIPT_URL}?type=${t}`).then(r => r.json())));
                 allMatches = results.flatMap(r => r.matches || []);
-                generateMonthButtons();
-                render();
+                
+                if (allMatches.length > 0) {
+                    generateMonthButtons();
+                    render();
+                } else {
+                    document.getElementById('schedule-list').innerHTML = 'NO DATA';
+                }
             } catch (e) {
                 document.getElementById('schedule-list').innerHTML = 'LOAD ERROR';
             }
@@ -137,16 +95,27 @@
 
         function generateMonthButtons() {
             const container = document.getElementById('month-filters');
-            const months = new Set(['ALL']);
+            const months = new Set();
+            months.add('ALL');
+            
             allMatches.forEach(m => {
-                const p = String(m.date).split('.');
-                if (p[1]) {
-                    const monthVal = parseInt(p[1]) + "月";
-                    months.add(monthVal);
+                const dateStr = String(m.date);
+                const match = dateStr.match(/(\d+)\./);
+                if (match) {
+                    months.add(parseInt(match[1]) + "月");
                 }
             });
-            const sorted = Array.from(months).sort((a,b) => a === 'ALL' ? -1 : parseInt(a) - parseInt(b));
-            container.innerHTML = sorted.map(m => `<button class="month-btn ${m === 'ALL' ? 'active' : ''}" onclick="updateFilters('month', '${m}', this)">${m}</button>`).join('');
+
+            const sorted = Array.from(months).sort((a, b) => {
+                if (a === 'ALL') return -1;
+                if (b === 'ALL') return 1;
+                return parseInt(a) - parseInt(b);
+            });
+
+            container.innerHTML = sorted.map(m => `
+                <button class="month-btn ${m === filterState.month ? 'active' : ''}" 
+                        onclick="updateFilters('month', '${m}', this)">${m}</button>
+            `).join('');
         }
 
         function updateFilters(type, value, el) {
@@ -166,7 +135,10 @@
             const listDiv = document.getElementById('schedule-list');
             let filtered = allMatches.filter(m => {
                 const s = String(m.source || "").trim();
-                const mMonth = String(m.date).split('.')[1] ? parseInt(String(m.date).split('.')[1]) + "月" : "";
+                const dateStr = String(m.date);
+                const match = dateStr.match(/(\d+)\./);
+                const mMonth = match ? parseInt(match[1]) + "月" : "";
+                
                 const catPass = (filterState.category === 'ALL') || s.startsWith(filterState.category);
                 const monthPass = (filterState.month === 'ALL') || (mMonth === filterState.month);
                 return catPass && monthPass;
@@ -186,10 +158,14 @@
                 const hColor = TEAM_DATA[Number(match.homeId)]?.color || "#333";
                 const aColor = TEAM_DATA[Number(match.awayId)]?.color || "#333";
                 
+                // タグ名の置換処理（正確にJ1 EAST/WESTに修正）
                 let displayTag = String(match.source)
-                    .replace('J2_J3_EA', 'J2.J3 EAST-A').replace('J2_J3_EB', 'J2.J3 EAST-B')
-                    .replace('J2_J3_WA', 'J2.J3 WEST-A').replace('J2_J3_WB', 'J2.J3 WEST-B')
-                    .replace('J1_E', 'J1 EAST').replace('J1_W', 'J1 WEST');
+                    .replace(/J1_E/g, 'J1 EAST')
+                    .replace(/J1_W/g, 'J1 WEST')
+                    .replace(/J2_J3_EA/g, 'J2.J3 EAST-A')
+                    .replace(/J2_J3_EB/g, 'J2.J3 EAST-B')
+                    .replace(/J2_J3_WA/g, 'J2.J3 WEST-A')
+                    .replace(/J2_J3_WB/g, 'J2.J3 WEST-B');
 
                 return `
                     <div class="match-card">

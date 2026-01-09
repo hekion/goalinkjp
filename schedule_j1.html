@@ -33,8 +33,8 @@
         .area-tab { flex: 1; text-align: center; padding: 1.2rem; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: rgba(255,255,255,0.3); cursor: pointer; }
         .area-tab.active { color: var(--main-cyan); border-bottom: 2px solid var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
 
-        /* チームカラーライン用 */
-        .color-line { height: 3px; width: 40px; margin-top: 4px; display: inline-block; border-radius: 2px; }
+        .team-container { display: flex; flex-direction: column; line-height: 1.1; }
+        .color-line { height: 3px; width: 80px; margin-top: 1px; display: block; border-radius: 1px; }
         .text-right .color-line { margin-left: auto; }
         .text-left .color-line { margin-right: auto; }
 
@@ -97,14 +97,12 @@
             44: { name: "ファジアーノ岡山", area: "WEST", color: "#C7243A" },
             45: { name: "サンフレッチェ広島", area: "WEST", color: "#B37DFF" },
             52: { name: "アビスパ福岡", area: "WEST", color: "#122A5B" },
-            55: { name: "V・ファーレン長崎", area: "WEST", color: "#FF9900" },
-            // 21-40
+            55: { name: "V・ファーレン長崎", area: "WEST", color: "#2E59FF" }, // ← 青に変更
             2: { color: "#00A968" }, 3: { color: "#FFD700" }, 4: { color: "#3498DB" }, 5: { color: "#2E59FF" },
             10: { color: "#FFFF00" }, 11: { color: "#24409E" }, 12: { color: "#1B2E53" }, 22: { color: "#56A9E3" },
             23: { color: "#77FF00" }, 24: { color: "#008040" }, 1: { color: "#FF0000" }, 6: { color: "#FF2200" },
             7: { color: "#FF4422" }, 14: { color: "#FF7700" }, 25: { color: "#3344BB" }, 26: { color: "#007733" },
             27: { color: "#FF8800" }, 32: { color: "#99CCFF" }, 33: { color: "#CC99FF" }, 35: { color: "#008855" },
-            // 41-60
             28: { color: "#FF6600" }, 29: { color: "#2E59FF" }, 30: { color: "#FF0000" }, 40: { color: "#33BBFF" },
             42: { color: "#2244AA" }, 47: { color: "#99DDFF" }, 48: { color: "#0055AA" }, 49: { color: "#FF8800" },
             50: { color: "#223366" }, 51: { color: "#FF2200" }, 36: { color: "#33CCFF" }, 43: { color: "#AAFF22" },
@@ -165,8 +163,9 @@
             listDiv.innerHTML = filtered.map(match => {
                 const displayTag = TAG_MAP[match.source] || match.source;
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
-                const dateParts = match.date.split(/[\/\-]/);
-                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
+                const dateValue = match.date;
+                const dateParts = dateValue.split(/[\/\-]/);
+                const formattedDate = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : dateValue;
 
                 const homeColor = TEAM_DATA[match.homeId]?.color || "#333";
                 const awayColor = TEAM_DATA[match.awayId]?.color || "#333";
@@ -181,18 +180,22 @@
                             <span>${formattedDate}</span> <span class="ml-2">${match.time}</span> <span class="ml-2 text-zinc-500">${match.stadium}</span>
                         </div>
                         <div class="flex items-center justify-center">
-                            <div class="flex-1 text-right font-serif text-lg md:text-xl">
-                                <span class="hidden md:inline">${match.homeName}</span>
-                                <span class="inline md:hidden">${match.homeShort}</span>
-                                <br><span class="color-line" style="background:${homeColor}"></span>
+                            <div class="flex-1 team-container text-right font-serif text-lg md:text-xl">
+                                <span>
+                                    <span class="hidden md:inline">${match.homeName}</span>
+                                    <span class="inline md:hidden">${match.homeShort}</span>
+                                </span>
+                                <span class="color-line" style="background:${homeColor}"></span>
                             </div>
                             <div class="flex flex-col items-center mx-6 min-w-[70px]">
                                 ${isPlayed ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
                             </div>
-                            <div class="flex-1 text-left font-serif text-lg md:text-xl">
-                                <span class="hidden md:inline">${match.awayName}</span>
-                                <span class="inline md:hidden">${match.awayShort}</span>
-                                <br><span class="color-line" style="background:${awayColor}"></span>
+                            <div class="flex-1 team-container text-left font-serif text-lg md:text-xl">
+                                <span>
+                                    <span class="hidden md:inline">${match.awayName}</span>
+                                    <span class="inline md:hidden">${match.awayShort}</span>
+                                </span>
+                                <span class="color-line" style="background:${awayColor}"></span>
                             </div>
                         </div>
                     </div>

@@ -44,8 +44,8 @@
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
         .name-container { position: relative; display: inline-block; }
-        .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 0; transition: width 0.4s ease; }
-        .player-row:hover .name-accent { width: 100%; }
+        /* 修正：最初から100%表示に固定 */
+        .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
 
         .player-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; text-decoration: none; }
         .player-row:active { background: rgba(255,255,255,0.1) !important; transform: scale(0.98); }

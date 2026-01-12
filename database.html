@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLAYER RANKING | Goalink</title>
+    <title>PLAYERS | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -57,25 +57,26 @@
 
         .ranking-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; margin-bottom: 3rem; }
         .ranking-header { border-left: 3px solid var(--main-cyan); padding-left: 1rem; margin-bottom: 1.5rem; }
-        .ranking-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.2rem; font-weight: 900; display: block; }
-        .ranking-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; color: var(--main-cyan); letter-spacing: 0.3em; text-transform: uppercase; }
+        .ranking-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.25rem; font-weight: 900; display: block; letter-spacing: 0.05em; }
 
-        .player-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .player-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); min-height: 64px; }
         .player-row:last-child { border-bottom: none; }
-        .rank-num { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 500; width: 35px; color: rgba(255,255,255,0.2); }
-        .rank-1 { color: #FFD700; font-size: 1.5rem; font-weight: 700; }
-        .player-info { flex: 1; border-left-width: 2px; padding-left: 12px; margin-left: 4px; }
-        .player-name { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 600; }
-        .player-team { font-size: 0.65rem; color: #888; }
-        .stat-value { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: var(--main-cyan); text-align: right; }
-        .stat-unit { font-size: 0.6rem; margin-left: 3px; opacity: 0.5; }
+        .rank-num { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 500; width: 35px; color: rgba(255,255,255,0.1); }
+        .rank-1 { color: #FFD700; font-size: 1.5rem; font-weight: 700; opacity: 1; }
+        .player-info { flex: 1; border-left: 2px solid rgba(255,255,255,0.05); padding-left: 12px; margin-left: 4px; }
+        .player-name { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+        .player-team { font-size: 0.65rem; color: #555; }
+        .stat-value { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: var(--main-cyan); text-align: right; opacity: 0.8; }
+        .stat-unit { font-size: 0.6rem; margin-left: 3px; opacity: 0.4; }
+
+        .note-text { font-size: 0.6rem; color: #666; margin-top: 1rem; display: flex; align-items: start; gap: 4px; }
 
         .fade-in { animation: fadeIn 1.2s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ローディングアニメーション */
-        .loading-shimmer { color: rgba(255,255,255,0.2); animation: shimmer 1.5s infinite linear; }
-        @keyframes shimmer { 0% { opacity: 0.2; } 50% { opacity: 0.5; } 100% { opacity: 0.2; } }
+        .loading-shimmer { animation: shimmer 2s infinite linear; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0) 100%); background-size: 200% 100%; }
+        @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
     </style>
 </head>
 <body>
@@ -106,8 +107,7 @@
     <main class="pt-32 px-8 max-w-screen-md mx-auto min-h-screen">
         
         <div class="section-header mb-10 fade-in">
-            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] uppercase block mb-2">Player Statistics</span>
-            <span class="font-serif text-3xl font-900 tracking-wider block">個人成績ランキング</span>
+            <span class="font-serif text-3xl font-900 tracking-wider block">個人成績</span>
         </div>
 
         <div class="category-grid fade-in" style="animation-delay: 0.1s;">
@@ -120,35 +120,24 @@
         </div>
 
         <div id="ranking-container" class="fade-in" style="animation-delay: 0.2s;">
-            <div id="goals-section" class="ranking-card">
-                <div class="ranking-header">
-                    <span class="ranking-title-en">Top Scorer</span>
-                    <span class="ranking-title-ja">得点王</span>
-                </div>
+            <div class="ranking-card">
+                <div class="ranking-header"><span class="ranking-title-ja">得点王</span></div>
                 <div id="list-goals" class="ranking-list"></div>
             </div>
 
-            <div id="per90-section" class="ranking-card">
-                <div class="ranking-header">
-                    <span class="ranking-title-en">Efficiency (Per 90)</span>
-                    <span class="ranking-title-ja">得点率</span>
-                </div>
+            <div class="ranking-card">
+                <div class="ranking-header"><span class="ranking-title-ja">得点率</span></div>
                 <div id="list-per90" class="ranking-list"></div>
+                <p class="note-text">※90分あたりの得点率（得点÷出場時間×90）を表示。累計出場時間が90分以上の選手のみを対象としています。</p>
             </div>
 
-            <div id="minutes-section" class="ranking-card">
-                <div class="ranking-header">
-                    <span class="ranking-title-en">Iron Man</span>
-                    <span class="ranking-title-ja">出場時間</span>
-                </div>
+            <div class="ranking-card">
+                <div class="ranking-header"><span class="ranking-title-ja">出場時間</span></div>
                 <div id="list-minutes" class="ranking-list"></div>
             </div>
 
-            <div id="cards-section" class="ranking-card">
-                <div class="ranking-header">
-                    <span class="ranking-title-en">Discipline</span>
-                    <span class="ranking-title-ja">警告数</span>
-                </div>
+            <div class="ranking-card">
+                <div class="ranking-header"><span class="ranking-title-ja">警告数</span></div>
                 <div id="list-cards" class="ranking-list"></div>
             </div>
         </div>
@@ -181,11 +170,29 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function fetchRankings(category) {
+        // 5人分の空枠（プレースホルダー）を生成する関数
+        function renderPlaceholders() {
             const containers = ['list-goals', 'list-per90', 'list-minutes', 'list-cards'];
             containers.forEach(id => {
-                document.getElementById(id).innerHTML = '<div class="loading-shimmer text-[0.6rem] tracking-[0.3em] py-10 text-center">LOADING DATA...</div>';
+                let html = '';
+                for (let i = 1; i <= 5; i++) {
+                    html += `
+                        <div class="player-row loading-shimmer">
+                            <div class="rank-num ${i === 1 ? 'rank-1' : ''}">${i}</div>
+                            <div class="player-info">
+                                <div class="player-name text-zinc-800">----------</div>
+                                <div class="player-team text-zinc-900">------</div>
+                            </div>
+                            <div class="stat-value text-zinc-800">--</div>
+                        </div>
+                    `;
+                }
+                document.getElementById(id).innerHTML = html;
             });
+        }
+
+        async function fetchRankings(category) {
+            renderPlaceholders(); // 取得前に枠を表示
 
             try {
                 const response = await fetch(`${SCRIPT_URL}?type=ranking&category=${category}`);
@@ -216,7 +223,7 @@
                         <div class="player-team">${player.team}</div>
                     </div>
                     <div class="stat-value">
-                        ${player.per90 && unit === 'PTS' ? player.per90.toFixed(2) : player[unit.toLowerCase()] || player.mins || player.cards}
+                        ${player.per90 && unit === 'PTS' ? player.per90.toFixed(2) : (player[unit.toLowerCase()] || player.mins || player.cards).toLocaleString()}
                         <span class="stat-unit">${unit}</span>
                     </div>
                 </div>

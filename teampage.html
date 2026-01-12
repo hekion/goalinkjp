@@ -233,31 +233,38 @@
                 scheduleDiv.innerHTML = displayMatches.map(m => {
                     const isHome = String(m.homeId) === String(teamId);
                     const opponent = isHome ? m.awayShort : m.homeShort;
-                    const oppId = isHome ? m.awayId : m.homeId;
                     const isPlayed = m.homeScore && m.homeScore !== "-" && m.homeScore !== "";
                     const hasPk = m.homePk !== "" && m.homePk !== undefined;
 
-                    // 対戦相手のカラーを探す
-                    let opponentColor = '#FFFFFF';
-                    const oppMatch = allMatches.find(match => String(match.homeId) === String(oppId) || String(match.awayId) === String(oppId));
-                    if(oppMatch) {
-                        opponentColor = String(oppMatch.homeId) === String(oppId) ? oppMatch.homeColor : oppMatch.awayColor;
-                    }
-
-                    // 勝敗判定による文字色の変更
-                    let scoreColor = "text-white"; 
+                    // 勝敗判定
+                    let resultLabel = "";
+                    let labelColor = "text-zinc-500";
                     if (isPlayed) {
                         const myScore = isHome ? parseInt(m.homeScore) : parseInt(m.awayScore);
                         const oppScore = isHome ? parseInt(m.awayScore) : parseInt(m.homeScore);
                         
-                        if (myScore > oppScore) scoreColor = "text-[#4bb8e0]"; // 勝利
-                        else if (myScore < oppScore) scoreColor = "text-zinc-500"; // 敗北
-                        
-                        if (hasPk) {
-                            const myPk = isHome ? parseInt(m.homePk) : parseInt(m.awayPk);
-                            const oppPk = isHome ? parseInt(m.awayPk) : parseInt(m.homePk);
-                            if (myPk > oppPk) scoreColor = "text-[#4bb8e0]";
-                            else if (myPk < oppPk) scoreColor = "text-zinc-500";
+                        if (myScore > oppScore) {
+                            resultLabel = "WIN";
+                            labelColor = "text-[#4bb8e0]";
+                        } else if (myScore < oppScore) {
+                            resultLabel = "LOSE";
+                            labelColor = "text-zinc-500";
+                        } else {
+                            // 引き分け時のPK判定
+                            if (hasPk) {
+                                const myPk = isHome ? parseInt(m.homePk) : parseInt(m.awayPk);
+                                const oppPk = isHome ? parseInt(m.awayPk) : parseInt(m.homePk);
+                                if (myPk > oppPk) {
+                                    resultLabel = "PK WIN";
+                                    labelColor = "text-[#4bb8e0]";
+                                } else {
+                                    resultLabel = "PK LOSE";
+                                    labelColor = "text-zinc-500";
+                                }
+                            } else {
+                                resultLabel = "DRAW";
+                                labelColor = "text-white/60";
+                            }
                         }
                     }
 
@@ -275,17 +282,19 @@
                                 
                                 <div class="flex flex-col flex-1 min-w-0">
                                     <div class="flex items-baseline gap-3">
-                                        <div class="font-oswald text-xl leading-none min-w-[3rem] ${isPlayed ? scoreColor : 'text-[#4bb8e0] font-bold'}">
-                                            ${isPlayed ? `${m.homeScore}-${m.awayScore}` : 'VS'}
+                                        <div class="flex flex-col items-start min-w-[3rem]">
+                                            <div class="font-oswald text-xl leading-none text-white">
+                                                ${isPlayed ? `${m.homeScore}-${m.awayScore}` : '<span class="text-[#4bb8e0] font-bold">VS</span>'}
+                                            </div>
+                                            ${isPlayed && hasPk ? `
+                                                <div class="font-oswald text-[0.6rem] text-[#4bb8e0] mt-1 opacity-80 leading-none">PK ${m.homePk}-${m.awayPk}</div>
+                                            ` : ''}
                                         </div>
-                                        <div class="relative inline-block min-w-0">
+                                        <div class="flex flex-col">
                                             <span class="font-serif text-lg tracking-wider truncate block">${opponent}</span>
-                                            <div class="absolute -bottom-1 left-0 h-[1px] w-full opacity-60" style="background-color: ${opponentColor || '#FFF'}"></div>
+                                            ${resultLabel ? `<span class="font-oswald text-[0.65rem] ${labelColor} font-bold tracking-widest mt-0.5">${resultLabel}</span>` : ''}
                                         </div>
                                     </div>
-                                    ${isPlayed && hasPk ? `
-                                        <div class="font-oswald text-[0.6rem] ${scoreColor} mt-1 ml-1 opacity-80">PK ${m.homePk}-${m.awayPk}</div>
-                                    ` : ''}
                                 </div>
                             </div>
                         </div>

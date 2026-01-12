@@ -169,7 +169,7 @@
                     document.getElementById('stat-red').textContent = data.stats.red || '0';
                 }
 
-                loadTeamSchedule(teamId, data.teamName);
+                loadTeamSchedule(teamId);
 
                 document.getElementById('playerGrid').innerHTML = data.players.map(p => {
                     const detailUrl = `playerpage.html?id=${p.id}&tid=${teamId}`;
@@ -206,7 +206,7 @@
             }
         }
 
-        async function loadTeamSchedule(teamId, teamName) {
+        async function loadTeamSchedule(teamId) {
             try {
                 const types = ['j1', 'j2j3_east', 'j2j3_west'];
                 const results = await Promise.all(types.map(t => fetch(`${MATCH_API_URL}?type=${t}`).then(r => r.json())));
@@ -229,13 +229,20 @@
                 nextMatches.forEach((m, i) => displayMatches.push({ ...m, type: i === 0 ? 'NEXT MATCH' : 'FOLLOWING' }));
 
                 const scheduleDiv = document.getElementById('teamSchedule');
-                const teamColor = document.getElementById('teamUnderline').style.backgroundColor;
 
                 scheduleDiv.innerHTML = displayMatches.map(m => {
                     const isHome = String(m.homeId) === String(teamId);
                     const opponent = isHome ? m.awayShort : m.homeShort;
+                    const oppId = isHome ? m.awayId : m.homeId;
                     const isPlayed = m.homeScore && m.homeScore !== "-" && m.homeScore !== "";
                     const hasPk = m.homePk !== "" && m.homePk !== undefined;
+
+                    // 対戦相手のカラーを探す
+                    let opponentColor = '#FFFFFF';
+                    const oppMatch = allMatches.find(match => String(match.homeId) === String(oppId) || String(match.awayId) === String(oppId));
+                    if(oppMatch) {
+                        opponentColor = String(oppMatch.homeId) === String(oppId) ? oppMatch.homeColor : oppMatch.awayColor;
+                    }
 
                     // 勝敗判定による文字色の変更
                     let scoreColor = "text-white"; 
@@ -246,7 +253,6 @@
                         if (myScore > oppScore) scoreColor = "text-[#4bb8e0]"; // 勝利
                         else if (myScore < oppScore) scoreColor = "text-zinc-500"; // 敗北
                         
-                        // PKの場合の判定
                         if (hasPk) {
                             const myPk = isHome ? parseInt(m.homePk) : parseInt(m.awayPk);
                             const oppPk = isHome ? parseInt(m.awayPk) : parseInt(m.homePk);
@@ -274,7 +280,7 @@
                                         </div>
                                         <div class="relative inline-block min-w-0">
                                             <span class="font-serif text-lg tracking-wider truncate block">${opponent}</span>
-                                            <div class="absolute -bottom-1 left-0 h-[1px] w-full opacity-30" style="background-color: ${teamColor}"></div>
+                                            <div class="absolute -bottom-1 left-0 h-[1px] w-full opacity-60" style="background-color: ${opponentColor || '#FFF'}"></div>
                                         </div>
                                     </div>
                                     ${isPlayed && hasPk ? `

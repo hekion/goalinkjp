@@ -81,16 +81,19 @@
     </header>
 
     <nav id="sideMenu">
-        <div class="menu-item" style="transition-delay: 0.1s;"><a href="https://hekion.github.io/goalinkjp/schedule.html"><span class="font-serif text-2xl">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="schedule.html"><span class="font-serif text-2xl text-white">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl text-[#4bb8e0]">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl text-white">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-white">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS</small></a></div>
         
-        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
-            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.5s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3 mb-6">
                 <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+            <a href="https://note.com/goalink_jp" target="_blank" class="flex items-center gap-3">
+                <img src="https://note.com/favicon.ico" class="w-5 h-5 grayscale opacity-70" alt="">
+                <span class="font-serif text-xl text-gray-400">公式noteへ</span>
             </a>
         </div>
     </nav>
@@ -128,8 +131,14 @@
         <div id="playerGrid" class="flex flex-col gap-2"></div>
     </main>
 
-    <footer class="p-20 text-center border-t border-white/5 mx-8">
-        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-12 flex flex-col items-center">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase mb-8">© 2026 Goalink</p>
+        <div class="flex items-center justify-center gap-4">
+            <span class="font-oswald text-[0.55rem] tracking-[0.3em] uppercase opacity-30">Powered by</span>
+            <a href="https://hekion.github.io/hekion/" target="_blank" class="block">
+                <img src="hekionlogo.png" alt="HEKION" class="h-8 w-auto">
+            </a>
+        </div>
     </footer>
 
     <script>

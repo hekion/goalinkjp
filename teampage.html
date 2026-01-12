@@ -229,17 +229,30 @@
                 nextMatches.forEach((m, i) => displayMatches.push({ ...m, type: i === 0 ? 'NEXT MATCH' : 'FOLLOWING' }));
 
                 const scheduleDiv = document.getElementById('teamSchedule');
+                const teamColor = document.getElementById('teamUnderline').style.backgroundColor;
+
                 scheduleDiv.innerHTML = displayMatches.map(m => {
                     const isHome = String(m.homeId) === String(teamId);
                     const opponent = isHome ? m.awayShort : m.homeShort;
-                    const isPlayed = m.homeScore && m.homeScore !== "-";
+                    const isPlayed = m.homeScore && m.homeScore !== "-" && m.homeScore !== "";
                     const hasPk = m.homePk !== "" && m.homePk !== undefined;
 
-                    // 表示用のメインテキスト（VS または スコア）
-                    let resultMain = `<span class="text-[#4bb8e0] font-bold">VS</span>`;
+                    // 勝敗判定による文字色の変更
+                    let scoreColor = "text-white"; 
                     if (isPlayed) {
-                        // 終わっている試合はスコアを出す
-                        resultMain = `<span class="text-white">${m.homeScore}-${m.awayScore}</span>`;
+                        const myScore = isHome ? parseInt(m.homeScore) : parseInt(m.awayScore);
+                        const oppScore = isHome ? parseInt(m.awayScore) : parseInt(m.homeScore);
+                        
+                        if (myScore > oppScore) scoreColor = "text-[#4bb8e0]"; // 勝利
+                        else if (myScore < oppScore) scoreColor = "text-zinc-500"; // 敗北
+                        
+                        // PKの場合の判定
+                        if (hasPk) {
+                            const myPk = isHome ? parseInt(m.homePk) : parseInt(m.awayPk);
+                            const oppPk = isHome ? parseInt(m.awayPk) : parseInt(m.homePk);
+                            if (myPk > oppPk) scoreColor = "text-[#4bb8e0]";
+                            else if (myPk < oppPk) scoreColor = "text-zinc-500";
+                        }
                     }
 
                     return `
@@ -249,15 +262,25 @@
                                 <span>${m.date} ${m.time}</span>
                                 <span class="truncate ml-2 text-zinc-600">${m.stadium}</span>
                             </div>
-                            <div class="flex flex-col">
-                                <div class="font-serif text-[0.6rem] text-zinc-500 mb-1 uppercase tracking-tighter">${isHome ? 'HOME' : 'AWAY'} GAME</div>
-                                <div class="flex items-baseline gap-3">
-                                    <div class="font-oswald text-xl leading-none min-w-[3rem]">${resultMain}</div>
-                                    <div class="font-serif text-lg tracking-wider truncate">${opponent}</div>
+                            <div class="flex items-center gap-4">
+                                <div class="font-serif text-[0.5rem] text-zinc-500 leading-tight border-r border-white/10 pr-3">
+                                    ${isHome ? 'HOME' : 'AWAY'}<br>GAME
                                 </div>
-                                ${isPlayed && hasPk ? `
-                                    <div class="font-oswald text-[0.6rem] text-[#4bb8e0] mt-1 ml-1">PK ${m.homePk}-${m.awayPk}</div>
-                                ` : ''}
+                                
+                                <div class="flex flex-col flex-1 min-w-0">
+                                    <div class="flex items-baseline gap-3">
+                                        <div class="font-oswald text-xl leading-none min-w-[3rem] ${isPlayed ? scoreColor : 'text-[#4bb8e0] font-bold'}">
+                                            ${isPlayed ? `${m.homeScore}-${m.awayScore}` : 'VS'}
+                                        </div>
+                                        <div class="relative inline-block min-w-0">
+                                            <span class="font-serif text-lg tracking-wider truncate block">${opponent}</span>
+                                            <div class="absolute -bottom-1 left-0 h-[1px] w-full opacity-30" style="background-color: ${teamColor}"></div>
+                                        </div>
+                                    </div>
+                                    ${isPlayed && hasPk ? `
+                                        <div class="font-oswald text-[0.6rem] ${scoreColor} mt-1 ml-1 opacity-80">PK ${m.homePk}-${m.awayPk}</div>
+                                    ` : ''}
+                                </div>
                             </div>
                         </div>
                     `;

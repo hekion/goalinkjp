@@ -250,7 +250,6 @@
                             resultLabel = "LOSE";
                             labelColor = "text-zinc-500";
                         } else {
-                            // 引き分け時のPK判定
                             if (hasPk) {
                                 const myPk = isHome ? parseInt(m.homePk) : parseInt(m.awayPk);
                                 const oppPk = isHome ? parseInt(m.awayPk) : parseInt(m.homePk);
@@ -281,7 +280,7 @@
                                 </div>
                                 
                                 <div class="flex flex-col flex-1 min-w-0">
-                                    <div class="flex items-baseline gap-3">
+                                    <div class="flex items-center gap-4">
                                         <div class="flex flex-col items-start min-w-[3rem]">
                                             <div class="font-oswald text-xl leading-none text-white">
                                                 ${isPlayed ? `${m.homeScore}-${m.awayScore}` : '<span class="text-[#4bb8e0] font-bold">VS</span>'}
@@ -290,9 +289,10 @@
                                                 <div class="font-oswald text-[0.6rem] text-[#4bb8e0] mt-1 opacity-80 leading-none">PK ${m.homePk}-${m.awayPk}</div>
                                             ` : ''}
                                         </div>
-                                        <div class="flex flex-col">
+                                        
+                                        <div class="flex items-baseline gap-2 min-w-0">
                                             <span class="font-serif text-lg tracking-wider truncate block">${opponent}</span>
-                                            ${resultLabel ? `<span class="font-oswald text-[0.65rem] ${labelColor} font-bold tracking-widest mt-0.5">${resultLabel}</span>` : ''}
+                                            ${resultLabel ? `<span class="font-oswald text-[0.6rem] ${labelColor} font-bold tracking-widest whitespace-nowrap">${resultLabel}</span>` : ''}
                                         </div>
                                     </div>
                                 </div>

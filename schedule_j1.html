@@ -159,6 +159,15 @@
 
         async function initLoad() {
             updateTeamSelector();
+            
+            // URLパラメータからチームIDを取得して反映させる（追記部分）
+            const params = new URLSearchParams(window.location.search);
+            const teamIdFromUrl = params.get('teamId');
+            if (teamIdFromUrl) {
+                filterState.teamId = teamIdFromUrl;
+                document.getElementById('team-selector').value = teamIdFromUrl;
+            }
+
             try {
                 const res = await fetch(`${SCRIPT_URL}?type=j1`);
                 const data = await res.json();

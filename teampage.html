@@ -52,6 +52,11 @@
         .mini-match-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 2px; text-align: left; }
         .match-label { font-family: 'Oswald', sans-serif; font-size: 0.55rem; letter-spacing: 0.1em; padding: 2px 6px; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); margin-bottom: 0.8rem; display: inline-block; }
 
+        /* View More ボタン */
+        .view-more-container { text-align: center; margin-top: 2rem; }
+        .view-more-btn { display: inline-block; padding: 0.8rem 2.5rem; border: 1px solid rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--main-cyan); text-decoration: none; transition: 0.3s; }
+        .view-more-btn:hover { background: var(--main-cyan); color: #000; border-color: var(--main-cyan); }
+
         /* チーム詳細固有スタイル */
         .name-container { position: relative; display: inline-block; }
         .name-accent { position: absolute; bottom: -2px; left: 0; height: 2px; width: 100%; }
@@ -111,6 +116,9 @@
             </div>
 
             <div id="teamSchedule" class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 opacity-0 transition-opacity duration-700 text-left">
+            </div>
+            <div class="view-more-container mb-16">
+                <a id="viewMoreBtn" href="#" class="view-more-btn">VIEW ALL SCHEDULE</a>
             </div>
         </div>
 
@@ -208,11 +216,27 @@
 
         async function loadTeamSchedule(teamId) {
             try {
-                const types = ['j1', 'j2j3_east', 'j2j3_west'];
-                const results = await Promise.all(types.map(t => fetch(`${MATCH_API_URL}?type=${t}`).then(r => r.json())));
-                const allMatches = results.flatMap(r => r.matches || []);
+                // カテゴリーごとのリンク先定義
+                const config = [
+                    { type: 'j1', file: 'schedule_j1.html' },
+                    { type: 'j2j3_east', file: 'schedule_j2.html' },
+                    { type: 'j2j3_west', file: 'schedule_j3.html' }
+                ];
+
+                const results = await Promise.all(config.map(c => 
+                    fetch(`${MATCH_API_URL}?type=${c.type}`).then(r => r.json().then(data => ({ ...data, file: c.file })))
+                ));
+                
+                const allMatches = results.flatMap(r => (r.matches || []).map(m => ({ ...m, categoryFile: r.file })));
 
                 const myMatches = allMatches.filter(m => String(m.homeId) === String(teamId) || String(m.awayId) === String(teamId));
+                
+                // ボタンのリンク先設定
+                if (myMatches.length > 0) {
+                    const targetFile = myMatches[0].categoryFile;
+                    document.getElementById('viewMoreBtn').href = `${targetFile}?teamId=${teamId}`;
+                }
+
                 myMatches.sort((a, b) => {
                     const dateA = new Date(String(a.date).replace(/\./g, '/') + ' ' + a.time);
                     const dateB = new Date(String(b.date).replace(/\./g, '/') + ' ' + b.time);

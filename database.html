@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLAYERS | Goalink</title>
+    <title>PLAYER RANKING | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +13,7 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        /* ヘッダー・共通パーツ */
+        /* 共通パーツ継承 */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -32,32 +32,9 @@
         #sideMenu.open { right: 0; }
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
-
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        /* セクションタイトル */
-        .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
-        .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
-        .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
-
-        /* リンクカードスタイル */
-        .link-card { 
-            background: #000;
-            padding: 1.4rem 1.2rem; 
-            border: 1px solid rgba(75, 184, 224, 0.2);
-            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1); 
-            display: flex; justify-content: space-between; align-items: center; position: relative;
-        }
-        .link-card::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background: var(--main-cyan); }
-        .link-card span { font-size: 0.85rem; letter-spacing: 0.15em; color: #fff; font-weight: 500; }
-        .link-card::after { content: '→'; font-family: 'Oswald', sans-serif; font-size: 1rem; color: var(--main-cyan); opacity: 0.8; }
-        .link-card:active, .link-card:hover { background: rgba(75, 184, 224, 0.1); border-color: var(--main-cyan); }
-
-        .db-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 768px) { .db-grid { grid-template-columns: repeat(3, 1fr); } }
-
-        /* ページトップボタン */
         #pagetop {
             position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
             background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -66,12 +43,39 @@
             text-decoration: none;
         }
         #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        #pagetop:hover { border-color: var(--main-cyan); }
         #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
         #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
-        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        /* ランキング独自スタイル */
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 3rem; }
+        .cat-btn { 
+            border: 1px solid rgba(255,255,255,0.1); padding: 12px 4px; text-align: center; 
+            font-family: 'Oswald', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; 
+            transition: 0.3s; color: rgba(255,255,255,0.4); cursor: pointer; background: rgba(255,255,255,0.02); 
+        }
+        .cat-btn.active { border-color: var(--main-cyan); color: var(--main-cyan); background: rgba(75, 184, 224, 0.05); }
+
+        .ranking-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; margin-bottom: 3rem; }
+        .ranking-header { border-left: 3px solid var(--main-cyan); padding-left: 1rem; margin-bottom: 1.5rem; }
+        .ranking-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.2rem; font-weight: 900; display: block; }
+        .ranking-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; color: var(--main-cyan); letter-spacing: 0.3em; text-transform: uppercase; }
+
+        .player-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .player-row:last-child { border-bottom: none; }
+        .rank-num { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 500; width: 35px; color: rgba(255,255,255,0.2); }
+        .rank-1 { color: #FFD700; font-size: 1.5rem; font-weight: 700; }
+        .player-info { flex: 1; border-left-width: 2px; padding-left: 12px; margin-left: 4px; }
+        .player-name { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 600; }
+        .player-team { font-size: 0.65rem; color: #888; }
+        .stat-value { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: var(--main-cyan); text-align: right; }
+        .stat-unit { font-size: 0.6rem; margin-left: 3px; opacity: 0.5; }
+
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ローディングアニメーション */
+        .loading-shimmer { color: rgba(255,255,255,0.2); animation: shimmer 1.5s infinite linear; }
+        @keyframes shimmer { 0% { opacity: 0.2; } 50% { opacity: 0.5; } 100% { opacity: 0.2; } }
     </style>
 </head>
 <body>
@@ -85,7 +89,10 @@
 
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
-        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger"><span></span><span></span></div>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
+            <span></span>
+            <span></span>
+        </div>
     </header>
 
     <nav id="sideMenu">
@@ -94,96 +101,138 @@
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
         <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-[#4bb8e0]">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
-        
-        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
-            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
-                <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                <span class="font-serif text-xl text-gray-400">公式Xへ</span>
-            </a>
-        </div>
     </nav>
 
-    <main class="pt-36 px-8 max-w-screen-md mx-auto pb-20">
-        <div class="section-header fade-in" style="animation-delay: 0.1s;">
-            <span class="section-title-en">Archive Collection</span>
-            <h1 class="section-title-ja text-3xl">個人成績</h1>
+    <main class="pt-32 px-8 max-w-screen-md mx-auto min-h-screen">
+        
+        <div class="section-header mb-10 fade-in">
+            <span class="font-oswald text-[0.65rem] tracking-[0.5em] text-[#4bb8e0] uppercase block mb-2">Player Statistics</span>
+            <span class="font-serif text-3xl font-900 tracking-wider block">個人成績ランキング</span>
         </div>
 
-        <section class="mb-24 fade-in" style="animation-delay: 0.3s;">
-            <a href="https://docs.google.com/spreadsheets/d/11bVNzcKZcKk6bGhxzL_ioJwXFO0xZrysY97dHTb0bZA/view?rm=minimal" target="_blank" 
-               class="block bg-zinc-900/40 border-2 border-[#4bb8e0] p-10 text-center hover:bg-[#4bb8e0]/10 transition-all duration-500">
-                <small class="font-oswald tracking-[0.6em] text-[#4bb8e0] text-[0.65rem] block mb-2">MASTER DATA</small>
-                <span class="block font-serif text-2xl">全カテゴリ日程表</span>
-            </a>
-        </section>
-
-        <div class="space-y-28 fade-in" style="animation-delay: 0.5s;">
-            <section>
-                <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
-                    <span class="section-title-en">J1 League Category</span>
-                    <span class="section-title-ja text-xl italic">J1 リーグ</span>
-                </div>
-                <div class="db-grid">
-                    <a href="https://docs.google.com/spreadsheets/d/1wXllYryBGIx4PhmKw6ojsfxM5UGMBA8K17NOZBagnCw/view?rm=minimal" target="_blank" class="link-card"><span>選手リスト</span></a>
-                    <a href="https://docs.google.com/spreadsheets/d/10R2lT4Fa3kMDLVYf2fAp4cYhe5QFxVZf2CXixQ20R04/view?rm=minimal" target="_blank" class="link-card"><span>スタッツ</span></a>
-                    <a href="https://docs.google.com/spreadsheets/d/10sZm1SJlPdADrrni6wNPBcDuzlvd5BIgbgbjkHMwqVo/view?rm=minimal" target="_blank" class="link-card"><span>日程・対戦</span></a>
-                </div>
-            </section>
-
-            <section>
-                <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
-                    <span class="section-title-en">J2・J3 East Category</span>
-                    <span class="section-title-ja text-xl italic">J2・J3 EAST</span>
-                </div>
-                <div class="db-grid">
-                    <a href="https://docs.google.com/spreadsheets/d/1l3ePTXeBPoFHxKZRb3VN5b82XSmCOoiwJBeWDI2LXaQ/view?rm=minimal" target="_blank" class="link-card"><span>選手リスト</span></a>
-                    <a href="https://docs.google.com/spreadsheets/d/1GY9erdzMbPIeHQMg1d5T8twLDJ2bb0l20YqT8SowNT0/view?rm=minimal" target="_blank" class="link-card"><span>スタッツ</span></a>
-                    <a href="https://docs.google.com/spreadsheets/d/10ySrl4D3zYY2RlOUI3zx7BTbr7gqVHm4jeYSx2H0FHc/view?rm=minimal" target="_blank" class="link-card"><span>日程・対戦</span></a>
-                </div>
-            </section>
-
-            <section>
-                <div class="section-header border-l-4 border-[#4bb8e0] pl-5 mb-10">
-                    <span class="section-title-en">J2・J3 West Category</span>
-                    <span class="section-title-ja text-xl italic">J2・J3 WEST</span>
-                </div>
-                <div class="db-grid">
-                    <a href="https://docs.google.com/spreadsheets/d/1o9GTT_MKoFD4P2XDaYxXx6Q_5dqNcqNQ8Wyo0a68Uwc/view?rm=minimal" target="_blank" class="link-card"><span>選手リスト</span></a>
-                    <a href="https://docs.google.com/spreadsheets/d/1qyT_1i6OdeIkXIYk02ZUO8Eu07r5Q21EUKlQ_amqBp8/view?rm=minimal" target="_blank" class="link-card"><span>スタッツ</span></a>
-                    <a href="https://docs.google.com/spreadsheets/d/10zjZvu4pVBfehwGN0j7dqc-rfgQPrjwp31RlC4jmzeM/view?rm=minimal" target="_blank" class="link-card"><span>日程・対戦</span></a>
-                </div>
-            </section>
+        <div class="category-grid fade-in" style="animation-delay: 0.1s;">
+            <div class="cat-btn active" onclick="changeCategory('J1_EAST', this)">J1 EAST</div>
+            <div class="cat-btn" onclick="changeCategory('J1_WEST', this)">J1 WEST</div>
+            <div class="cat-btn" onclick="changeCategory('J2_J3_EA', this)">J2/J3 EAST-A</div>
+            <div class="cat-btn" onclick="changeCategory('J2_J3_EB', this)">J2/J3 EAST-B</div>
+            <div class="cat-btn" onclick="changeCategory('J2_J3_WA', this)">J2/J3 WEST-A</div>
+            <div class="cat-btn" onclick="changeCategory('J2_J3_WB', this)">J2/J3 WEST-B</div>
         </div>
+
+        <div id="ranking-container" class="fade-in" style="animation-delay: 0.2s;">
+            <div id="goals-section" class="ranking-card">
+                <div class="ranking-header">
+                    <span class="ranking-title-en">Top Scorer</span>
+                    <span class="ranking-title-ja">得点王</span>
+                </div>
+                <div id="list-goals" class="ranking-list"></div>
+            </div>
+
+            <div id="per90-section" class="ranking-card">
+                <div class="ranking-header">
+                    <span class="ranking-title-en">Efficiency (Per 90)</span>
+                    <span class="ranking-title-ja">得点率</span>
+                </div>
+                <div id="list-per90" class="ranking-list"></div>
+            </div>
+
+            <div id="minutes-section" class="ranking-card">
+                <div class="ranking-header">
+                    <span class="ranking-title-en">Iron Man</span>
+                    <span class="ranking-title-ja">出場時間</span>
+                </div>
+                <div id="list-minutes" class="ranking-list"></div>
+            </div>
+
+            <div id="cards-section" class="ranking-card">
+                <div class="ranking-header">
+                    <span class="ranking-title-en">Discipline</span>
+                    <span class="ranking-title-ja">警告数</span>
+                </div>
+                <div id="list-cards" class="ranking-list"></div>
+            </div>
+        </div>
+
     </main>
 
-    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-32">
+    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-12">
         <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
     </footer>
 
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws0qWNqZ1mbNkdDtyLlnSIBQn7493OY-B-EXLzAGpcZlrZfhL8JIDR1ra5o0si_BYVAg/exec";
+        let currentCategory = 'J1_EAST';
+
         function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('overlay');
-            const btn = document.getElementById('menuBtn');
-            menu.classList.toggle('open');
-            overlay.classList.toggle('show');
-            btn.classList.toggle('active');
-            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
+            document.getElementById('sideMenu').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+            document.getElementById('menuBtn').classList.toggle('active');
+            document.body.style.overflow = document.getElementById('sideMenu').classList.contains('open') ? 'hidden' : 'auto';
         }
 
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
-                pagetop.classList.add('show');
-            } else {
-                pagetop.classList.remove('show');
-            }
+            if (window.scrollY > 400) { pagetop.classList.add('show'); } 
+            else { pagetop.classList.remove('show'); }
         });
 
         function scrollToTop(e) {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        async function fetchRankings(category) {
+            const containers = ['list-goals', 'list-per90', 'list-minutes', 'list-cards'];
+            containers.forEach(id => {
+                document.getElementById(id).innerHTML = '<div class="loading-shimmer text-[0.6rem] tracking-[0.3em] py-10 text-center">LOADING DATA...</div>';
+            });
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?type=ranking&category=${category}`);
+                const data = await response.json();
+
+                renderList('list-goals', data.goals, 'GOALS');
+                renderList('list-per90', data.per90, 'PTS');
+                renderList('list-minutes', data.minutes, 'MIN');
+                renderList('list-cards', data.cards, 'CARDS');
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        }
+
+        function renderList(elementId, players, unit) {
+            const container = document.getElementById(elementId);
+            if (!players || players.length === 0) {
+                container.innerHTML = '<div class="text-zinc-600 text-[0.65rem] py-10 text-center uppercase tracking-widest">No Data Available</div>';
+                return;
+            }
+
+            container.innerHTML = players.map((player, index) => `
+                <div class="player-row">
+                    <div class="rank-num ${index === 0 ? 'rank-1' : ''}">${index + 1}</div>
+                    <div class="player-info" style="border-color: ${player.color}">
+                        <div class="player-name">${player.name}</div>
+                        <div class="player-team">${player.team}</div>
+                    </div>
+                    <div class="stat-value">
+                        ${player.per90 && unit === 'PTS' ? player.per90.toFixed(2) : player[unit.toLowerCase()] || player.mins || player.cards}
+                        <span class="stat-unit">${unit}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeCategory(cat, el) {
+            if (currentCategory === cat) return;
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            fetchRankings(cat);
+        }
+
+        // 初回読み込み
+        fetchRankings(currentCategory);
     </script>
 </body>
 </html>

@@ -167,7 +167,6 @@
             } catch (e) { document.getElementById('schedule-list').innerHTML = 'ERROR'; }
         }
 
-        // チーム選択プルダウンの動的更新
         function updateTeamSelector() {
             const selector = document.getElementById('team-selector');
             const currentArea = filterState.area;
@@ -195,7 +194,7 @@
                 document.querySelectorAll('.area-tab').forEach(t => t.classList.remove('active'));
                 el.classList.add('active');
                 filterState.teamId = '';
-                updateTeamSelector(); // エリアに合わせてプルダウンを更新
+                updateTeamSelector();
             } else if (type === 'team') {
                 filterState.teamId = value;
             }
@@ -213,6 +212,7 @@
 
             listDiv.innerHTML = filtered.map(match => {
                 const isPlayed = match.homeScore && match.homeScore !== "-" && match.homeScore !== "";
+                const hasPk = match.homePk !== "" && match.awayPk !== "";
                 const dateParts = match.date.split(/[\/\-]/);
                 const formattedDate = dateParts.length >= 2 ? `${dateParts[1]}/${dateParts[2]}` : match.date;
 
@@ -236,7 +236,12 @@
                                 <span class="color-line" style="background:${homeColor}"></span>
                             </div>
                             <div class="flex flex-col items-center mx-6 min-w-[70px]">
-                                ${isPlayed ? `<span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>` : `<span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>`}
+                                ${isPlayed ? `
+                                    <span class="font-oswald text-2xl font-medium tracking-tighter">${match.homeScore}-${match.awayScore}</span>
+                                    ${hasPk ? `<span class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-widest mt-[-4px]">PK ${match.homePk}-${match.awayPk}</span>` : ''}
+                                ` : `
+                                    <span class="font-oswald font-bold text-[#4bb8e0] text-xs tracking-widest">VS</span>
+                                `}
                             </div>
                             <div class="flex-1 team-container font-serif text-lg md:text-xl">
                                 <span><span class="hidden md:inline">${match.awayName}</span><span class="inline md:hidden">${match.awayShort}</span></span>

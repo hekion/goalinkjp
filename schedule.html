@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCHEDULE HUB - Goalink</title>
+    <title>PLAYER DETAILS | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
         body { background-color: var(--sumi-black); color: #fff; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; overflow-x: hidden; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
-        
+
         /* ヘッダー・メニュー共通 */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
@@ -32,113 +32,121 @@
         #sideMenu.open { right: 0; }
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; z-index: 100; transition: 0.6s; }
         #overlay.show { opacity: 1; visibility: visible; }
-
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        /* コンテンツ用スタイル */
-        .section-header { margin-bottom: 2.5rem; }
-        .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 0.05em; display: block; }
-        .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
-
-        .hub-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 2.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            position: relative;
-            overflow: hidden;
+        /* ページトップボタン */
+        #pagetop {
+            position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 90; opacity: 0; visibility: hidden; transition: 0.4s; transform: translateY(10px);
             text-decoration: none;
         }
-        .hub-card::before {
-            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 3px;
-            background: var(--border-color, #333); transition: width 0.3s; z-index: 0;
-        }
-        .hub-card:hover { background: rgba(255,255,255,0.07); transform: translateX(10px); }
-        .hub-card:hover::before { width: 6px; }
+        #pagetop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #pagetop:hover { border-color: var(--main-cyan); }
+        #pagetop svg { width: 14px; height: 14px; fill: var(--main-cyan); margin-bottom: 2px; }
+        #pagetop span { font-family: 'Oswald', sans-serif; font-size: 0.55rem; color: var(--main-cyan); letter-spacing: 0.1em; font-weight: 500; }
 
-        .fade-in { animation: fadeIn 1s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* ローダー・エラー */
+        .loader { width: 24px; height: 24px; border: 2px solid var(--main-cyan); border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .error-message { font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 1.5rem; border-radius: 2px; background: rgba(255, 107, 107, 0.05); }
+        
+        #playerName { word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; display: block; }
     </style>
 </head>
 <body>
 
     <div id="overlay" onclick="toggleMenu()"></div>
 
+    <a href="#" id="pagetop" onclick="scrollToTop(event)">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+        <span>TOP</span>
+    </a>
+
     <header class="h-28 px-8 flex justify-between items-center fixed top-0 w-full z-[200] bg-gradient-to-b from-black/95 to-transparent">
         <a href="index.html"><img src="goalinklogo.png" alt="Goalink" class="site-logo"></a>
-        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger">
-            <span></span>
-            <span></span>
-        </div>
+        <div id="menuBtn" onclick="toggleMenu()" class="menu-trigger"><span></span><span></span></div>
     </header>
 
     <nav id="sideMenu">
-        <div class="menu-item" style="transition-delay: 0.1s;"><a href="https://hekion.github.io/goalinkjp/schedule.html"><span class="font-serif text-2xl text-[#4bb8e0]">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.1s;"><a href="https://hekion.github.io/goalinkjp/schedule.html"><span class="font-serif text-2xl">試合日程</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">SCHEDULE</small></a></div>
         <div class="menu-item" style="transition-delay: 0.2s;"><a href="teams.html"><span class="font-serif text-2xl">チーム一覧</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">TEAMS</small></a></div>
         <div class="menu-item" style="transition-delay: 0.3s;"><a href="standing.html"><span class="font-serif text-2xl">順位表</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STANDING</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">PLAYERS</small></a></div>
-        <div class="menu-item" style="transition-delay: 0.5s;"><a href="https://note.com/goalink_jp" target="_blank"><span class="font-serif text-2xl">節スタッツまとめ</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS SUMMARY</small></a></div>
+        <div class="menu-item" style="transition-delay: 0.4s;"><a href="database.html"><span class="font-serif text-2xl text-[#4bb8e0]">個人成績</span><small class="font-oswald text-[#4bb8e0] ml-3 text-[0.6rem] tracking-[0.3em]">STATS</small></a></div>
         
-        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.6s;">
-            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3">
+        <div class="mt-8 border-t border-white/10 pt-8 menu-item" style="transition-delay: 0.5s;">
+            <a href="https://x.com/Goalink_JP" target="_blank" class="flex items-center gap-3 mb-6">
                 <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 <span class="font-serif text-xl text-gray-400">公式Xへ</span>
+            </a>
+            <a href="https://note.com/goalink_jp" target="_blank" class="flex items-center gap-3">
+                <img src="https://note.com/favicon.ico" class="w-5 h-5 grayscale opacity-70" alt="">
+                <span class="font-serif text-xl text-gray-400">公式noteへ</span>
             </a>
         </div>
     </nav>
 
-    <main class="pt-40 px-8 max-w-screen-md mx-auto min-h-screen">
-        <div class="section-header fade-in">
-            <span class="section-title-en">Match Schedule</span>
-            <span class="section-title-ja">試合日程</span>
+    <main class="pt-48 pb-20 px-6 max-w-screen-md mx-auto">
+        <div id="loading" class="text-center py-20">
+            <span class="loader"></span>
+            <p class="font-oswald text-[0.6rem] tracking-widest mt-4 opacity-30 uppercase italic">Loading...</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 fade-in" style="animation-delay: 0.2s;">
-            
-            <a href="schedule_all.html" class="hub-card" style="--border-color: #ffffff;">
-                <div class="relative z-10">
-                    <span class="font-serif text-2xl block mb-1">全カテゴリ日程</span>
-                    <small class="font-oswald text-[0.6rem] opacity-40 tracking-[0.3em] uppercase">All category match schedule</small>
-                </div>
-                <span class="text-white opacity-20 text-xl font-light">→</span>
-            </a>
+        <div id="errorMessage" class="hidden text-center py-20 error-message">
+            読み込みに失敗しました。
+        </div>
 
-            <a href="schedule_j1.html" class="hub-card" style="--border-color: #4bb8e0;">
-                <div class="relative z-10">
-                    <span class="font-serif text-2xl block mb-1">J1 日程</span>
-                    <small class="font-oswald text-[0.6rem] text-[#4bb8e0] tracking-[0.3em] uppercase">J1 match schedule</small>
+        <div id="playerContent" class="hidden">
+            <div class="mb-16 text-center">
+                <div class="flex justify-center items-center gap-6 mb-10">
+                    <a id="backBtn" href="#" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white transition-colors whitespace-nowrap">← チーム詳細に戻る</a>
+                    <a href="teams.html" class="font-serif text-[0.7rem] tracking-[0.1em] text-white/40 hover:text-white transition-colors whitespace-nowrap">← チーム一覧に戻る</a>
                 </div>
-                <span class="text-[#4bb8e0] opacity-40 text-xl font-light">→</span>
-            </a>
 
-            <a href="schedule_j2.html" class="hub-card" style="--border-color: #10b981;">
-                <div class="relative z-10">
-                    <span class="font-serif text-2xl block mb-1">J2・J3 EAST 日程</span>
-                    <small class="font-oswald text-[0.6rem] text-[#10b981] tracking-[0.3em] uppercase">J2・J3 EAST match schedule</small>
+                <div class="flex flex-col items-center w-full">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span id="playerPos" class="font-oswald text-sm text-gray-400 tracking-[0.3em] uppercase"></span>
+                        <span id="playerNumber" class="font-oswald text-3xl font-light italic text-white"></span>
+                    </div>
+                    
+                    <h1 id="playerName" class="text-white text-[10vw] md:text-6xl font-serif font-black tracking-tighter uppercase italic leading-none mb-6"></h1>
+                    
+                    <div id="accentBar" class="h-[1px] w-16 mb-8 opacity-80"></div>
+                    
+                    <div class="flex gap-8 font-oswald text-[0.75rem] opacity-50 tracking-[0.2em] text-white uppercase italic">
+                        <span id="playerBirth"></span>
+                        <span><span id="playerHeight"></span>CM / <span id="playerWeight"></span>KG</span>
+                    </div>
                 </div>
-                <span class="text-[#10b981] opacity-40 text-xl font-light">→</span>
-            </a>
+            </div>
 
-            <a href="schedule_j3.html" class="hub-card" style="--border-color: #f43f5e;">
-                <div class="relative z-10">
-                    <span class="font-serif text-2xl block mb-1">J2・J3 WEST 日程</span>
-                    <small class="font-oswald text-[0.6rem] text-[#f43f5e] tracking-[0.3em] uppercase">J2・J3 WEST match schedule</small>
+            <div class="max-w-md mx-auto border-t border-white/10 pt-12 mt-12">
+                <div class="grid grid-cols-5 gap-2 text-center">
+                    <div><span class="block text-[0.5rem] opacity-20 mb-2 font-serif uppercase">出場</span><span id="stat-games" class="font-oswald text-sm"></span></div>
+                    <div><span class="block text-[0.5rem] opacity-20 mb-2 font-serif uppercase">時間</span><span id="stat-min" class="font-oswald text-sm"></span></div>
+                    <div><span class="block text-[0.5rem] opacity-20 mb-2 font-serif uppercase">得点</span><span id="stat-goals" class="font-oswald text-sm"></span></div>
+                    <div><span class="block text-[0.5rem] opacity-20 mb-2 font-serif uppercase">警告</span><span id="stat-yel" class="font-oswald text-sm"></span></div>
+                    <div><span class="block text-[0.5rem] opacity-20 mb-2 font-serif uppercase">退場</span><span id="stat-red" class="font-oswald text-sm"></span></div>
                 </div>
-                <span class="text-[#f43f5e] opacity-40 text-xl font-light">→</span>
-            </a>
-
+            </div>
         </div>
     </main>
 
-    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-12">
-        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase">© 2026 Goalink / Powered by HEKION</p>
+    <footer class="p-20 text-center border-t border-white/5 mx-8 mt-12 flex flex-col items-center">
+        <p class="font-oswald text-[0.55rem] tracking-[0.8em] opacity-30 uppercase mb-8">© 2026 Goalink</p>
+        <div class="flex items-center justify-center gap-4">
+            <span class="font-oswald text-[0.55rem] tracking-[0.3em] uppercase opacity-30">Powered by</span>
+            <a href="https://hekion.github.io/hekion/" target="_blank" class="block">
+                <img src="hekionlogo.png" alt="HEKION" class="h-8 w-auto">
+            </a>
+        </div>
     </footer>
 
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcIbOA514BcUjssR78RqoWbp4bYM_eo6b3CtNPJt-9FxDrfY_5EFy9HSnTOtjG9Ytb/exec";
+
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             const overlay = document.getElementById('overlay');
@@ -148,6 +156,56 @@
             btn.classList.toggle('active');
             document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : 'auto';
         }
+
+        const pagetop = document.getElementById('pagetop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                pagetop.classList.add('show');
+            } else {
+                pagetop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function loadPlayerDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('id');
+            const teamId = urlParams.get('tid');
+            if (!playerId || !teamId) return;
+
+            document.getElementById('backBtn').href = `teampage.html?id=${teamId}`;
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?id=${teamId}`);
+                const data = await response.json();
+                const player = data.players.find(p => p.id == playerId);
+                if (!player) throw new Error();
+
+                document.getElementById('playerName').textContent = player.name;
+                document.getElementById('playerNumber').textContent = `#${player.number}`;
+                document.getElementById('playerPos').textContent = player.position;
+                document.getElementById('playerBirth').textContent = player.birthday ? player.birthday.substring(0, 10) : '----.--.--';
+                document.getElementById('playerHeight').textContent = player.height || '---';
+                document.getElementById('playerWeight').textContent = player.weight || '--';
+                document.getElementById('stat-games').textContent = player.games || '0';
+                document.getElementById('stat-min').textContent = player.minutes || '0';
+                document.getElementById('stat-goals').textContent = player.goals || '0';
+                document.getElementById('stat-yel').textContent = player.yellow || '0';
+                document.getElementById('stat-red').textContent = player.red || '0';
+                document.getElementById('accentBar').style.backgroundColor = data.teamColor || '#FFFFFF';
+
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('playerContent').classList.remove('hidden');
+            } catch (e) {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        }
+        loadPlayerDetail();
     </script>
 </body>
 </html>

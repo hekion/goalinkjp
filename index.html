@@ -14,7 +14,6 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        /* ヘッダー・共通パーツ */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -41,7 +40,6 @@
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
 
-        /* ページトップボタン */
         #pagetop {
             position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
             background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -104,8 +102,7 @@
                 <span class="section-title-ja">次節対戦</span>
             </div>
             <div class="swiper nextSwiper">
-                <div class="swiper-wrapper" id="nextContainer">
-                    </div>
+                <div class="swiper-wrapper" id="nextContainer"></div>
             </div>
         </section>
 
@@ -116,8 +113,7 @@
             </div>
             <a href="standing.html" class="block">
                 <div class="swiper standSwiper">
-                    <div class="swiper-wrapper" id="standContainer">
-                        </div>
+                    <div class="swiper-wrapper" id="standContainer"></div>
                 </div>
             </a>
         </section>
@@ -178,11 +174,8 @@
 
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
-                pagetop.classList.add('show');
-            } else {
-                pagetop.classList.remove('show');
-            }
+            if (window.scrollY > 400) { pagetop.classList.add('show'); } 
+            else { pagetop.classList.remove('show'); }
         });
 
         function scrollToTop(e) {
@@ -190,7 +183,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- スプレッドシート読み込み処理 ---
         const SHEET_ID = '14BZJzwJ9cIRK7fG0uYbnfjPnT2l0kfhBv_tackPP03s';
         
         async function loadSlides() {
@@ -198,8 +190,9 @@
                 if (!url) return null;
                 const cleanUrl = url.trim().replace(/^"|"$/g, '');
                 if (cleanUrl.includes('drive.google.com')) {
+                    // セキュリティを回避しやすいサムネイル表示形式に変換
                     const id = cleanUrl.split('/d/')[1]?.split('/')[0] || cleanUrl.split('id=')[1]?.split('&')[0];
-                    return id ? `https://drive.google.com/uc?export=view&id=${id}` : cleanUrl;
+                    return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1200` : cleanUrl;
                 }
                 return cleanUrl;
             };
@@ -210,22 +203,14 @@
                     const res = await fetch(url);
                     const text = await res.text();
                     const json = JSON.parse(text.substr(47).slice(0, -2));
-                    
-                    // 1行目が見出し、2行目(index 1)からURLがある前提。3行分(B2, B3, B4)取得
-                    return json.table.rows.slice(1, 4).map(row => {
-                        return row.c[1] ? fixUrl(row.c[1].v) : null;
-                    }).filter(v => v);
+                    return json.table.rows.slice(1, 4).map(row => row.c[1] ? fixUrl(row.c[1].v) : null).filter(v => v);
                 } catch (err) {
-                    console.error(`${sheetName}の取得失敗:`, err);
                     return [];
                 }
             };
 
             try {
-                const [nextUrls, standUrls] = await Promise.all([
-                    fetchSheetData('日程'),
-                    fetchSheetData('順位')
-                ]);
+                const [nextUrls, standUrls] = await Promise.all([fetchSheetData('日程'), fetchSheetData('順位')]);
 
                 const createSlides = (containerId, urls) => {
                     const container = document.getElementById(containerId);
@@ -234,7 +219,7 @@
                     urls.forEach(url => {
                         const div = document.createElement('div');
                         div.className = 'swiper-slide';
-                        div.innerHTML = `<img src="${url}" class="w-full h-auto block">`;
+                        div.innerHTML = `<img src="${url}" class="w-full h-auto block" onerror="this.src='https://placehold.jp/24/0c0c0c/ffffff/400x225.png?text=Image+Load+Error'">`;
                         container.appendChild(div);
                     });
                 };
@@ -242,16 +227,13 @@
                 createSlides('nextContainer', nextUrls);
                 createSlides('standContainer', standUrls);
 
-                // スライドが存在する場合のみ初期化
                 if (nextUrls.length > 0) new Swiper('.nextSwiper', swiperConfig);
                 if (standUrls.length > 0) new Swiper('.standSwiper', swiperConfig);
-
             } catch (e) {
-                console.error("読み込み全体エラー:", e);
+                console.error(e);
             }
         }
 
-        // 実行
         loadSlides();
     </script>
 </body>

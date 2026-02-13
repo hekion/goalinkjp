@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goalink</title>
+    <title>STANDING | Goalink</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Oswald:wght@300;500&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +13,6 @@
         .font-serif { font-family: 'Noto Serif JP', serif; }
         .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        /* ヘッダー・共通パーツ */
         .site-logo { height: 3.5rem; width: auto; object-fit: contain; }
         .menu-trigger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; z-index: 200; position: relative; }
         .menu-trigger span { display: block; height: 1px; background-color: #fff; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -36,21 +35,18 @@
         .menu-item { opacity: 0; transform: translateX(20px); transition: 0.5s; margin-bottom: 2rem; }
         #sideMenu.open .menu-item { opacity: 1; transform: translateX(0); }
 
-        /* セクションタイトル */
         .section-header { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
         .section-title-ja { font-family: 'Noto Serif JP', serif; font-weight: 900; letter-spacing: 0.05em; display: block; line-height: 1.2; }
         .section-title-en { font-family: 'Oswald', sans-serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--main-cyan); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
 
-        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
+        .stand-img { width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); min-height: 100px; display: block; }
         
         .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.2s ease-out forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        /* グループラベルの装飾 */
         .group-label { display: flex; align-items: center; font-family: 'Oswald', sans-serif; font-size: 0.75rem; color: var(--main-cyan); letter-spacing: 0.4em; margin-bottom: 1rem; }
         .group-label::before { content: ""; width: 3px; height: 12px; background-color: var(--main-cyan); margin-right: 12px; }
 
-        /* ページトップボタン */
         #pagetop {
             position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px;
             background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -110,15 +106,13 @@
                 <span class="section-title-en">J1 League Category</span>
                 <span class="section-title-ja text-xl italic">J1 リーグ</span>
             </div>
-            
             <div class="mb-12">
                 <h3 class="group-label">EAST GROUP</h3>
-                <img src="stand_j1_east.png" alt="J1 EAST" class="stand-img">
+                <img id="img_j1_east" src="" alt="J1 EAST" class="stand-img">
             </div>
-
             <div class="mb-12">
                 <h3 class="group-label">WEST GROUP</h3>
-                <img src="stand_j1_west.png" alt="J1 WEST" class="stand-img">
+                <img id="img_j1_west" src="" alt="J1 WEST" class="stand-img">
             </div>
         </div>
 
@@ -127,15 +121,13 @@
                 <span class="section-title-en">J2・J3 East Category</span>
                 <span class="section-title-ja text-xl italic">J2・J3 EAST</span>
             </div>
-            
             <div class="mb-12">
                 <h3 class="group-label">A GROUP</h3>
-                <img src="stand_j2j3_east_a.png" alt="J2・J3 EAST-A" class="stand-img">
+                <img id="img_j2j3_east_a" src="" alt="J2・J3 EAST-A" class="stand-img">
             </div>
-
             <div class="mb-12">
                 <h3 class="group-label">B GROUP</h3>
-                <img src="stand_j2j3_east_b.png" alt="J2・J3 EAST-B" class="stand-img">
+                <img id="img_j2j3_east_b" src="" alt="J2・J3 EAST-B" class="stand-img">
             </div>
         </div>
 
@@ -144,15 +136,13 @@
                 <span class="section-title-en">J2・J3 West Category</span>
                 <span class="section-title-ja text-xl italic">J2・J3 WEST</span>
             </div>
-            
             <div class="mb-12">
                 <h3 class="group-label">A GROUP</h3>
-                <img src="stand_j2j3_west_a.png" alt="J2・J3 WEST-A" class="stand-img">
+                <img id="img_j2j3_west_a" src="" alt="J2・J3 WEST-A" class="stand-img">
             </div>
-
             <div class="mb-12">
                 <h3 class="group-label">B GROUP</h3>
-                <img src="stand_j2j3_west_b.png" alt="J2・J3 WEST-B" class="stand-img">
+                <img id="img_j2j3_west_b" src="" alt="J2・J3 WEST-B" class="stand-img">
             </div>
         </div>
     </main>
@@ -180,17 +170,58 @@
 
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
-                pagetop.classList.add('show');
-            } else {
-                pagetop.classList.remove('show');
-            }
+            if (window.scrollY > 400) { pagetop.classList.add('show'); } 
+            else { pagetop.classList.remove('show'); }
         });
 
         function scrollToTop(e) {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        const SHEET_ID = '14BZJzwJ9cIRK7fG0uYbnfjPnT2l0kfhBv_tackPP03s';
+
+        async function loadStandingTableImages() {
+            const fixUrl = (url) => {
+                if (!url) return 'https://placehold.jp/24/0c0c0c/ffffff/400x225.png?text=No+Image';
+                const cleanUrl = url.trim().replace(/^"|"$/g, '');
+                if (cleanUrl.includes('drive.google.com')) {
+                    const id = cleanUrl.split('/d/')[1]?.split('/')[0] || cleanUrl.split('id=')[1]?.split('&')[0];
+                    return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1200` : cleanUrl;
+                }
+                return cleanUrl;
+            };
+
+            try {
+                // シート名を「順位表」に指定
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('順位表')}`;
+                const res = await fetch(url);
+                const text = await res.text();
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const rows = json.table.rows;
+
+                const ids = [
+                    'img_j1_east',       // 2行目
+                    'img_j1_west',       // 3行目
+                    'img_j2j3_east_a',   // 4行目
+                    'img_j2j3_east_b',   // 5行目
+                    'img_j2j3_west_a',   // 6行目
+                    'img_j2j3_west_b'    // 7行目
+                ];
+
+                ids.forEach((id, index) => {
+                    const targetRow = rows[index + 1];
+                    const imgElement = document.getElementById(id);
+                    if (targetRow && targetRow.c[1] && imgElement) {
+                        imgElement.src = fixUrl(targetRow.c[1].v);
+                    }
+                });
+            } catch (err) {
+                console.error('Failed to load standing table images:', err);
+            }
+        }
+
+        loadStandingTableImages();
     </script>
 </body>
 </html>

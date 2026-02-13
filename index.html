@@ -104,11 +104,8 @@
                 <span class="section-title-ja">次節対戦</span>
             </div>
             <div class="swiper nextSwiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide"><img src="next_j1.png"></div>
-                    <div class="swiper-slide"><img src="next_j2.png"></div>
-                    <div class="swiper-slide"><img src="next_j3.png"></div>
-                </div>
+                <div class="swiper-wrapper" id="nextContainer">
+                    </div>
             </div>
         </section>
 
@@ -119,11 +116,8 @@
             </div>
             <a href="standing.html" class="block">
                 <div class="swiper standSwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="stand_j1.png"></div>
-                        <div class="swiper-slide"><img src="stand_j2.png"></div>
-                        <div class="swiper-slide"><img src="stand_j3.png"></div>
-                    </div>
+                    <div class="swiper-wrapper" id="standContainer">
+                        </div>
                 </div>
             </a>
         </section>
@@ -182,9 +176,6 @@
             autoplay: { delay: 5000, disableOnInteraction: false }
         };
 
-        new Swiper('.nextSwiper', swiperConfig);
-        new Swiper('.standSwiper', swiperConfig);
-
         const pagetop = document.getElementById('pagetop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {
@@ -198,6 +189,56 @@
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- スプレッドシート読み込み処理 ---
+        const SHEET_ID = '14BZJzwJ9cIRK7fG0uYbnfjPnT2l0kfhBv_tackPP03s';
+        
+        async function loadSlides() {
+            // GoogleドライブのURLを直リンクに変換する関数
+            const fixUrl = (url) => {
+                if (url.includes('drive.google.com')) {
+                    const id = url.split('/d/')[1]?.split('/')[0] || url.split('id=')[1]?.split('&')[0];
+                    return id ? `https://drive.google.com/uc?export=view&id=${id}` : url;
+                }
+                return url;
+            };
+
+            const fetchSheet = async (name) => {
+                const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`);
+                const text = await res.text();
+                // CSVからB列(URL)を抽出（1行目は見出しなので飛ばす）
+                return text.split('\n').slice(1, 4).map(row => {
+                    const cols = row.split('","');
+                    const url = cols[1]?.replace(/"/g, '').trim();
+                    return url ? fixUrl(url) : null;
+                }).filter(url => url);
+            };
+
+            try {
+                const [nextUrls, standUrls] = await Promise.all([fetchSheet('日程'), fetchSheet('順位')]);
+
+                const createSlides = (containerId, urls) => {
+                    const container = document.getElementById(containerId);
+                    urls.forEach(url => {
+                        const div = document.createElement('div');
+                        div.className = 'swiper-slide';
+                        div.innerHTML = `<img src="${url}">`;
+                        container.appendChild(div);
+                    });
+                };
+
+                createSlides('nextContainer', nextUrls);
+                createSlides('standContainer', standUrls);
+
+                // 画像読み込み後にSwiperを起動
+                new Swiper('.nextSwiper', swiperConfig);
+                new Swiper('.standSwiper', swiperConfig);
+            } catch (e) {
+                console.error("読み込みエラー:", e);
+            }
+        }
+
+        loadSlides();
     </script>
 </body>
 </html>
